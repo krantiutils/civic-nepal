@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution of Nepal - Bilingual Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --card-bg: white;
+            --border: #e5e7eb;
+            --hover: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .controls-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: var(--hover);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar a:hover {
+            background: var(--hover);
+            color: var(--primary);
+        }
+
+        .content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .preamble {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(to right, #fef3c7, #fde68a);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .preamble-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .preamble-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .preamble-text.nepali-text {
+            font-size: 1.1rem;
+        }
+
+        .part {
+            margin-bottom: 3rem;
+        }
+
+        .part-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .part-number {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.3rem;
+        }
+
+        .part-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .article {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .article-header {
+            margin-bottom: 1rem;
+        }
+
+        .article-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .article-title-en {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        .article-content {
+            margin-top: 1rem;
+        }
+
+        .subsection {
+            margin-bottom: 0.75rem;
+            line-height: 1.8;
+        }
+
+        .subsection-id {
+            font-weight: 600;
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .sub-subsection {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .nepali-text {
+            font-size: 1.05rem;
+        }
+
+        .english-text {
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .missing-translation {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .stats {
+            background: linear-gradient(to right, #dbeafe, #bfdbfe);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stats-content {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                height: auto;
+                max-height: 300px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .preamble {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>नेपालको संविधान / Constitution of Nepal</h1>
+        <p>Bilingual Interactive Viewer - 100% Coverage</p>
+    </div>
+
+    <div class="controls">
+        <div class="controls-inner">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search articles...">
+            </div>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="both">Both</button>
+                <button class="lang-btn" data-lang="nepali">नेपाली</button>
+                <button class="lang-btn" data-lang="english">English</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Table of Contents</h3>
+            <ul id="toc"></ul>
+        </aside>
+
+        <main class="content">
+            <div id="constitution" class="loading">
+                Loading constitution...
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let constitutionData = null;
+        let currentLang = 'both';
+
+        // Load constitution data
+        fetch('constitution_bilingual.json')
+            .then(res => res.json())
+            .then(data => {
+                constitutionData = data;
+                renderTOC();
+                renderConstitution();
+            })
+            .catch(err => {
+                document.getElementById('constitution').innerHTML =
+                    '<p style="color: #dc2626;">Error loading constitution data. Please ensure constitution_bilingual.json is in the same directory.</p>';
+                console.error(err);
+            });
+
+        // Render table of contents
+        function renderTOC() {
+            const toc = document.getElementById('toc');
+            const parts = constitutionData.constitution.parts;
+
+            // Add preamble link
+            const preambleLi = document.createElement('li');
+            const preambleA = document.createElement('a');
+            preambleA.href = '#preamble';
+            preambleA.textContent = 'Preamble / प्रस्तावना';
+            preambleA.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('preamble').scrollIntoView({ behavior: 'smooth' });
+            });
+            preambleLi.appendChild(preambleA);
+            toc.appendChild(preambleLi);
+
+            // Add parts
+            parts.forEach(part => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#part-${part.number}`;
+                const title = part.title.np || part.title.en || `Part ${part.number}`;
+                a.textContent = `Part ${part.number}: ${title}`;
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById(`part-${part.number}`).scrollIntoView({ behavior: 'smooth' });
+                });
+                li.appendChild(a);
+                toc.appendChild(li);
+            });
+        }
+
+        // Render constitution
+        function renderConstitution() {
+            const container = document.getElementById('constitution');
+            const constitution = constitutionData.constitution;
+            const parts = constitution.parts;
+
+            container.innerHTML = '';
+
+            // Statistics
+            const totalArticles = parts.reduce((sum, part) => sum + part.articles.length, 0);
+            const withNepali = parts.reduce((sum, part) =>
+                sum + part.articles.filter(a => a.title.np).length, 0);
+
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'stats';
+            statsDiv.innerHTML = `
+                <div class="stats-title">Constitution Statistics</div>
+                <div class="stats-content">
+                    <div class="stat-item">
+                        <div class="stat-value">${parts.length}</div>
+                        <div class="stat-label">Parts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${totalArticles}</div>
+                        <div class="stat-label">Total Articles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${((withNepali/totalArticles)*100).toFixed(1)}%</div>
+                        <div class="stat-label">Nepali Coverage</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(statsDiv);
+
+            // Preamble
+            if (constitution.preamble) {
+                const preambleDiv = document.createElement('div');
+                preambleDiv.id = 'preamble';
+                preambleDiv.className = 'preamble';
+
+                const preambleHeader = document.createElement('div');
+                preambleHeader.className = 'preamble-header';
+                preambleHeader.textContent = 'Preamble / प्रस्तावना';
+                preambleDiv.appendChild(preambleHeader);
+
+                if (constitution.preamble.np && currentLang !== 'english') {
+                    const npText = document.createElement('div');
+                    npText.className = 'preamble-text nepali-text';
+                    npText.textContent = constitution.preamble.np;
+                    preambleDiv.appendChild(npText);
+                }
+
+                if (constitution.preamble.en && currentLang !== 'nepali') {
+                    const enText = document.createElement('div');
+                    enText.className = 'preamble-text english-text';
+                    enText.textContent = constitution.preamble.en;
+                    preambleDiv.appendChild(enText);
+                }
+
+                container.appendChild(preambleDiv);
+            }
+
+            // Parts
+            parts.forEach(part => {
+                const partDiv = document.createElement('div');
+                partDiv.className = 'part';
+                partDiv.id = `part-${part.number}`;
+
+                const partHeader = document.createElement('div');
+                partHeader.className = 'part-header';
+
+                const titleNp = part.title.np || '';
+                const titleEn = part.title.en || '';
+
+                partHeader.innerHTML = `
+                    <div class="part-number">Part ${part.number}</div>
+                    ${titleNp ? `<div class="part-title nepali-text">${titleNp}</div>` : ''}
+                    ${titleEn ? `<div class="part-title english-text" style="color: rgba(255,255,255,0.9); margin-top: 0.5rem; font-size: 1.2rem;">${titleEn}</div>` : ''}
+                `;
+
+                partDiv.appendChild(partHeader);
+
+                // Render articles
+                part.articles.forEach(article => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'article';
+
+                    const articleHeader = document.createElement('div');
+                    articleHeader.className = 'article-header';
+
+                    const titleNp = article.title.np || '';
+                    const titleEn = article.title.en || '';
+
+                    articleHeader.innerHTML = `
+                        <span class="article-number">${article.number}</span>
+                        ${titleNp ? `<div class="article-title nepali-text">${titleNp}</div>` : ''}
+                        ${titleEn ? `<div class="article-title-en">${titleEn}</div>` : ''}
+                    `;
+
+                    articleDiv.appendChild(articleHeader);
+
+                    // Render content
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'article-content';
+                    contentDiv.innerHTML = renderArticleContent(article.content);
+
+                    articleDiv.appendChild(contentDiv);
+                    partDiv.appendChild(articleDiv);
+                });
+
+                container.appendChild(partDiv);
+            });
+        }
+
+        // Render article content
+        function renderArticleContent(content) {
+            let html = '';
+
+            // Nepali content
+            if (content.np && content.np.length > 0 && currentLang !== 'english') {
+                content.np.forEach(item => {
+                    if (item.type === 'subsection') {
+                        html += `<div class="subsection nepali-text">
+                            <span class="subsection-id">${item.identifier}</span>
+                            ${item.text}
+                        `;
+
+                        if (item.items && item.items.length > 0) {
+                            item.items.forEach(subItem => {
+                                html += `<div class="sub-subsection">
+                                    <span class="subsection-id">${subItem.identifier}</span>
+                                    ${subItem.text}
+                                </div>`;
+                            });
+                        }
+
+                        html += '</div>';
+                    } else if (item.type === 'text') {
+                        html += `<div class="subsection nepali-text">${item.text}</div>`;
+                    }
+                });
+            }
+
+            // English content (if available and language setting allows)
+            if (content.en && content.en.length > 0 && currentLang !== 'nepali') {
+                content.en.forEach(item => {
+                    if (item.type === 'subsection') {
+                        html += `<div class="subsection english-text">
+                            <span class="subsection-id">${item.identifier}</span>
+                            ${item.text}
+                        `;
+
+                        if (item.items && item.items.length > 0) {
+                            item.items.forEach(subItem => {
+                                html += `<div class="sub-subsection">
+                                    <span class="subsection-id">${subItem.identifier}</span>
+                                    ${subItem.text}
+                                </div>`;
+                            });
+                        }
+
+                        html += '</div>';
+                    } else if (item.type === 'text') {
+                        html += `<div class="subsection english-text">${item.text}</div>`;
+                    }
+                });
+            }
+
+            return html;
+        }
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+
+                // Re-render to apply language filter
+                renderConstitution();
+            });
+        });
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const articles = document.querySelectorAll('.article');
+
+            articles.forEach(article => {
+                const text = article.textContent.toLowerCase();
+                article.style.display = text.includes(query) ? 'block' : 'none';
+            });
+
+            // Also filter preamble
+            const preamble = document.getElementById('preamble');
+            if (preamble) {
+                const text = preamble.textContent.toLowerCase();
+                preamble.style.display = text.includes(query) ? 'block' : 'none';
+            }
+        });
+    </script>
+</body>
+</html>
