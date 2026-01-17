@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../providers/constitution_provider.dart';
 import '../../models/constitution.dart';
 import '../../widgets/meaning_mode_overlay.dart';
+import '../../widgets/linked_text.dart';
 
 part 'constitution_screen.g.dart';
 
@@ -211,7 +212,7 @@ class ConstitutionScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        SelectableText(
+        LinkedText(
           text,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             height: 1.8,
@@ -311,7 +312,7 @@ class ConstitutionScreen extends ConsumerWidget {
             if (item.text != null)
               Padding(
                 padding: const EdgeInsets.only(left: 16, top: 4),
-                child: SelectableText(item.text!, style: textStyle),
+                child: LinkedText(item.text!, style: textStyle),
               ),
             if (item.items.isNotEmpty)
               Padding(
@@ -331,7 +332,7 @@ class ConstitutionScreen extends ConsumerWidget {
     // Regular text item
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: SelectableText(item.text ?? '', style: textStyle),
+      child: LinkedText(item.text ?? '', style: textStyle),
     );
   }
 
