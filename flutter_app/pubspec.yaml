@@ -1,0 +1,86 @@
+name: nepal_civic
+description: Nepal Civic Information App - Constitution, Leaders, and District Map
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.4.0
+
+  # SVG rendering
+  flutter_svg: ^2.0.0
+  path_parsing: ^1.0.1
+
+  # Local storage
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.0
+
+  # Markdown rendering
+  flutter_markdown: ^0.6.0
+
+  # Image caching
+  cached_network_image: ^3.3.0
+
+  # Routing
+  go_router: ^12.0.0
+
+  # HTTP client for API calls
+  http: ^1.1.0
+
+  # Path provider for file system access
+  path_provider: ^2.1.0
+
+  # Image tools (picker, manipulation, sharing, gallery save)
+  image_picker: ^1.0.0
+  image: ^4.0.0
+  share_plus: ^7.0.0
+  gal: ^2.3.0
+
+  # URL launcher for opening websites
+  url_launcher: ^6.0.0
+
+  # Nepali date utilities (tested library)
+  nepali_utils: ^3.0.1
+
+  # Unicode characters (Devanagari)
+  flutter_localizations:
+    sdk: flutter
+
+  # Code generation
+  freezed_annotation: ^2.4.0
+  riverpod_annotation: ^2.3.0
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.0
+  freezed: ^2.4.0
+  json_serializable: ^6.7.0
+  riverpod_generator: ^2.3.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/constitution_bilingual.json
+    - assets/data/per-sentence.json
+    - assets/data/dictionary.json
+    - assets/data/leaders.json
+    - assets/data/parties.json
+    - assets/data/districts.json
+    - assets/data/gov_services.json
+    - assets/data/know_your_rights.json
+    - assets/data/nepali_calendar_events.json
+    - assets/data/nepali_calendar_auspicious.json
+    - assets/data/ministers.json
+    - assets/data/data_version.json
+    - assets/images/nepal_districts.svg
+    - assets/images/leaders/
