@@ -299,12 +299,22 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: isWide ? 200 : null,
-                  child: Expanded(
-                    flex: isWide ? 0 : 1,
+                if (isWide) const Spacer(),
+                if (isWide)
+                  SizedBox(
+                    width: 200,
+                    child: OutlinedButton.icon(
+                      onPressed: _saveImage,
+                      icon: const Icon(Icons.save_alt),
+                      label: Text(l10n.save),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  )
+                else
+                  Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _saveImage,
                       icon: const Icon(Icons.save_alt),
@@ -314,12 +324,21 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(width: 16),
-                SizedBox(
-                  width: isWide ? 200 : null,
-                  child: Expanded(
-                    flex: isWide ? 0 : 1,
+                if (isWide)
+                  SizedBox(
+                    width: 200,
+                    child: FilledButton.icon(
+                      onPressed: _shareImage,
+                      icon: const Icon(Icons.share),
+                      label: Text(l10n.share),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  )
+                else
+                  Expanded(
                     child: FilledButton.icon(
                       onPressed: _shareImage,
                       icon: const Icon(Icons.share),
@@ -329,7 +348,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
                       ),
                     ),
                   ),
-                ),
+                if (isWide) const Spacer(),
               ],
             ),
           ),
