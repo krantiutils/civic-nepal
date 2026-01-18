@@ -25,13 +25,13 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
 GoRouter router(RouterRef ref) {
+  // Enable URL updates for push/pop operations on web
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    debugLogDiagnostics: true,
     redirect: (context, state) {
       final path = state.uri.path;
-      debugPrint('GoRouter redirect called with path: $path');
-
       final uri = state.uri;
       // Handle deep links from widgets
       if (uri.scheme == 'nepalcivic' && uri.host.isNotEmpty) {
@@ -39,10 +39,8 @@ GoRouter router(RouterRef ref) {
       }
       // Redirect root to /home
       if (path == '/' || path.isEmpty) {
-        debugPrint('Redirecting to /home');
         return '/home';
       }
-      debugPrint('No redirect needed for: $path');
       return null;
     },
     routes: [
@@ -89,6 +87,11 @@ GoRouter router(RouterRef ref) {
         builder: (context, state) => const ConstitutionScreen(),
       ),
       GoRoute(
+        path: '/constitutional-rights',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ConstitutionScreen(),
+      ),
+      GoRoute(
         path: '/leaders',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const LeadersScreen(),
@@ -108,6 +111,11 @@ GoRouter router(RouterRef ref) {
         builder: (context, state) => const DistrictMapScreen(),
       ),
       GoRoute(
+        path: '/how-nepal-works',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const HowNepalWorksScreen(),
+      ),
+      GoRoute(
         path: '/government',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const HowNepalWorksScreen(),
@@ -118,14 +126,29 @@ GoRouter router(RouterRef ref) {
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
+        path: '/photo-merger',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const CitizenshipMergerScreen(),
+      ),
+      GoRoute(
         path: '/tools/citizenship-merger',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const CitizenshipMergerScreen(),
       ),
       GoRoute(
+        path: '/photo-compress',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ImageCompressorScreen(),
+      ),
+      GoRoute(
         path: '/tools/image-compressor',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ImageCompressorScreen(),
+      ),
+      GoRoute(
+        path: '/date-converter',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const DateConverterScreen(),
       ),
       GoRoute(
         path: '/tools/date-converter',
@@ -145,9 +168,19 @@ GoRouter router(RouterRef ref) {
         builder: (context, state) => const NepaliCalendarScreen(),
       ),
       GoRoute(
+        path: '/forex',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ForexScreen(),
+      ),
+      GoRoute(
         path: '/tools/forex',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ForexScreen(),
+      ),
+      GoRoute(
+        path: '/gold-price',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const BullionScreen(),
       ),
       GoRoute(
         path: '/tools/bullion',

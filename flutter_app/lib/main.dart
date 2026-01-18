@@ -82,31 +82,27 @@ class NepalCivicApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsProvider);
 
-    return settingsAsync.when(
-      loading: () => MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(
-              color: _primaryColor,
-            ),
-          ),
-        ),
-      ),
-      error: (_, __) => _buildApp(ref, ThemeMode.system, 'ne'),
-      data: (settings) {
-        final themeMode = switch (settings.themeMode) {
-          'light' => ThemeMode.light,
-          'dark' => ThemeMode.dark,
-          _ => ThemeMode.system,
-        };
-        return _buildApp(ref, themeMode, settings.appLocale);
+    // Determine theme and locale from settings, with defaults during loading
+    final themeMode = settingsAsync.when(
+      loading: () => ThemeMode.system,
+      error: (_, __) => ThemeMode.system,
+      data: (settings) => switch (settings.themeMode) {
+        'light' => ThemeMode.light,
+        'dark' => ThemeMode.dark,
+        _ => ThemeMode.system,
       },
     );
-  }
 
-  Widget _buildApp(WidgetRef ref, ThemeMode themeMode, String localeCode) {
+    final localeCode = settingsAsync.when(
+      loading: () => 'ne',
+      error: (_, __) => 'ne',
+      data: (settings) => settings.appLocale,
+    );
+
     final appLocale = AppLocale.fromCode(localeCode);
 
+    // Always use MaterialApp.router to preserve URL on web
+    // This ensures direct URL navigation works (e.g., /calendar loads calendar)
     return MaterialApp.router(
       title: 'Nepal Civic',
       debugShowCheckedModeBanner: false,
