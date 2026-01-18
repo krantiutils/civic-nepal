@@ -27,7 +27,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter router(RouterRef ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/home',
+    debugLogDiagnostics: true,
     redirect: (context, state) {
       final uri = state.uri;
       // Handle deep links from widgets
