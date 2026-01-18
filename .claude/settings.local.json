@@ -42,7 +42,13 @@
       "WebFetch(domain:cdsc.com.np)",
       "WebFetch(domain:merolagani.com)",
       "WebFetch(domain:nitter.net)",
-      "Bash(./gradlew assembleDebug:*)"
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run watch:*)"
     ]
   }
 }

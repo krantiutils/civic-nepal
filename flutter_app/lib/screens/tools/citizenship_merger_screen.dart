@@ -267,93 +267,74 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
 
   Widget _buildMergedResultView(bool isWide) {
     final l10n = AppLocalizations.of(context);
-    return Column(
-      children: [
-        // Merged image preview
-        Expanded(
-          child: InteractiveViewer(
-            minScale: 0.5,
-            maxScale: 4.0,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.memory(
-                _mergedImage!,
-                fit: BoxFit.contain,
-              ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Merged image preview
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
+            child: Image.memory(
+              _mergedImage!,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                debugPrint('Image error: $error');
+                return Container(
+                  height: 200,
+                  color: Colors.grey[200],
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.broken_image, size: 48, color: Colors.grey[400]),
+                        const SizedBox(height: 8),
+                        Text('Failed to display image', style: TextStyle(color: Colors.grey[600])),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-        ),
+          const SizedBox(height: 16),
 
-        // File size info
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
+          // File size info
+          Text(
             l10n.fileSize(ImageService.getFileSizeString(_mergedImage!.length)),
             style: TextStyle(color: Colors.grey[600]),
           ),
-        ),
-        const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
-        // Action buttons
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                if (isWide) const Spacer(),
-                if (isWide)
-                  SizedBox(
-                    width: 200,
-                    child: OutlinedButton.icon(
-                      onPressed: _saveImage,
-                      icon: const Icon(Icons.save_alt),
-                      label: Text(l10n.save),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _saveImage,
-                      icon: const Icon(Icons.save_alt),
-                      label: Text(l10n.save),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _saveImage,
+                  icon: const Icon(Icons.save_alt),
+                  label: Text(l10n.save),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                const SizedBox(width: 16),
-                if (isWide)
-                  SizedBox(
-                    width: 200,
-                    child: FilledButton.icon(
-                      onPressed: _shareImage,
-                      icon: const Icon(Icons.share),
-                      label: Text(l10n.share),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: _shareImage,
-                      icon: const Icon(Icons.share),
-                      label: Text(l10n.share),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: _shareImage,
+                  icon: const Icon(Icons.share),
+                  label: Text(l10n.share),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                if (isWide) const Spacer(),
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
