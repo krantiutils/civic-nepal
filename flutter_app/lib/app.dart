@@ -20,24 +20,18 @@ import 'screens/government/how_nepal_works_screen.dart';
 
 part 'app.g.dart';
 
-// Keys for shell branches to maintain state
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorCalendarKey = GlobalKey<NavigatorState>(debugLabel: 'calendar');
-final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final _shellNavigatorIpoKey = GlobalKey<NavigatorState>(debugLabel: 'ipo');
-final _shellNavigatorRightsKey = GlobalKey<NavigatorState>(debugLabel: 'rights');
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
 GoRouter router(RouterRef ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    // Handle deep links from widgets (nepalcivic://tools/nepali-calendar)
+    initialLocation: '/home',
     redirect: (context, state) {
-      // Deep link: nepalcivic://tools/nepali-calendar parses as host=tools, path=/nepali-calendar
-      // We need to reconstruct the full path
       final uri = state.uri;
+      // Handle deep links from widgets
       if (uri.scheme == 'nepalcivic' && uri.host.isNotEmpty) {
-        // Reconstruct: /{host}{path}
         return '/${uri.host}${uri.path}';
       }
       // Redirect root to /home
@@ -47,51 +41,39 @@ GoRouter router(RouterRef ref) {
       return null;
     },
     routes: [
-      // Bottom navigation shell
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return ScaffoldWithNavBar(navigationShell: navigationShell);
+      // Shell route for bottom navigation
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return ScaffoldWithNavBar(
+            currentPath: state.uri.path,
+            child: child,
+          );
         },
-        branches: [
-          // Calendar tab
-          StatefulShellBranch(
-            navigatorKey: _shellNavigatorCalendarKey,
-            routes: [
-              GoRoute(
-                path: '/calendar',
-                builder: (context, state) => const NepaliCalendarScreen(),
-              ),
-            ],
+        routes: [
+          GoRoute(
+            path: '/home',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomeTab(),
+            ),
           ),
-          // Home tab
-          StatefulShellBranch(
-            navigatorKey: _shellNavigatorHomeKey,
-            routes: [
-              GoRoute(
-                path: '/home',
-                builder: (context, state) => const HomeTab(),
-              ),
-            ],
+          GoRoute(
+            path: '/calendar',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: NepaliCalendarScreen(),
+            ),
           ),
-          // IPO tab
-          StatefulShellBranch(
-            navigatorKey: _shellNavigatorIpoKey,
-            routes: [
-              GoRoute(
-                path: '/ipo',
-                builder: (context, state) => const IpoSharesScreen(),
-              ),
-            ],
+          GoRoute(
+            path: '/ipo',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: IpoSharesScreen(),
+            ),
           ),
-          // Rights/Constitution tab
-          StatefulShellBranch(
-            navigatorKey: _shellNavigatorRightsKey,
-            routes: [
-              GoRoute(
-                path: '/rights',
-                builder: (context, state) => const ConstitutionScreen(),
-              ),
-            ],
+          GoRoute(
+            path: '/rights',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ConstitutionScreen(),
+            ),
           ),
         ],
       ),
@@ -176,27 +158,37 @@ GoRouter router(RouterRef ref) {
   );
 }
 
-/// Scaffold with bottom navigation bar for shell routes
+/// Scaffold with bottom navigation bar
 class ScaffoldWithNavBar extends StatelessWidget {
   const ScaffoldWithNavBar({
-    required this.navigationShell,
+    required this.currentPath,
+    required this.child,
     super.key,
   });
 
-  final StatefulNavigationShell navigationShell;
+  final String currentPath;
+  final Widget child;
+
+  int _getSelectedIndex() {
+    if (currentPath.startsWith('/calendar')) return 0;
+    if (currentPath.startsWith('/home')) return 1;
+    if (currentPath.startsWith('/ipo')) return 2;
+    if (currentPath.startsWith('/rights')) return 3;
+    return 1; // default to home
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final selectedIndex = _getSelectedIndex();
+
     return Scaffold(
-      body: navigationShell,
+      body: child,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
+        selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
+          final paths = ['/calendar', '/home', '/ipo', '/rights'];
+          context.go(paths[index]);
         },
         destinations: [
           NavigationDestination(
