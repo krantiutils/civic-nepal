@@ -1,6 +1,10 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../models/ipo.dart';
 import 'nepali_date_service.dart';
+
+/// Method channel for foreground service control
+const _foregroundServiceChannel = MethodChannel('com.nepal.constitution.nepal_civic/foreground_service');
 
 /// Service for handling local notifications
 class NotificationService {
@@ -200,8 +204,19 @@ class NotificationService {
     await _notifications.cancelAll();
   }
 
-  /// Show sticky date notification with today's Nepali date
+  /// Show sticky date notification using foreground service (Android only)
+  /// This notification cannot be dismissed by the user
   static Future<void> showStickyDateNotification() async {
+    try {
+      await _foregroundServiceChannel.invokeMethod('startDateService');
+    } catch (e) {
+      // Fallback to regular notification if foreground service fails
+      await _showRegularStickyNotification();
+    }
+  }
+
+  /// Fallback method using regular notification (can be dismissed on Android 13+)
+  static Future<void> _showRegularStickyNotification() async {
     final today = NepaliDateService.today();
     final dayNameNp = NepaliDateService.getWeekdayNp(today);
     final dayNameEn = NepaliDateService.getWeekdayEn(today);
@@ -220,7 +235,7 @@ class NotificationService {
           importance: Importance.low,
           priority: Priority.low,
           icon: '@mipmap/ic_launcher',
-          ongoing: true, // Make it sticky
+          ongoing: true,
           autoCancel: false,
           showWhen: false,
           playSound: false,
@@ -235,14 +250,23 @@ class NotificationService {
     );
   }
 
-  /// Cancel sticky date notification
+  /// Cancel sticky date notification (stops foreground service)
   static Future<void> cancelStickyDateNotification() async {
-    await _notifications.cancel(_stickyDateNotificationId);
+    try {
+      await _foregroundServiceChannel.invokeMethod('stopDateService');
+    } catch (e) {
+      // Fallback to canceling regular notification
+      await _notifications.cancel(_stickyDateNotificationId);
+    }
   }
 
-  /// Update sticky date notification (call at midnight or app open)
-  static Future<void> updateStickyDateNotificationIfEnabled() async {
-    // This will be called from settings screen when toggled
-    await showStickyDateNotification();
+  /// Check if sticky date service is running
+  static Future<bool> isStickyDateServiceRunning() async {
+    try {
+      final result = await _foregroundServiceChannel.invokeMethod('isServiceRunning');
+      return result == true;
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'providers/settings_provider.dart';
 import 'services/notification_service.dart';
@@ -66,6 +67,9 @@ void main() async {
     await NotificationService.initialize();
     await BackgroundService.initialize();
     await BackgroundService.registerIpoCheckTask();
+
+    // Restore sticky notification if it was enabled
+    await _restoreStickyNotificationIfEnabled();
   }
 
   runApp(
@@ -75,11 +79,51 @@ void main() async {
   );
 }
 
-class NepalCivicApp extends ConsumerWidget {
+/// Restores the sticky date notification if it was previously enabled
+/// This ensures the notification persists after app restart or device reboot
+Future<void> _restoreStickyNotificationIfEnabled() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final isEnabled = prefs.getBool('sticky_date_notification') ?? false;
+    if (isEnabled) {
+      await NotificationService.showStickyDateNotification();
+    }
+  } catch (e) {
+    // Silently fail - notification restoration is not critical
+  }
+}
+
+class NepalCivicApp extends ConsumerStatefulWidget {
   const NepalCivicApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NepalCivicApp> createState() => _NepalCivicAppState();
+}
+
+class _NepalCivicAppState extends ConsumerState<NepalCivicApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Re-show sticky notification when app comes to foreground
+    if (state == AppLifecycleState.resumed && !kIsWeb) {
+      _restoreStickyNotificationIfEnabled();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settingsAsync = ref.watch(settingsProvider);
 
     // Determine theme and locale from settings, with defaults during loading

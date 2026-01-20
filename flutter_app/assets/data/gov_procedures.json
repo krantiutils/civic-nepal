@@ -1,0 +1,852 @@
+{
+  "version": "2026-01",
+  "disclaimer": {
+    "en": "This is general guidance only. Requirements may change. Always verify with the official government office.",
+    "np": "यो सामान्य मार्गदर्शन मात्र हो। आवश्यकताहरू परिवर्तन हुन सक्छन्। सधैं सरकारी कार्यालयमा पुष्टि गर्नुहोस्।"
+  },
+  "procedures": [
+    {
+      "id": "driving-license",
+      "icon": "directions_car",
+      "title": {
+        "en": "Driving License",
+        "np": "सवारी चालक अनुमतिपत्र"
+      },
+      "summary": {
+        "en": "Get your license to drive motorcycles, cars, or heavy vehicles",
+        "np": "मोटरसाइकल, कार, वा भारी सवारी चलाउन अनुमतिपत्र प्राप्त गर्नुहोस्"
+      },
+      "eligibility": {
+        "en": [
+          "Must be a Nepali citizen",
+          "18+ years for motorcycle/car",
+          "21+ years for public/heavy vehicles",
+          "Medically fit to drive",
+          "Eyesight at least 0.5 in both eyes"
+        ],
+        "np": [
+          "नेपाली नागरिक हुनुपर्छ",
+          "मोटरसाइकल/कारको लागि १८+ वर्ष",
+          "सार्वजनिक/भारी सवारीको लागि २१+ वर्ष",
+          "चलाउन चिकित्सकीय रूपमा फिट",
+          "दुवै आँखामा कम्तिमा ०.५ दृष्टि"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original + photocopy (front & back)", "np": "सक्कल + फोटोकपी (अगाडि र पछाडि)" },
+          "required": true
+        },
+        {
+          "name": { "en": "Medical Form", "np": "चिकित्सा फारम" },
+          "description": { "en": "Form available at DoTM office. Color blindness & eye power test done on-site.", "np": "फारम DoTM कार्यालयमा पाइन्छ। रंग अन्धता र आँखाको पावर जाँच त्यहीं हुन्छ।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Online Application Slip", "np": "अनलाइन आवेदन स्लिप" },
+          "description": { "en": "Print from applydl.dotm.gov.np after registration", "np": "दर्ता पछि applydl.dotm.gov.np बाट प्रिन्ट गर्नुहोस्" },
+          "required": true
+        },
+        {
+          "name": { "en": "Passport Photos", "np": "पासपोर्ट साइज फोटो" },
+          "description": { "en": "Photo taken on-site at DoTM during biometric capture", "np": "बायोमेट्रिक क्यापचरको समयमा DoTM मा फोटो खिचिन्छ" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Online Registration", "np": "अनलाइन दर्ता" },
+          "description": { "en": "Visit applydl.dotm.gov.np, create account with your mobile number, select vehicle category (A=Bike, B=Car, K=Scooter)", "np": "applydl.dotm.gov.np मा जानुहोस्, मोबाइल नम्बरले खाता बनाउनुहोस्, सवारी वर्ग छान्नुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Schedule Appointment", "np": "भेट्ने समय तोक्नुहोस्" },
+          "description": { "en": "Select your province and nearest DoTM office. Book early morning when new slots open.", "np": "आफ्नो प्रदेश र नजिकको DoTM कार्यालय छान्नुहोस्। बिहान सबेरै बुक गर्नुहोस्।" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Visit DoTM Office", "np": "DoTM कार्यालय जानुहोस्" },
+          "description": { "en": "Document verification, biometric capture (fingerprint, photo, signature), medical/eye test", "np": "कागजात प्रमाणीकरण, बायोमेट्रिक (औंठाछाप, फोटो, हस्ताक्षर), चिकित्सा/आँखा जाँच" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Written Exam", "np": "लिखित परीक्षा" },
+          "description": { "en": "20 MCQ questions, need 10 correct (50%) to pass, 30 minutes, available in Nepali/English", "np": "२० MCQ प्रश्न, पास हुन १० सही चाहिन्छ (५०%), ३० मिनेट, नेपाली/अंग्रेजीमा" }
+        },
+        {
+          "step": 5,
+          "title": { "en": "Practical Trial", "np": "प्रयोगात्मक ट्रायल" },
+          "description": { "en": "Scheduled within 3 weeks of passing written exam. Demonstrate driving skills on course.", "np": "लिखित परीक्षा पास भएको ३ हप्ताभित्र। ट्र्याकमा ड्राइभिङ सीप देखाउनुहोस्।" }
+        },
+        {
+          "step": 6,
+          "title": { "en": "Collect License", "np": "लाइसेन्स लिनुहोस्" },
+          "description": { "en": "Pay license fee and collect your smart driving license card", "np": "लाइसेन्स शुल्क तिर्नुहोस् र स्मार्ट ड्राइभिङ लाइसेन्स कार्ड लिनुहोस्" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Trial Fee (per attempt)", "np": "ट्रायल शुल्क (प्रति प्रयास)" }, "amount": "Rs. 500" },
+        { "item": { "en": "Motorcycle/Scooter License", "np": "मोटरसाइकल/स्कुटर लाइसेन्स" }, "amount": "Rs. 1,500" },
+        { "item": { "en": "Car/Jeep License", "np": "कार/जिप लाइसेन्स" }, "amount": "Rs. 4,000" }
+      ],
+      "tips": [
+        { "en": "Slots fill up fast! Log in at 10 PM when new dates are released.", "np": "स्लटहरू छिट्टै भरिन्छन्! नयाँ मितिहरू जारी हुँदा राति १० बजे लग इन गर्नुहोस्।" },
+        { "en": "If you fail written exam, you can retake after 10 days.", "np": "लिखित परीक्षामा फेल भएमा १० दिनपछि पुन: दिन सकिन्छ।" },
+        { "en": "License is valid for 10 years (under 60) or 5 years (60+).", "np": "लाइसेन्स १० वर्ष (६० मुनि) वा ५ वर्ष (६०+) मान्य छ।" },
+        { "en": "Practice the 8-figure and hill start before the trial.", "np": "ट्रायल अघि ८-फिगर र हिल स्टार्ट अभ्यास गर्नुहोस्।" }
+      ],
+      "officialUrl": "https://applydl.dotm.gov.np",
+      "processingTime": { "en": "2-4 weeks total", "np": "जम्मा २-४ हप्ता" }
+    },
+    {
+      "id": "national-id",
+      "icon": "badge",
+      "title": {
+        "en": "National ID Card",
+        "np": "राष्ट्रिय परिचयपत्र"
+      },
+      "summary": {
+        "en": "Digital identity card with biometric chip for all citizens 16+",
+        "np": "१६+ का सबै नागरिकको लागि बायोमेट्रिक चिप सहितको डिजिटल परिचयपत्र"
+      },
+      "eligibility": {
+        "en": [
+          "Nepali citizen",
+          "16 years or older",
+          "Must have citizenship certificate"
+        ],
+        "np": [
+          "नेपाली नागरिक",
+          "१६ वर्ष वा माथि",
+          "नागरिकता प्रमाणपत्र हुनुपर्छ"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original required. Photo, fingerprint & iris scan done on-site.", "np": "सक्कल चाहिन्छ। फोटो, औंठाछाप र आँखाको स्क्यान त्यहीं हुन्छ।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Marriage Certificate", "np": "विवाह प्रमाणपत्र" },
+          "description": { "en": "Only if married and spouse info not in citizenship", "np": "विवाहित भए र पति/पत्नी नागरिकतामा नभएमा मात्र" },
+          "required": false
+        },
+        {
+          "name": { "en": "Migration Certificate", "np": "बसाइसराइ प्रमाणपत्र" },
+          "description": { "en": "Get from your previous ward if you moved districts", "np": "जिल्ला सरेको भए पुरानो वडाबाट लिनुहोस्" },
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Online Pre-enrollment", "np": "अनलाइन पूर्व-दर्ता" },
+          "description": { "en": "Visit donidcr.gov.np, login with mobile OTP, fill personal and family details", "np": "donidcr.gov.np मा जानुहोस्, मोबाइल OTP ले लगइन गर्नुहोस्, व्यक्तिगत र पारिवारिक विवरण भर्नुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Select Appointment", "np": "भेट्ने समय छान्नुहोस्" },
+          "description": { "en": "Choose date and location for biometric verification", "np": "बायोमेट्रिक प्रमाणीकरणको लागि मिति र स्थान छान्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Biometric Verification", "np": "बायोमेट्रिक प्रमाणीकरण" },
+          "description": { "en": "Visit DAO or designated center with original documents for fingerprint, photo, iris scan", "np": "औंठाछाप, फोटो, आँखाको स्क्यानको लागि सक्कल कागजात लिएर DAO वा तोकिएको केन्द्रमा जानुहोस्" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Collect Card", "np": "कार्ड लिनुहोस्" },
+          "description": { "en": "You'll receive SMS when ready. Collect from same center.", "np": "तयार हुँदा SMS आउँछ। उही केन्द्रबाट लिनुहोस्।" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "New Card", "np": "नयाँ कार्ड" }, "amount": "Rs. 200" },
+        { "item": { "en": "Replacement Card", "np": "प्रतिस्थापन कार्ड" }, "amount": "Rs. 100" }
+      ],
+      "tips": [
+        { "en": "Kathmandu permanent residents: Go to Rastriya Sabha Griha", "np": "काठमाडौं स्थायी बासिन्दा: राष्ट्रिय सभा गृह जानुहोस्" },
+        { "en": "Non-permanent Kathmandu residents: Go to Narayanhiti Museum", "np": "काठमाडौं अस्थायी बासिन्दा: नारायणहिटी संग्रहालय जानुहोस्" },
+        { "en": "Check status: SMS 'S <16-digit number>' to 30001", "np": "स्थिति जाँच: 'S <१६ अंकको नम्बर>' 30001 मा SMS गर्नुहोस्" },
+        { "en": "NID is now required for passport application", "np": "पासपोर्ट आवेदनको लागि अब NID आवश्यक छ" }
+      ],
+      "officialUrl": "https://donidcr.gov.np",
+      "processingTime": { "en": "2-4 weeks", "np": "२-४ हप्ता" }
+    },
+    {
+      "id": "citizenship",
+      "icon": "account_box",
+      "title": {
+        "en": "Citizenship Certificate",
+        "np": "नागरिकता प्रमाणपत्र"
+      },
+      "summary": {
+        "en": "Official proof of Nepali citizenship - required for all government services",
+        "np": "नेपाली नागरिकताको आधिकारिक प्रमाण - सबै सरकारी सेवाको लागि आवश्यक"
+      },
+      "eligibility": {
+        "en": [
+          "16 years or older",
+          "At least one parent is Nepali citizen (by descent)",
+          "Born in Nepal before April 13, 1990",
+          "Or meet naturalization requirements (15 years residence)"
+        ],
+        "np": [
+          "१६ वर्ष वा माथि",
+          "कम्तिमा एक अभिभावक नेपाली नागरिक (वंशजको आधारमा)",
+          "अप्रिल १३, १९९० अघि नेपालमा जन्मिएको",
+          "वा प्राकृतिक नागरिकता आवश्यकता पूरा (१५ वर्ष बसोबास)"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Parent's Citizenship", "np": "अभिभावकको नागरिकता" },
+          "description": { "en": "Father's or mother's original citizenship. They must accompany you.", "np": "बाबु वा आमाको सक्कल नागरिकता। तिनीहरू साथमा जानुपर्छ।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Birth Certificate", "np": "जन्म प्रमाणपत्र" },
+          "description": { "en": "Get from hospital/VDC where born. Or lineage cert from ward.", "np": "जन्मिएको अस्पताल/वडाबाट लिनुहोस्। वा वंशावली प्रमाणपत्र।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Ward Recommendation", "np": "वडा सिफारिस" },
+          "description": { "en": "Get from your local ward office. Free, same day.", "np": "स्थानीय वडा कार्यालयबाट लिनुहोस्। निःशुल्क, उही दिन।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Land/Tax Receipt", "np": "जग्गा/कर रसिद" },
+          "description": { "en": "Lalpurja or house tax receipt in family name", "np": "परिवारको नाममा लालपुर्जा वा घर कर रसिद" },
+          "required": true
+        },
+        {
+          "name": { "en": "3 Witnesses", "np": "३ जना साक्षी" },
+          "description": { "en": "Neighbors with citizenship from same ward. Must sign at DAO.", "np": "उही वडाको नागरिकता भएका छिमेकी। DAO मा हस्ताक्षर गर्नुपर्छ।" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Get Ward Recommendation", "np": "वडा सिफारिस लिनुहोस्" },
+          "description": { "en": "Visit your local ward office with parent's citizenship and birth certificate", "np": "अभिभावकको नागरिकता र जन्म प्रमाणपत्र लिएर आफ्नो स्थानीय वडा कार्यालय जानुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Visit DAO", "np": "DAO जानुहोस्" },
+          "description": { "en": "Go to District Administration Office with all documents and witnesses", "np": "सबै कागजात र साक्षीहरू लिएर जिल्ला प्रशासन कार्यालय जानुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Document Verification", "np": "कागजात प्रमाणीकरण" },
+          "description": { "en": "Officials verify documents, witnesses provide signatures", "np": "अधिकारीहरूले कागजात प्रमाणित गर्छन्, साक्षीहरूले हस्ताक्षर गर्छन्" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Biometric & Photo", "np": "बायोमेट्रिक र फोटो" },
+          "description": { "en": "Fingerprint and photo taken for the certificate", "np": "प्रमाणपत्रको लागि औंठाछाप र फोटो खिचिन्छ" }
+        },
+        {
+          "step": 5,
+          "title": { "en": "Collect Certificate", "np": "प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Usually same day if all documents are complete", "np": "सबै कागजात पूरा भएमा सामान्यतया उही दिन" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" }, "amount": "FREE" }
+      ],
+      "tips": [
+        { "en": "Go early! Processing is usually same-day if complete.", "np": "चाँडो जानुहोस्! पूरा भएमा सामान्यतया उही दिन प्रशोधन हुन्छ।" },
+        { "en": "Nepal does NOT allow dual citizenship.", "np": "नेपालले दोहोरो नागरिकता अनुमति दिँदैन।" },
+        { "en": "Keep multiple photocopies - you'll need them for everything.", "np": "धेरै फोटोकपी राख्नुहोस् - सबै कुराको लागि चाहिन्छ।" },
+        { "en": "If parents are deceased, bring death certificates.", "np": "अभिभावक बितेको भए मृत्यु प्रमाणपत्र ल्याउनुहोस्।" }
+      ],
+      "officialUrl": "https://moha.gov.np",
+      "processingTime": { "en": "Same day (1-2 hours)", "np": "उही दिन (१-२ घण्टा)" }
+    },
+    {
+      "id": "pan-card",
+      "icon": "credit_card",
+      "title": {
+        "en": "PAN Card",
+        "np": "प्यान कार्ड"
+      },
+      "summary": {
+        "en": "Permanent Account Number for tax purposes - required for banking and business",
+        "np": "कर प्रयोजनको लागि स्थायी खाता नम्बर - बैंकिङ र व्यवसायको लागि आवश्यक"
+      },
+      "eligibility": {
+        "en": [
+          "Nepali citizen OR",
+          "Foreigner with valid visa and work permit",
+          "Anyone doing taxable transactions in Nepal"
+        ],
+        "np": [
+          "नेपाली नागरिक वा",
+          "वैध भिसा र कार्य अनुमति भएको विदेशी",
+          "नेपालमा कर योग्य कारोबार गर्ने जोसुकै"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original + photocopy (both sides)", "np": "सक्कल + फोटोकपी (दुवै पट्टि)" },
+          "required": true
+        },
+        {
+          "name": { "en": "Passport Photo", "np": "पासपोर्ट फोटो" },
+          "description": { "en": "Photo booths available outside IRD office", "np": "IRD कार्यालय बाहिर फोटो बुथ पाइन्छ" },
+          "required": true
+        },
+        {
+          "name": { "en": "Passport & Visa", "np": "पासपोर्ट र भिसा" },
+          "description": { "en": "For foreigners only, with valid work permit", "np": "विदेशीहरूको लागि मात्र, वैध कार्य अनुमति सहित" },
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Online Registration", "np": "अनलाइन दर्ता" },
+          "description": { "en": "Visit ird.gov.np, select 'Registration', choose 'Personal PAN', fill details", "np": "ird.gov.np मा जानुहोस्, 'दर्ता' छान्नुहोस्, 'व्यक्तिगत प्यान' छान्नुहोस्, विवरण भर्नुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Print Application", "np": "आवेदन प्रिन्ट गर्नुहोस्" },
+          "description": { "en": "Print the filled application form", "np": "भरिएको आवेदन फारम प्रिन्ट गर्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Visit IRD Office", "np": "IRD कार्यालय जानुहोस्" },
+          "description": { "en": "Submit printed form with documents at nearest Inland Revenue Office", "np": "नजिकको आन्तरिक राजस्व कार्यालयमा कागजात सहित प्रिन्ट गरिएको फारम पेश गर्नुहोस्" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Get PAN Number", "np": "प्यान नम्बर प्राप्त गर्नुहोस्" },
+          "description": { "en": "PAN is issued same day after verification", "np": "प्रमाणीकरण पछि उही दिन प्यान जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "PAN Registration", "np": "प्यान दर्ता" }, "amount": "FREE" }
+      ],
+      "tips": [
+        { "en": "You can also register via Nagarik App!", "np": "तपाईं नागरिक एपबाट पनि दर्ता गर्न सक्नुहुन्छ!" },
+        { "en": "PAN is mandatory for bank accounts over Rs. 1 lakh.", "np": "रु. १ लाख भन्दा माथिको बैंक खाताको लागि प्यान अनिवार्य छ।" },
+        { "en": "Keep your PAN number safe - you'll need it for taxes.", "np": "आफ्नो प्यान नम्बर सुरक्षित राख्नुहोस् - करको लागि चाहिन्छ।" },
+        { "en": "Business PAN requires company registration documents.", "np": "व्यवसाय प्यानको लागि कम्पनी दर्ता कागजात चाहिन्छ।" }
+      ],
+      "officialUrl": "https://ird.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "passport",
+      "icon": "flight",
+      "title": {
+        "en": "Passport",
+        "np": "राहदानी"
+      },
+      "summary": {
+        "en": "Machine Readable Passport (MRP) or e-Passport for international travel",
+        "np": "अन्तर्राष्ट्रिय यात्राको लागि मेसिन रिडेबल पासपोर्ट (MRP) वा ई-पासपोर्ट"
+      },
+      "eligibility": {
+        "en": [
+          "Nepali citizen of any age",
+          "Must have citizenship (for adults)",
+          "Must have National ID Card (NID)",
+          "Minors need parent's documents"
+        ],
+        "np": [
+          "कुनै पनि उमेरको नेपाली नागरिक",
+          "नागरिकता हुनुपर्छ (वयस्कको लागि)",
+          "राष्ट्रिय परिचयपत्र (NID) हुनुपर्छ",
+          "नाबालकलाई अभिभावकको कागजात चाहिन्छ"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original (both sides). Keep photocopy too.", "np": "सक्कल (दुवै पट्टि)। फोटोकपी पनि राख्नुहोस्।" },
+          "required": true
+        },
+        {
+          "name": { "en": "National ID Card", "np": "राष्ट्रिय परिचयपत्र" },
+          "description": { "en": "Get NID first if you don't have it!", "np": "नभएमा पहिले NID बनाउनुहोस्!" },
+          "required": true
+        },
+        {
+          "name": { "en": "Passport Photos", "np": "पासपोर्ट फोटो" },
+          "description": { "en": "Photo taken on-site. Studios available nearby.", "np": "फोटो त्यहीं खिचिन्छ। स्टुडियो नजिकै पाइन्छ।" },
+          "required": true
+        },
+        {
+          "name": { "en": "Old Passport", "np": "पुरानो पासपोर्ट" },
+          "description": { "en": "For renewal only. Bring even if expired.", "np": "नविकरणको लागि मात्र। म्याद सकिए पनि ल्याउनुहोस्।" },
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Online Pre-enrollment", "np": "अनलाइन पूर्व-दर्ता" },
+          "description": { "en": "Visit nepalpassport.gov.np, fill form, select application type (new/renewal)", "np": "nepalpassport.gov.np मा जानुहोस्, फारम भर्नुहोस्, आवेदन प्रकार छान्नुहोस् (नयाँ/नविकरण)" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Pay Fee Online", "np": "अनलाइन शुल्क तिर्नुहोस्" },
+          "description": { "en": "Pay passport fee via eSewa, Khalti, or bank", "np": "इसेवा, खल्ती, वा बैंकबाट पासपोर्ट शुल्क तिर्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Biometric Appointment", "np": "बायोमेट्रिक भेट" },
+          "description": { "en": "Visit passport office with original documents for photo, fingerprint, signature", "np": "फोटो, औंठाछाप, हस्ताक्षरको लागि सक्कल कागजात लिएर पासपोर्ट कार्यालय जानुहोस्" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Collect Passport", "np": "पासपोर्ट लिनुहोस्" },
+          "description": { "en": "Collect from same office. Regular: 15-21 days, Fast track: 2-3 days", "np": "उही कार्यालयबाट लिनुहोस्। सामान्य: १५-२१ दिन, द्रुत: २-३ दिन" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "5-year passport", "np": "५ वर्षे पासपोर्ट" }, "amount": "Rs. 5,000" },
+        { "item": { "en": "10-year passport", "np": "१० वर्षे पासपोर्ट" }, "amount": "Rs. 10,000" },
+        { "item": { "en": "Fast track (additional)", "np": "द्रुत (थप)" }, "amount": "+Rs. 5,000" }
+      ],
+      "tips": [
+        { "en": "Get your NID first! It's now mandatory for passport.", "np": "पहिले NID लिनुहोस्! पासपोर्टको लागि अब अनिवार्य छ।" },
+        { "en": "Photo must be recent - taken within 6 months.", "np": "फोटो हालसालैको हुनुपर्छ - ६ महिनाभित्र खिचेको।" },
+        { "en": "Apply 2-3 months before travel for regular processing.", "np": "सामान्य प्रशोधनको लागि यात्रा भन्दा २-३ महिना अघि आवेदन दिनुहोस्।" },
+        { "en": "Minors under 16 get 5-year passport only.", "np": "१६ वर्ष मुनिका नाबालकले ५ वर्षे पासपोर्ट मात्र पाउँछन्।" }
+      ],
+      "officialUrl": "https://nepalpassport.gov.np",
+      "processingTime": { "en": "2-3 days (fast) to 15-21 days (regular)", "np": "२-३ दिन (द्रुत) देखि १५-२१ दिन (सामान्य)" }
+    },
+    {
+      "id": "birth-registration",
+      "icon": "child_care",
+      "title": {
+        "en": "Birth Registration",
+        "np": "जन्मदर्ता"
+      },
+      "summary": {
+        "en": "Register a child's birth at ward office - required for citizenship later",
+        "np": "वडा कार्यालयमा बच्चाको जन्म दर्ता - पछि नागरिकताको लागि आवश्यक"
+      },
+      "eligibility": {
+        "en": [
+          "Any child born in Nepal",
+          "Must register within 35 days (free)",
+          "After 35 days: Rs. 200 late fee"
+        ],
+        "np": [
+          "नेपालमा जन्मेको कुनै पनि बच्चा",
+          "३५ दिनभित्र दर्ता गर्नुपर्छ (निःशुल्क)",
+          "३५ दिनपछि: रु २०० जरिवाना"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Father's Citizenship", "np": "बुबाको नागरिकता" },
+          "description": { "en": "Original citizenship certificate", "np": "सक्कल नागरिकता प्रमाणपत्र" },
+          "required": true
+        },
+        {
+          "name": { "en": "Mother's Citizenship", "np": "आमाको नागरिकता" },
+          "description": { "en": "Original citizenship certificate", "np": "सक्कल नागरिकता प्रमाणपत्र" },
+          "required": true
+        },
+        {
+          "name": { "en": "Hospital Documents", "np": "अस्पताल कागजात" },
+          "description": { "en": "Birth record from hospital if born there", "np": "अस्पतालमा जन्मिएको भए जन्म रेकर्ड" },
+          "required": false
+        },
+        {
+          "name": { "en": "Informant's Citizenship", "np": "सूचकको नागरिकता" },
+          "description": { "en": "If not parents, informant must be adult family member", "np": "अभिभावक नभए, सूचक परिवारको वयस्क सदस्य हुनुपर्छ" },
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Go to Ward Office", "np": "वडा कार्यालय जानुहोस्" },
+          "description": { "en": "Visit your local ward office with all documents", "np": "सबै कागजात लिएर आफ्नो स्थानीय वडा कार्यालय जानुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Fill Birth Form", "np": "जन्म फारम भर्नुहोस्" },
+          "description": { "en": "Form available at ward office. Fill child's details, parents' info", "np": "फारम वडा कार्यालयमा पाइन्छ। बच्चाको विवरण, अभिभावकको जानकारी भर्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Get Birth Certificate", "np": "जन्म प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Certificate issued same day after verification", "np": "प्रमाणीकरण पछि उही दिन प्रमाणपत्र जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Within 35 days", "np": "३५ दिनभित्र" }, "amount": "FREE" },
+        { "item": { "en": "After 35 days (late fee)", "np": "३५ दिनपछि (जरिवाना)" }, "amount": "Rs. 200" }
+      ],
+      "tips": [
+        { "en": "Register within 35 days to avoid late fee!", "np": "जरिवाना बच्न ३५ दिनभित्र दर्ता गर्नुहोस्!" },
+        { "en": "Birth certificate is required for school admission.", "np": "स्कुल भर्नाको लागि जन्म प्रमाणपत्र आवश्यक छ।" },
+        { "en": "Keep multiple photocopies - you'll need them.", "np": "धेरै फोटोकपी राख्नुहोस् - तपाईंलाई चाहिन्छ।" }
+      ],
+      "officialUrl": "https://donidcr.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "marriage-registration",
+      "icon": "favorite",
+      "title": {
+        "en": "Marriage Registration",
+        "np": "विवाह दर्ता"
+      },
+      "summary": {
+        "en": "Legal registration of marriage at ward office",
+        "np": "वडा कार्यालयमा विवाहको कानुनी दर्ता"
+      },
+      "eligibility": {
+        "en": [
+          "Both must be 20+ years old",
+          "Both must consent to marriage",
+          "Not already married (polygamy illegal)",
+          "Must register within 35 days (free)"
+        ],
+        "np": [
+          "दुवै २०+ वर्षको हुनुपर्छ",
+          "दुवैको विवाहमा सहमति हुनुपर्छ",
+          "पहिले नै विवाहित नभएको (बहुविवाह गैरकानुनी)",
+          "३५ दिनभित्र दर्ता गर्नुपर्छ (निःशुल्क)"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Both Spouses' Citizenship", "np": "पति र पत्नी दुवैको नागरिकता" },
+          "description": { "en": "Original citizenship of both husband and wife", "np": "पति र पत्नी दुवैको सक्कल नागरिकता" },
+          "required": true
+        },
+        {
+          "name": { "en": "Parents' Citizenship (both sides)", "np": "दुवैका अभिभावकको नागरिकता" },
+          "description": { "en": "Photocopy of parents' citizenship from both families", "np": "दुवै परिवारका अभिभावकको नागरिकता फोटोकपी" },
+          "required": true
+        },
+        {
+          "name": { "en": "Both Spouses Present", "np": "पति पत्नी दुवै उपस्थित" },
+          "description": { "en": "Both must appear in person at ward office", "np": "दुवै वडा कार्यालयमा उपस्थित हुनुपर्छ" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Visit Ward Office Together", "np": "वडा कार्यालय सँगै जानुहोस्" },
+          "description": { "en": "Both husband and wife must be present with documents", "np": "पति र पत्नी दुवै कागजात सहित उपस्थित हुनुपर्छ" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Fill Marriage Form", "np": "विवाह फारम भर्नुहोस्" },
+          "description": { "en": "Both sign the marriage registration form", "np": "दुवैले विवाह दर्ता फारममा हस्ताक्षर गर्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Get Marriage Certificate", "np": "विवाह प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Certificate issued same day", "np": "प्रमाणपत्र उही दिन जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Within 35 days", "np": "३५ दिनभित्र" }, "amount": "FREE" },
+        { "item": { "en": "After 35 days (late fee)", "np": "३५ दिनपछि (जरिवाना)" }, "amount": "Rs. 200" }
+      ],
+      "tips": [
+        { "en": "Marriage certificate is needed to add spouse to citizenship.", "np": "नागरिकतामा पति/पत्नी थप्न विवाह प्रमाणपत्र चाहिन्छ।" },
+        { "en": "Required for spouse visa applications.", "np": "पति/पत्नी भिसा आवेदनको लागि आवश्यक।" },
+        { "en": "Both must physically appear - no proxy allowed.", "np": "दुवै उपस्थित हुनुपर्छ - प्रोक्सी मान्य छैन।" }
+      ],
+      "officialUrl": "https://donidcr.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "death-registration",
+      "icon": "report",
+      "title": {
+        "en": "Death Registration",
+        "np": "मृत्यु दर्ता"
+      },
+      "summary": {
+        "en": "Register death at ward office - required for inheritance and legal matters",
+        "np": "वडा कार्यालयमा मृत्यु दर्ता - सम्पत्ति र कानुनी कामको लागि आवश्यक"
+      },
+      "eligibility": {
+        "en": [
+          "Any death occurring in ward area",
+          "Must register within 35 days (free)",
+          "Family member or ward member can report"
+        ],
+        "np": [
+          "वडा क्षेत्रमा भएको कुनै पनि मृत्यु",
+          "३५ दिनभित्र दर्ता गर्नुपर्छ (निःशुल्क)",
+          "परिवारको सदस्य वा वडा सदस्यले रिपोर्ट गर्न सक्छ"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Deceased's Citizenship", "np": "मृतकको नागरिकता" },
+          "description": { "en": "Original or photocopy of deceased's citizenship", "np": "मृतकको नागरिकता सक्कल वा फोटोकपी" },
+          "required": true
+        },
+        {
+          "name": { "en": "Informant's Citizenship", "np": "सूचकको नागरिकता" },
+          "description": { "en": "Citizenship of person reporting the death", "np": "मृत्यु रिपोर्ट गर्ने व्यक्तिको नागरिकता" },
+          "required": true
+        },
+        {
+          "name": { "en": "Hospital Death Certificate", "np": "अस्पताल मृत्यु प्रमाणपत्र" },
+          "description": { "en": "If death occurred at hospital", "np": "अस्पतालमा मृत्यु भएको भए" },
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Visit Ward Office", "np": "वडा कार्यालय जानुहोस्" },
+          "description": { "en": "Family member goes to ward office with documents", "np": "परिवारको सदस्य कागजात लिएर वडा कार्यालय जानुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Fill Death Form", "np": "मृत्यु फारम भर्नुहोस्" },
+          "description": { "en": "Fill details: date, cause of death, family info", "np": "विवरण भर्नुहोस्: मिति, मृत्युको कारण, परिवार जानकारी" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Get Death Certificate", "np": "मृत्यु प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Certificate issued same day", "np": "प्रमाणपत्र उही दिन जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Within 35 days", "np": "३५ दिनभित्र" }, "amount": "FREE" },
+        { "item": { "en": "After 35 days (late fee)", "np": "३५ दिनपछि (जरिवाना)" }, "amount": "Rs. 200" }
+      ],
+      "tips": [
+        { "en": "Death certificate required for inheritance claims.", "np": "सम्पत्ति दाबीको लागि मृत्यु प्रमाणपत्र आवश्यक।" },
+        { "en": "Needed to close bank accounts of deceased.", "np": "मृतकको बैंक खाता बन्द गर्न आवश्यक।" },
+        { "en": "Required for widow/widower social security.", "np": "विधवा/विधुर सामाजिक सुरक्षाको लागि आवश्यक।" }
+      ],
+      "officialUrl": "https://donidcr.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "migration-registration",
+      "icon": "transfer_within_a_station",
+      "title": {
+        "en": "Migration Registration",
+        "np": "बसाईसराई दर्ता"
+      },
+      "summary": {
+        "en": "Register when moving to a new ward/district",
+        "np": "नयाँ वडा/जिल्लामा सर्दा दर्ता गर्नुहोस्"
+      },
+      "eligibility": {
+        "en": [
+          "Anyone moving to new ward or district",
+          "Must register within 35 days (free)",
+          "Complete other registrations first (birth, etc.)"
+        ],
+        "np": [
+          "नयाँ वडा वा जिल्लामा सर्ने जोसुकै",
+          "३५ दिनभित्र दर्ता गर्नुपर्छ (निःशुल्क)",
+          "पहिले अन्य दर्ता पूरा गर्नुहोस् (जन्म, आदि)"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original citizenship", "np": "सक्कल नागरिकता" },
+          "required": true
+        },
+        {
+          "name": { "en": "Proof of New Residence", "np": "नयाँ बसोबासको प्रमाण" },
+          "description": { "en": "Land ownership (Lalpurja) or rent agreement", "np": "जग्गाधनी (लालपुर्जा) वा भाडा सम्झौता" },
+          "required": true
+        },
+        {
+          "name": { "en": "Migration Certificate from Old Ward", "np": "पुरानो वडाबाट बसाईसराई प्रमाणपत्र" },
+          "description": { "en": "Get this from your previous ward before moving", "np": "सर्नु अघि पुरानो वडाबाट यो लिनुहोस्" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Get Certificate from Old Ward", "np": "पुरानो वडाबाट प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Before leaving, get migration certificate from old ward", "np": "छोड्नु अघि, पुरानो वडाबाट बसाईसराई प्रमाणपत्र लिनुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Visit New Ward Office", "np": "नयाँ वडा कार्यालय जानुहोस्" },
+          "description": { "en": "Go to new ward with all documents", "np": "सबै कागजात लिएर नयाँ वडामा जानुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Register Migration", "np": "बसाईसराई दर्ता गर्नुहोस्" },
+          "description": { "en": "Fill form and get registered in new ward", "np": "फारम भर्नुहोस् र नयाँ वडामा दर्ता हुनुहोस्" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Within 35 days", "np": "३५ दिनभित्र" }, "amount": "FREE" },
+        { "item": { "en": "After 35 days (late fee)", "np": "३५ दिनपछि (जरिवाना)" }, "amount": "Rs. 200" }
+      ],
+      "tips": [
+        { "en": "Register births, deaths, marriages BEFORE migration.", "np": "बसाईसराई अघि जन्म, मृत्यु, विवाह दर्ता गर्नुहोस्।" },
+        { "en": "Migration cert needed for citizenship transfer.", "np": "नागरिकता ठेगाना परिवर्तनको लागि बसाईसराई प्रमाणपत्र चाहिन्छ।" },
+        { "en": "Must be done for voter registration in new area.", "np": "नयाँ क्षेत्रमा मतदाता दर्ताको लागि गर्नुपर्छ।" }
+      ],
+      "officialUrl": "https://donidcr.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "business-registration",
+      "icon": "store",
+      "title": {
+        "en": "Business Registration",
+        "np": "व्यवसाय दर्ता"
+      },
+      "summary": {
+        "en": "Register your business at municipality office",
+        "np": "नगरपालिका कार्यालयमा आफ्नो व्यवसाय दर्ता गर्नुहोस्"
+      },
+      "eligibility": {
+        "en": [
+          "Nepali citizen or registered company",
+          "Valid business premises",
+          "For small/cottage industries at local level"
+        ],
+        "np": [
+          "नेपाली नागरिक वा दर्ता भएको कम्पनी",
+          "मान्य व्यवसाय स्थान",
+          "स्थानीय स्तरमा साना/घरेलु उद्योगको लागि"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Original + photocopy", "np": "सक्कल + फोटोकपी" },
+          "required": true
+        },
+        {
+          "name": { "en": "Property Proof (Lalpurja)", "np": "सम्पत्ति प्रमाण (लालपुर्जा)" },
+          "description": { "en": "If own premises - land ownership document", "np": "आफ्नै स्थान भए - जग्गाधनी कागजात" },
+          "required": true
+        },
+        {
+          "name": { "en": "Rent Agreement", "np": "भाडा सम्झौता" },
+          "description": { "en": "If renting premises for business", "np": "व्यवसायको लागि भाडामा लिएको भए" },
+          "required": false
+        },
+        {
+          "name": { "en": "Photos", "np": "फोटो" },
+          "description": { "en": "2 passport-size photos", "np": "२ वटा पासपोर्ट साइज फोटो" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Visit Municipality Office", "np": "नगरपालिका कार्यालय जानुहोस्" },
+          "description": { "en": "Go to revenue section of your municipality", "np": "आफ्नो नगरपालिकाको राजस्व शाखामा जानुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Fill Application Form", "np": "आवेदन फारम भर्नुहोस्" },
+          "description": { "en": "Fill business details: name, type, location", "np": "व्यवसाय विवरण भर्नुहोस्: नाम, प्रकार, स्थान" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Pay Registration Fee", "np": "दर्ता शुल्क तिर्नुहोस्" },
+          "description": { "en": "Fee depends on business type and category", "np": "शुल्क व्यवसायको प्रकार र वर्गमा निर्भर" }
+        },
+        {
+          "step": 4,
+          "title": { "en": "Get Business Certificate", "np": "व्यवसाय प्रमाणपत्र लिनुहोस्" },
+          "description": { "en": "Certificate issued same day", "np": "प्रमाणपत्र उही दिन जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Registration Fee", "np": "दर्ता शुल्क" }, "amount": "Varies by type" },
+        { "item": { "en": "Annual Renewal", "np": "वार्षिक नविकरण" }, "amount": "Varies by type" }
+      ],
+      "tips": [
+        { "en": "Renew every year in Shrawan-Bhadra (July-Aug).", "np": "हरेक वर्ष श्रावण-भाद्रमा नविकरण गर्नुहोस्।" },
+        { "en": "Late renewal has penalties.", "np": "ढिलो नविकरणमा जरिवाना लाग्छ।" },
+        { "en": "PAN registration needed for larger businesses.", "np": "ठूला व्यवसायको लागि प्यान दर्ता आवश्यक।" },
+        { "en": "Keep paying rent tax if in rented space.", "np": "भाडाको स्थानमा भए बहाल कर तिरिरहनुहोस्।" }
+      ],
+      "officialUrl": "https://mofaga.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    },
+    {
+      "id": "senior-citizen-id",
+      "icon": "elderly",
+      "title": {
+        "en": "Senior Citizen ID Card",
+        "np": "ज्येष्ठ नागरिक परिचयपत्र"
+      },
+      "summary": {
+        "en": "ID card for citizens 60+ with discounts on services",
+        "np": "६०+ नागरिकको लागि सेवामा छुट सहितको परिचयपत्र"
+      },
+      "eligibility": {
+        "en": [
+          "Nepali citizen aged 60 or above",
+          "Permanent resident of the municipality"
+        ],
+        "np": [
+          "६० वर्ष वा माथिको नेपाली नागरिक",
+          "नगरपालिकाको स्थायी बासिन्दा"
+        ]
+      },
+      "documents": [
+        {
+          "name": { "en": "Citizenship Certificate", "np": "नागरिकता प्रमाणपत्र" },
+          "description": { "en": "Must show age 60+", "np": "६०+ उमेर देखाउनुपर्छ" },
+          "required": true
+        },
+        {
+          "name": { "en": "Recent Photos", "np": "हालसालैको फोटो" },
+          "description": { "en": "2 passport-size photos", "np": "२ वटा पासपोर्ट साइज फोटो" },
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": { "en": "Visit Municipality Office", "np": "नगरपालिका कार्यालय जानुहोस्" },
+          "description": { "en": "Go to Women & Social Development section", "np": "महिला तथा सामाजिक विकास शाखामा जानुहोस्" }
+        },
+        {
+          "step": 2,
+          "title": { "en": "Submit Documents", "np": "कागजात पेश गर्नुहोस्" },
+          "description": { "en": "Submit citizenship copy and photos", "np": "नागरिकता प्रतिलिपि र फोटो पेश गर्नुहोस्" }
+        },
+        {
+          "step": 3,
+          "title": { "en": "Get ID Card", "np": "परिचयपत्र लिनुहोस्" },
+          "description": { "en": "ID card issued immediately", "np": "परिचयपत्र तुरुन्तै जारी हुन्छ" }
+        }
+      ],
+      "fees": [
+        { "item": { "en": "Senior Citizen ID", "np": "ज्येष्ठ नागरिक परिचयपत्र" }, "amount": "FREE" }
+      ],
+      "tips": [
+        { "en": "Get discounts on public transport with this card.", "np": "यस कार्डले सार्वजनिक यातायातमा छुट पाइन्छ।" },
+        { "en": "Discounts at government hospitals.", "np": "सरकारी अस्पतालमा छुट।" },
+        { "en": "70+ are eligible for senior citizen allowance (Rs. 4,000/month).", "np": "७०+ लाई ज्येष्ठ नागरिक भत्ता पाइन्छ (रु ४,०००/महिना)।" },
+        { "en": "Dalit seniors get allowance from age 60.", "np": "दलित ज्येष्ठले ६० वर्षबाट भत्ता पाउँछन्।" }
+      ],
+      "officialUrl": "https://mofaga.gov.np",
+      "processingTime": { "en": "Same day", "np": "उही दिन" }
+    }
+  ]
+}

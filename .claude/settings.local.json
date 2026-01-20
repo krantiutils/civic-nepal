@@ -50,7 +50,22 @@
       "Bash(gh run view:*)",
       "Bash(gh run watch:*)",
       "Bash(flutter pub run build_runner build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git update-index:*)",
+      "Bash(git show:*)",
+      "Bash(git for-each-ref:*)",
+      "Bash(xargs:*)",
+      "Bash(git stash:*)",
+      "Bash(find:*)",
+      "Bash(git fsck:*)",
+      "Bash(git log:*)",
+      "Bash(while read _ _ sha)",
+      "Bash(do echo '=== $sha ===')",
+      "Bash(done)",
+      "Bash(for sha in 40c9425ac01187a03b7553045ab2dcd406ea47c9 f39214048d4d68a3d9d43cc110fb36e58c17ebb5 eace79461a503c4435ed45a67a7128a7a1f6f516)",
+      "Bash(do echo '=== Checking $sha ===' git ls-tree -r --name-only $sha)"
     ]
   }
 }

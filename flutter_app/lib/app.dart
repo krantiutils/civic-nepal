@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'l10n/app_localizations.dart';
@@ -176,6 +178,12 @@ GoRouter router(RouterRef ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const NepaliCalendarScreen(),
       ),
+      // Alias for deep links that might arrive without /tools/ prefix
+      GoRoute(
+        path: '/nepali-calendar',
+        parentNavigatorKey: _rootNavigatorKey,
+        redirect: (context, state) => '/calendar',
+      ),
       GoRoute(
         path: '/forex',
         parentNavigatorKey: _rootNavigatorKey,
@@ -221,48 +229,74 @@ class ScaffoldWithNavBar extends StatefulWidget {
 }
 
 class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
-  int _getSelectedIndex() {
-    if (widget.currentPath.startsWith('/calendar')) return 0;
-    if (widget.currentPath.startsWith('/home')) return 1;
-    if (widget.currentPath.startsWith('/ipo')) return 2;
-    if (widget.currentPath.startsWith('/rights')) return 3;
+  // Track tab history for back navigation
+  final List<int> _tabHistory = [1]; // Start with home (index 1)
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = _getIndexFromPath(widget.currentPath);
+    if (_currentIndex != 1 && !_tabHistory.contains(_currentIndex)) {
+      _tabHistory.add(_currentIndex);
+    }
+  }
+
+  @override
+  void didUpdateWidget(ScaffoldWithNavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newIndex = _getIndexFromPath(widget.currentPath);
+    if (newIndex != _currentIndex) {
+      _currentIndex = newIndex;
+      // Add to history if not already the last item
+      if (_tabHistory.isEmpty || _tabHistory.last != newIndex) {
+        _tabHistory.add(newIndex);
+      }
+    }
+  }
+
+  int _getIndexFromPath(String path) {
+    if (path.startsWith('/calendar')) return 0;
+    if (path.startsWith('/home')) return 1;
+    if (path.startsWith('/ipo')) return 2;
+    if (path.startsWith('/rights')) return 3;
     return 1; // default to home
   }
 
-  bool get _isHome => widget.currentPath.startsWith('/home');
+  bool get _isHome => _currentIndex == 1;
 
-  Future<bool> _onWillPop() async {
-    if (!_isHome) {
-      context.go('/home');
-      return false; // Don't pop, we navigated instead
+  void _onBackPressed() {
+    if (_tabHistory.length > 1) {
+      // Pop current tab from history
+      _tabHistory.removeLast();
+      // Navigate to previous tab
+      final previousIndex = _tabHistory.last;
+      final paths = ['/calendar', '/home', '/ipo', '/rights'];
+      GoRouter.of(context).go(paths[previousIndex]);
+    } else {
+      // On home with no history, exit app
+      SystemNavigator.pop();
     }
-    return true; // Allow pop (exit app)
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final selectedIndex = _getSelectedIndex();
 
     return PopScope(
-      canPop: _isHome,
+      canPop: _isHome && _tabHistory.length <= 1,
       onPopInvokedWithResult: (didPop, result) {
-        if (!didPop && !_isHome) {
-          // Use post-frame callback to avoid issues with navigation during build
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              context.go('/home');
-            }
-          });
+        if (!didPop) {
+          _onBackPressed();
         }
       },
       child: Scaffold(
         body: widget.child,
         bottomNavigationBar: NavigationBar(
-          selectedIndex: selectedIndex,
+          selectedIndex: _currentIndex,
           onDestinationSelected: (index) {
             final paths = ['/calendar', '/home', '/ipo', '/rights'];
-            context.go(paths[index]);
+            GoRouter.of(context).go(paths[index]);
           },
           destinations: [
             NavigationDestination(
