@@ -52,11 +52,11 @@ class AuspiciousDaysInfo {
         pasni.contains(day);
   }
 
-  List<String> getAuspiciousTypes(int day) {
+  List<String> getAuspiciousTypes(int day, AppLocalizations l10n) {
     final types = <String>[];
-    if (bibahaLagan.contains(day)) types.add('विवाह (Wedding)');
-    if (bratabandha.contains(day)) types.add('ब्रतबन्ध (Bratabandha)');
-    if (pasni.contains(day)) types.add('पास्नी (Rice Feeding)');
+    if (bibahaLagan.contains(day)) types.add(l10n.weddingAuspicious);
+    if (bratabandha.contains(day)) types.add(l10n.bratabandhaAuspicious);
+    if (pasni.contains(day)) types.add(l10n.pasniAuspicious);
     return types;
   }
 }
@@ -316,7 +316,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
               width: 300,
               decoration: BoxDecoration(
                 border: Border(
-                  left: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                  left: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                 ),
               ),
               child: Column(
@@ -357,7 +357,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
       return Center(
         child: Text(
           l10n.noEvents,
-          style: TextStyle(color: Colors.grey[500], fontStyle: FontStyle.italic),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontStyle: FontStyle.italic),
         ),
       );
     }
@@ -381,7 +381,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                   decoration: BoxDecoration(
                     color: dayInfo?.isHoliday == true
                         ? Colors.red.withValues(alpha: 0.1)
-                        : Colors.grey.withValues(alpha: 0.1),
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Center(
@@ -418,7 +418,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
     AuspiciousDaysInfo? auspiciousForMonth,
   ) {
     final dayInfo = eventsForMonth[_selectedDay];
-    final auspiciousTypes = auspiciousForMonth?.getAuspiciousTypes(_selectedDay!) ?? [];
+    final auspiciousTypes = auspiciousForMonth?.getAuspiciousTypes(_selectedDay!, AppLocalizations.of(context)) ?? [];
     final bsDate = NepaliDateService.fromBsDate(_currentYear, _currentMonth, _selectedDay!);
     final adDate = NepaliDateService.bsToAd(bsDate);
 
@@ -440,7 +440,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                     ),
                     Text(
                       '${adDate.day}/${adDate.month}/${adDate.year}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -496,7 +496,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
               if ((dayInfo == null || dayInfo.events.isEmpty) && auspiciousTypes.isEmpty)
                 Text(
                   AppLocalizations.of(context).noEvents,
-                  style: TextStyle(color: Colors.grey[500], fontStyle: FontStyle.italic),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontStyle: FontStyle.italic),
                 ),
             ],
           ),
@@ -518,7 +518,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
           IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: _previousMonth,
-            tooltip: 'Previous month',
+            tooltip: AppLocalizations.of(context).previousMonth,
           ),
           Expanded(
             child: Column(
@@ -533,7 +533,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                 Text(
                   monthNameEn,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[700],
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -541,7 +541,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                 Text(
                   englishMonthRange,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -551,7 +551,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
           IconButton(
             icon: const Icon(Icons.chevron_right),
             onPressed: _nextMonth,
-            tooltip: 'Next month',
+            tooltip: AppLocalizations.of(context).nextMonth,
           ),
         ],
       ),
@@ -590,7 +590,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
         const SizedBox(width: 4),
         Text(
           label,
-          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );
@@ -621,7 +621,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                   weekdaysEn[index],
                   style: TextStyle(
                     fontSize: 10,
-                    color: isSaturday ? Colors.red[300] : Colors.grey[500],
+                    color: isSaturday ? Colors.red[300] : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -733,7 +733,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(6),
-          border: border ?? Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+          border: border ?? Border.all(color: Theme.of(context).colorScheme.outlineVariant),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -754,7 +754,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                 fontSize: 9,
                 color: isToday
                     ? Colors.white.withValues(alpha: 0.8)
-                    : Colors.grey[500],
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             // Event indicators
@@ -796,7 +796,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
     AuspiciousDaysInfo? auspiciousForMonth,
   ) {
     final dayInfo = eventsForMonth[_selectedDay];
-    final auspiciousTypes = auspiciousForMonth?.getAuspiciousTypes(_selectedDay!) ?? [];
+    final auspiciousTypes = auspiciousForMonth?.getAuspiciousTypes(_selectedDay!, AppLocalizations.of(context)) ?? [];
     final bsDate = NepaliDateService.fromBsDate(_currentYear, _currentMonth, _selectedDay!);
     final adDate = NepaliDateService.bsToAd(bsDate);
 
@@ -805,7 +805,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         border: Border(
-          top: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+          top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         ),
       ),
       child: Column(
@@ -884,7 +884,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                 if ((dayInfo == null || dayInfo.events.isEmpty) && auspiciousTypes.isEmpty)
                   Text(
                     AppLocalizations.of(context).noEvents,
-                    style: TextStyle(color: Colors.grey[500], fontStyle: FontStyle.italic),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontStyle: FontStyle.italic),
                   ),
               ],
             ),
@@ -905,7 +905,7 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         border: Border(
-          top: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+          top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         ),
       ),
       child: Row(
@@ -936,21 +936,21 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Today: ${NepaliDateService.formatNp(_today)}',
+                  AppLocalizations.of(context).todayLabel(NepaliDateService.formatNp(_today)),
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 Text(
                   '${NepaliDateService.getWeekdayNp(_today)} (${NepaliDateService.getWeekdayEn(_today)})',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 Text(
-                  'AD: ${adDate.day}/${adDate.month}/${adDate.year}',
+                  AppLocalizations.of(context).adDate('${adDate.day}/${adDate.month}/${adDate.year}'),
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 if (todayEvents != null && todayEvents.events.isNotEmpty) ...[

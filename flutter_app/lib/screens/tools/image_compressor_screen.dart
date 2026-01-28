@@ -210,7 +210,7 @@ class _ImageCompressorScreenState extends State<ImageCompressorScreen> {
             Text(
               l10n.compressDesc,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600]),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 32),
             FilledButton.icon(
@@ -257,7 +257,7 @@ class _ImageCompressorScreenState extends State<ImageCompressorScreen> {
                         child: _SizeInfo(
                           label: l10n.original,
                           size: _originalImage!.size,
-                          color: Colors.grey,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       if (_compressedImage != null) ...[
@@ -408,7 +408,7 @@ class _SizeInfo extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[600],
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         Text(

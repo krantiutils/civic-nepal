@@ -466,7 +466,7 @@ class _GovernmentStructureTab extends StatelessWidget {
           ),
           const Text(
             'संघीय संसद (द्विसदनात्मक)',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 12),
           Row(
@@ -599,7 +599,7 @@ class _StructureCard extends StatelessWidget {
                         titleNp,
                         style: TextStyle(
                           fontSize: 13,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -612,7 +612,7 @@ class _StructureCard extends StatelessWidget {
               description,
               style: TextStyle(
                 fontSize: 13,
-                color: isDark ? Colors.grey[300] : Colors.grey[700],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const Divider(height: 24),
@@ -667,7 +667,7 @@ class _HierarchyItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               description,
-              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             if (hasTap) ...[
@@ -755,7 +755,7 @@ class _HouseCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               election,
-              style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             if (hasTap) ...[
@@ -847,7 +847,7 @@ class _CourtItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               description,
-              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             if (hasTap) ...[
@@ -950,12 +950,12 @@ class _FederalLevelItem extends StatelessWidget {
                   ),
                   Text(
                     description,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                   if (breakdown != null)
                     Text(
                       breakdown!,
-                      style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   if (hasTap) ...[
                     const SizedBox(height: 4),
@@ -1006,7 +1006,7 @@ class _LegislativeProcessTab extends StatelessWidget {
           data['titleNp'] as String,
           style: TextStyle(
             fontSize: 14,
-            color: isDark ? Colors.grey[400] : Colors.grey[600],
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 24),
@@ -1118,12 +1118,12 @@ class _ProcessStep extends StatelessWidget {
                   ),
                   Text(
                     titleNp,
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     description,
-                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -1169,7 +1169,7 @@ class _SpecialBillCard extends StatelessWidget {
                 ),
                 Text(
                   note,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
@@ -1208,7 +1208,7 @@ class _ElectionsTab extends StatelessWidget {
         ),
         Text(
           data['titleNp'] as String,
-          style: TextStyle(fontSize: 16, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+          style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 8),
         Text(
@@ -1277,7 +1277,7 @@ class _ElectionsTab extends StatelessWidget {
                       ),
                       Text(
                         electoralSystem['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1319,7 +1319,7 @@ class _ElectionsTab extends StatelessWidget {
             ),
             Text(
               whyBoth['questionNp'] as String,
-              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 8),
             Text(
@@ -1364,7 +1364,7 @@ class _ElectionsTab extends StatelessWidget {
                       ),
                       Text(
                         electionLevels['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1420,7 +1420,7 @@ class _ElectionsTab extends StatelessWidget {
                         ),
                         Text(
                           ec['titleNp'] as String,
-                          style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -1493,7 +1493,7 @@ class _ElectionsTab extends StatelessWidget {
                       ),
                       Text(
                         voter['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1577,7 +1577,7 @@ class _ElectionsTab extends StatelessWidget {
                       ),
                       Text(
                         govFormation['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1629,7 +1629,7 @@ class _ElectionsTab extends StatelessWidget {
             ),
             Text(
               instability['titleNp'] as String,
-              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
             for (final reason in reasons)
@@ -1650,7 +1650,7 @@ class _ElectionsTab extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       reason['explanation'] as String,
-                      style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[300] : Colors.grey[700]),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -1733,7 +1733,7 @@ class _ElectionsTab extends StatelessWidget {
                       ),
                       Text(
                         t['meaning'] as String,
-                        style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1793,7 +1793,7 @@ class _ElectoralSystemCard extends StatelessWidget {
                     ),
                     Text(
                       system['nameNp'] as String,
-                      style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                      style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -1830,7 +1830,7 @@ class _SystemDetailRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: Colors.grey),
+          Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(width: 8),
           Expanded(
             child: RichText(
@@ -1887,7 +1887,7 @@ class _ElectionLevelCard extends StatelessWidget {
                       ),
                       Text(
                         level['levelNp'] as String,
-                        style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1919,7 +1919,7 @@ class _ElectionLevelCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text('Elects:', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+            Text('Elects:', style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             for (final e in elects)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -1984,7 +1984,7 @@ class _InfoRow extends StatelessWidget {
             width: 100,
             child: Text(
               label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
@@ -2016,19 +2016,19 @@ class _CabinetTab extends StatelessWidget {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: isDark ? Colors.grey[800] : Colors.grey[100],
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Row(
             children: [
               const Icon(Icons.update, size: 16),
               const SizedBox(width: 8),
               Text(
                 l10n.lastUpdatedDate(lastUpdated),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
               const Spacer(),
               Text(
                 l10n.sourceOpmcm,
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ],
           ),
@@ -2099,11 +2099,11 @@ class _MinisterCard extends StatelessWidget {
               radius: 24,
               backgroundColor: isPM
                   ? Theme.of(context).colorScheme.primary
-                  : (isDark ? Colors.grey[700] : Colors.grey[300]),
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
               child: Text(
                 name.substring(0, 1),
                 style: TextStyle(
-                  color: isPM ? Colors.white : (isDark ? Colors.white : Colors.grey[700]),
+                  color: isPM ? Colors.white : (isDark ? Colors.white : Theme.of(context).colorScheme.onSurfaceVariant),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -2149,7 +2149,7 @@ class _MinisterCard extends StatelessWidget {
                     nameNp,
                     style: TextStyle(
                       fontSize: 13,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -2162,14 +2162,14 @@ class _MinisterCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.grey[800] : Colors.grey[200],
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             ministries[i],
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark ? Colors.grey[300] : Colors.grey[700],
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),

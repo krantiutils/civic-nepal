@@ -35,12 +35,12 @@ class _ConstituencyScreenState extends ConsumerState<ConstituencyScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.map_outlined, size: 64, color: Colors.grey),
+                  const Icon(Icons.map_outlined, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   const SizedBox(height: 16),
                   Text(
                     l10n.noConstituenciesFound,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.grey,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
                 ],
@@ -186,7 +186,7 @@ class _CandidatesPanel extends StatelessWidget {
                     child: Text(
                       l10n.noCandidatesFound,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   )

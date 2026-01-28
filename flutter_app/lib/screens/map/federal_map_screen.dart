@@ -37,9 +37,24 @@ class FederalMapScreen extends ConsumerStatefulWidget {
 class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
   final TransformationController _transformationController =
       TransformationController();
+  double _currentZoom = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _transformationController.addListener(_onZoomChanged);
+  }
+
+  void _onZoomChanged() {
+    final zoom = _transformationController.value.getMaxScaleOnAxis();
+    if (zoom != _currentZoom) {
+      setState(() => _currentZoom = zoom);
+    }
+  }
 
   @override
   void dispose() {
+    _transformationController.removeListener(_onZoomChanged);
     _transformationController.dispose();
     super.dispose();
   }
@@ -84,6 +99,35 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
                         right: 16,
                         child: _ConstituencyInfoChip(name: selectedConstituency),
                       ),
+                    // Zoom hint at bottom
+                    Positioned(
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.zoom_in, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                              const SizedBox(width: 6),
+                              Text(
+                                l10n.zoomHint,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -103,13 +147,14 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
     return InteractiveViewer(
       transformationController: _transformationController,
       minScale: 0.5,
-      maxScale: 4.0,
+      maxScale: 15.0,
       constrained: false,
       child: SizedBox(
         width: 1200,
         height: 700,
         child: _ConstituencyMapWidget(
           data: data,
+          currentZoom: _currentZoom,
           onConstituencyTap: (name) {
             if (name.isEmpty) {
               ref.read(selectedFederalConstituencyProvider.notifier).clear();
@@ -213,10 +258,12 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
 /// Interactive constituency map widget
 class _ConstituencyMapWidget extends StatefulWidget {
   final ConstituencyData data;
+  final double currentZoom;
   final void Function(String name) onConstituencyTap;
 
   const _ConstituencyMapWidget({
     required this.data,
+    required this.currentZoom,
     required this.onConstituencyTap,
   });
 
@@ -228,6 +275,10 @@ class _ConstituencyMapWidgetState extends State<_ConstituencyMapWidget> {
   final SvgPathParser _pathParser = SvgPathParser();
   final GlobalKey _mapKey = GlobalKey();
   bool _isLoading = true;
+  final Map<String, Size> _textSizes = {};
+
+  // Fixed map size - must match parent SizedBox in _buildInteractiveMap
+  static const _mapSize = Size(1200, 700);
 
   @override
   void initState() {
@@ -238,43 +289,154 @@ class _ConstituencyMapWidgetState extends State<_ConstituencyMapWidget> {
   Future<void> _loadSvgPaths() async {
     await _pathParser.loadSvg('assets/data/election/nepal_constituencies.svg');
     if (mounted) {
+      _precomputeTextSizes();
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _precomputeTextSizes() {
+    const textStyle = TextStyle(fontSize: 8, fontWeight: FontWeight.bold);
+
+    for (final id in _pathParser.districtIds) {
+      if (id.startsWith('path')) continue;
+
+      final label = _formatConstituencyName(id);
+      final textPainter = TextPainter(
+        text: TextSpan(text: label, style: textStyle),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      _textSizes[id] = Size(textPainter.width, textPainter.height);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SvgPicture.asset(
-          'assets/data/election/nepal_constituencies.svg',
-          key: _mapKey,
-          width: 1200,
-          height: 700,
-          fit: BoxFit.contain,
-        ),
-        Positioned.fill(
-          child: GestureDetector(
-            onTapUp: _isLoading ? null : _handleTap,
-            behavior: HitTestBehavior.translucent,
+    // Use LayoutBuilder to get actual constraints and ensure consistent sizing
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Use actual available size, constrained to our max
+        final actualSize = Size(
+          constraints.maxWidth.clamp(0, _mapSize.width),
+          constraints.maxHeight.clamp(0, _mapSize.height),
+        );
+
+        return SizedBox(
+          width: actualSize.width,
+          height: actualSize.height,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SvgPicture.asset(
+                'assets/data/election/nepal_constituencies.svg',
+                key: _mapKey,
+                width: actualSize.width,
+                height: actualSize.height,
+                fit: BoxFit.contain,
+                alignment: Alignment.topLeft,
+              ),
+              // Constituency labels
+              if (!_isLoading) ..._buildConstituencyLabels(actualSize),
+              Positioned.fill(
+                child: GestureDetector(
+                  onTapUp: _isLoading ? null : (details) => _handleTap(details, actualSize),
+                  behavior: HitTestBehavior.translucent,
+                ),
+              ),
+              if (_isLoading)
+                const Positioned.fill(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+            ],
           ),
-        ),
-        if (_isLoading)
-          const Positioned.fill(
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      ],
+        );
+      },
     );
   }
 
-  void _handleTap(TapUpDetails details) {
+  List<Widget> _buildConstituencyLabels(Size mapSize) {
+    final labels = <Widget>[];
+    final pathCenters = _pathParser.pathCenters;
+    final zoom = widget.currentZoom;
+
+    const baseFontSize = 11.0;
+
+    // Calculate scale to match SvgPicture's BoxFit.contain behavior
+    final svgWidth = _pathParser.svgWidth;
+    final svgHeight = _pathParser.svgHeight;
+    final scaleX = mapSize.width / svgWidth;
+    final scaleY = mapSize.height / svgHeight;
+    final scale = scaleX < scaleY ? scaleX : scaleY;
+
+    // No offset needed since we use Alignment.topLeft on SvgPicture
+
+    for (final entry in pathCenters.entries) {
+      final id = entry.key;
+      final svgCenter = entry.value;
+
+      if (id.startsWith('path')) continue;
+
+      final label = _formatConstituencyName(id);
+      final textSize = _textSizes[id];
+      final clearance = _pathParser.getLabelClearance(id) ?? 0;
+
+      // Check if text fits at current zoom
+      if (textSize != null) {
+        final effectiveClearance = clearance * scale * zoom;
+        if (effectiveClearance < textSize.width / 2) {
+          continue;
+        }
+      }
+
+      // Transform SVG coordinates to screen coordinates (scale only, no offset)
+      final screenX = svgCenter.dx * scale;
+      final screenY = svgCenter.dy * scale;
+
+      // Scale font size inversely with zoom to keep labels readable but not overwhelming
+      final adjustedFontSize = baseFontSize / zoom;
+      final adjustedHalfWidth = (textSize?.width ?? 20) / 2 / zoom;
+      final adjustedHalfHeight = (textSize?.height ?? 6) / 2 / zoom;
+
+      labels.add(Positioned(
+        left: screenX - adjustedHalfWidth,
+        top: screenY - adjustedHalfHeight,
+        child: IgnorePointer(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: adjustedFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              shadows: const [
+                Shadow(color: Colors.white, blurRadius: 2),
+                Shadow(color: Colors.white, blurRadius: 3),
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+
+    return labels;
+  }
+
+  void _handleTap(TapUpDetails details, Size mapSize) {
     final renderBox = _mapKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final localPosition = renderBox.globalToLocal(details.globalPosition);
-    final size = renderBox.size;
 
-    final svgPoint = _pathParser.screenToSvg(localPosition, size);
+    // Convert screen to SVG coordinates (matching topLeft alignment)
+    final svgWidth = _pathParser.svgWidth;
+    final svgHeight = _pathParser.svgHeight;
+    final scaleX = mapSize.width / svgWidth;
+    final scaleY = mapSize.height / svgHeight;
+    final scale = scaleX < scaleY ? scaleX : scaleY;
+
+    final svgPoint = Offset(
+      localPosition.dx / scale,
+      localPosition.dy / scale,
+    );
     final pathId = _pathParser.hitTest(svgPoint);
 
     if (pathId != null) {
@@ -392,15 +554,20 @@ class _CandidateCard extends StatelessWidget {
                   ),
                   if (candidate.votes > 0) ...[
                     const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(Icons.how_to_vote, size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${candidate.votes} votes',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                    Builder(
+                      builder: (context) {
+                        final l10n = AppLocalizations.of(context);
+                        return Row(
+                          children: [
+                            const Icon(Icons.how_to_vote, size: 14),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${candidate.votes} ${l10n.votes}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ],
@@ -440,3 +607,4 @@ class _CandidateCard extends StatelessWidget {
     );
   }
 }
+

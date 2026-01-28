@@ -42,9 +42,9 @@ class _IpoSharesScreenState extends State<IpoSharesScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(l10n.ipoShares),
-              const Text(
-                'आईपीओ र सेयर',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+              Text(
+                l10n.ipoSharesNp,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
               ),
             ],
           ),
@@ -239,12 +239,12 @@ class _IpoListTabState extends State<_IpoListTab> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Updating...',
+                  l10n.updating,
                   style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
               ] else if (_lastFetch != null)
                 Text(
-                  l10n.updatedAgo(_formatDuration(_lastFetch!)),
+                  l10n.updatedAgo(_formatDuration(_lastFetch!, l10n)),
                   style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
             ],
@@ -266,8 +266,8 @@ class _IpoListTabState extends State<_IpoListTab> {
     );
   }
 
-  String _formatDuration(Duration duration) {
-    if (duration.inMinutes < 1) return 'just now';
+  String _formatDuration(Duration duration, AppLocalizations l10n) {
+    if (duration.inMinutes < 1) return l10n.justNow;
     if (duration.inMinutes < 60) return '${duration.inMinutes}m';
     if (duration.inHours < 24) return '${duration.inHours}h';
     return '${duration.inDays}d';
@@ -292,6 +292,7 @@ class _IpoCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     final now = DateTime.now();
     final isOpen = IpoService.isCurrentlyOpen(ipo);
@@ -306,20 +307,20 @@ class _IpoCard extends StatelessWidget {
     if (isOpen) {
       if (daysUntilClose <= 1) {
         statusColor = Colors.orange;
-        statusText = daysUntilClose <= 0 ? 'Closes Today!' : 'Closes Tomorrow';
+        statusText = daysUntilClose <= 0 ? l10n.closesToday : l10n.closesTomorrow;
         statusIcon = Icons.warning_amber;
       } else {
         statusColor = isDark ? Colors.green[400]! : Colors.green[600]!;
-        statusText = 'Open for Application';
+        statusText = l10n.openForApplication;
         statusIcon = Icons.check_circle;
       }
     } else if (isUpcoming) {
       statusColor = isDark ? Colors.blue[400]! : Colors.blue[600]!;
-      statusText = daysUntilOpen <= 1 ? 'Opens Tomorrow' : 'Opens in $daysUntilOpen days';
+      statusText = daysUntilOpen <= 1 ? l10n.opensTomorrow : l10n.opensInDays(daysUntilOpen);
       statusIcon = Icons.schedule;
     } else {
       statusColor = colorScheme.onSurface.withValues(alpha: 0.5);
-      statusText = 'Closed';
+      statusText = l10n.closed;
       statusIcon = Icons.block;
     }
 
@@ -392,7 +393,7 @@ class _IpoCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Issue Manager: ${ipo.issueManager}',
+                  l10n.issueManager(ipo.issueManager),
                   style: TextStyle(
                     fontSize: 12,
                     color: subtitleColor,
@@ -405,13 +406,13 @@ class _IpoCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _StatItem(
-                        label: 'Issued Units',
+                        label: l10n.issuedUnits,
                         value: _formatNumber(ipo.issuedUnits),
                       ),
                     ),
                     Expanded(
                       child: _StatItem(
-                        label: 'Applications',
+                        label: l10n.applications,
                         value: _formatNumber(ipo.numberOfApplications),
                       ),
                     ),
@@ -422,13 +423,13 @@ class _IpoCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _StatItem(
-                        label: 'Applied Units',
+                        label: l10n.appliedUnits,
                         value: _formatNumber(ipo.appliedUnits),
                       ),
                     ),
                     Expanded(
                       child: _StatItem(
-                        label: 'Total Amount',
+                        label: l10n.totalAmount,
                         value: 'Rs ${_formatNumber(ipo.amount)}',
                       ),
                     ),
@@ -450,7 +451,7 @@ class _IpoCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Opens',
+                              l10n.opens,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: subtitleColor,
@@ -472,7 +473,7 @@ class _IpoCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              'Closes',
+                              l10n.closes,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: subtitleColor,
@@ -495,7 +496,7 @@ class _IpoCard extends StatelessWidget {
                 // Last update
                 const SizedBox(height: 8),
                 Text(
-                  'Last updated: ${_formatDateTime(ipo.lastUpdate)}',
+                  l10n.lastUpdated(_formatDateTime(ipo.lastUpdate)),
                   style: TextStyle(
                     fontSize: 11,
                     color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -801,14 +802,14 @@ class _StockPricesTabState extends State<_StockPricesTab> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Updating...',
+                  l10n.updating,
                   style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
               ] else ...[
                 Icon(Icons.info_outline, size: 14, color: colorScheme.onSurface.withValues(alpha: 0.5)),
                 const SizedBox(width: 4),
                 Text(
-                  'Source: ShareSansar / Merolagani',
+                  l10n.sourceShares,
                   style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
               ],
@@ -923,21 +924,26 @@ class _StockRow extends StatelessWidget {
           // Volume
           Expanded(
             flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  _formatVolume(stock.volume),
-                  style: TextStyle(fontSize: 12, color: colorScheme.onSurface),
-                ),
-                Text(
-                  'Vol',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-                ),
-              ],
+            child: Builder(
+              builder: (context) {
+                final l10n = AppLocalizations.of(context);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      _formatVolume(stock.volume),
+                      style: TextStyle(fontSize: 12, color: colorScheme.onSurface),
+                    ),
+                    Text(
+                      l10n.vol,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
 

@@ -197,7 +197,7 @@ class _DateConverterScreenState extends State<DateConverterScreen>
                       const SizedBox(height: 4),
                       Text(
                         _getDayName(_convertedAd!),
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -263,13 +263,13 @@ class _DateConverterScreenState extends State<DateConverterScreen>
                       Text(
                         NepaliDateService.formatNp(_convertedBs!),
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.grey[700],
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         NepaliDateService.getWeekdayNp(_convertedBs!),
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -367,7 +367,7 @@ class _DateConverterScreenState extends State<DateConverterScreen>
             Text(
               title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
             const SizedBox(height: 12),

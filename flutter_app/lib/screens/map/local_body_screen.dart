@@ -340,7 +340,7 @@ class _LocalBodyScreenState extends ConsumerState<LocalBodyScreen> {
                     child: Text(
                       l10n.noCandidatesFound,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   )
@@ -656,12 +656,12 @@ class _OfficialCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.how_to_vote, size: 14, color: Colors.grey),
+                        Icon(Icons.how_to_vote, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
                         const SizedBox(width: 4),
                         Text(
                           '${official.votes} votes',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                         ),
                       ],

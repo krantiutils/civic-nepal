@@ -11,18 +11,29 @@ nav_rights,Rights,अधिकार,अधिकार,Bottom nav tab
 
 # Navigation - Quick Access
 explore,Explore,अन्वेषण,अन्वेषण,Section header
+explore_np,अन्वेषण,अन्वेषण,अन्वेषण,Section header Nepali
 utilities,Utilities,उपकरणहरू,उपकरणथें,Section header
+utilities_np,उपकरणहरू,उपकरणहरू,उपकरणथें,Section header Nepali
 govt,Govt,सरकार,सरकार,Quick access card
+govt_np,सरकार,सरकार,सरकार,Quick access card Nepali
 map,Map,नक्सा,नक्सा,Quick access card
+map_np,नक्सा,नक्सा,नक्सा,Quick access card Nepali
 rights,Rights,अधिकार,अधिकार,Quick access card
+rights_np,अधिकार,अधिकार,अधिकार,Quick access card Nepali
 
 # Utility Cards
 citizenship_merger,Citizenship Merger,नागरिकता मर्जर,नागरिकता मर्जर,Utility card title
+citizenship_merger_np,नागरिकता मर्जर,नागरिकता मर्जर,नागरिकता मर्जर,Utility card Nepali
 image_compressor,Image < 300KB,फोटो कम्प्रेस,फोटो कम्प्रेस,Utility card title
+image_compressor_np,फोटो कम्प्रेस,फोटो कम्प्रेस,फोटो कम्प्रेस,Utility card Nepali
 calendar,Calendar,पात्रो,पात्रो,Utility card title
+calendar_np,पात्रो,पात्रो,पात्रो,Utility card Nepali
 date_convert,Date Convert,मिति परिवर्तक,मिति परिवर्तक,Utility card title
+date_convert_np,मिति परिवर्तक,मिति परिवर्तक,मिति परिवर्तक,Utility card Nepali
 forex,Forex,विदेशी मुद्रा,विदेशी मुद्रा,Utility card title
+forex_np,विदेशी मुद्रा,विदेशी मुद्रा,विदेशी मुद्रा,Utility card Nepali
 gold_silver,Gold/Silver,सुन/चाँदी,लुँ/चाँदी,Utility card title
+gold_silver_np,सुन/चाँदी,सुन/चाँदी,लुँ/चाँदी,Utility card Nepali
 
 # Settings Screen
 settings,Settings,सेटिङ,सेटिङ,Screen title
@@ -108,6 +119,8 @@ nepal_districts,Nepal Districts,नेपाल जिल्लाहरू,न�
 filter_by_province,Filter by Province,प्रदेश अनुसार फिल्टर,प्रदेश कथं फिल्टर,Dialog title
 reset_zoom,Reset Zoom,जुम रिसेट,जुम रिसेट,Button tooltip
 no_leaders_district,No leaders found for {district},"{district}" मा कुनै नेता भेटिएन,{district} या खँग्व नेता मदु,Empty state
+wikipedia,Wikipedia,विकिपेडिया,विकिपेडिया,Link label
+website,Website,वेबसाइट,वेबसाइट,Link label
 
 # Map Selector Screen
 select_map_type,Select Map View,नक्सा दृश्य छान्नुहोस्,नक्सा स्वयादिसँ छ्यानादिसँ,Screen title
@@ -123,20 +136,31 @@ candidates,candidates,उम्मेदवारहरू,उम्मेदव
 no_constituencies_found,No constituencies found,कुनै निर्वाचन क्षेत्र भेटिएन,खँग्व निर्वाचन क्षेत्र मदु,Empty state
 no_candidates_found,No candidates found,कुनै उम्मेदवार भेटिएन,खँग्व उम्मेदवार मदु,Empty state
 view_constituencies,View Constituencies,निर्वाचन क्षेत्रहरू हेर्नुहोस्,निर्वाचन क्षेत्रथें स्वयादिसँ,Button text
+zoom_hint,Zoom in/out to view names properly,नामहरू राम्ररी हेर्न जुम गर्नुहोस्,नांथें ज्याःया स्वयेत जुम यायेमा,Map hint
+votes,votes,मतहरू,मतथें,Vote count label
 
 # Calendar Screen
 nepali_calendar,Nepali Calendar,नेपाली पात्रो,नेपाली पात्रो,Screen title
 today,Today,आज,थौं,Button label
+today_label,Today: {date},आज: {date},थौं: {date},Today info
+ad_date,AD: {date},ई.सं.: {date},ई.सं.: {date},AD date
 previous_month,Previous month,अघिल्लो महिना,न्हापाया लः,Tooltip
 next_month,Next month,अर्को महिना,अप्वया लः,Tooltip
 holiday,Holiday,बिदा,बिदा,Legend item
 event,Event,कार्यक्रम,कार्यक्रम,Legend item
 auspicious,Auspicious,शुभ,शुभ,Legend item
 no_events,No events,कुनै कार्यक्रम छैन,खँग्व कार्यक्रम मदु,Empty state
+wedding_auspicious,विवाह (Wedding),विवाह (Wedding),विवाह (Wedding),Auspicious type
+bratabandha_auspicious,ब्रतबन्ध (Bratabandha),ब्रतबन्ध (Bratabandha),ब्रतबन्ध (Bratabandha),Auspicious type
+pasni_auspicious,पास्नी (Rice Feeding),पास्नी (Rice Feeding),पास्नी (Rice Feeding),Auspicious type
 
 # IPO Screen
 ipo_shares,IPO & Shares,आईपीओ र सेयर,आईपीओ व सेयर,Screen title
+ipo_shares_np,आईपीओ र सेयर,आईपीओ र सेयर,आईपीओ व सेयर,Screen title Nepali
 ipo_list,IPO List,आईपीओ सूची,आईपीओ सूची,Tab label
+updating,Updating...,अद्यावधिक हुँदैछ...,अद्यावधिक जुयाच्वँ...,Status text
+just_now,just now,अहिले भर्खरै,थौं जक,Time duration
+source_shares,Source: ShareSansar / Merolagani,स्रोत: सेयरसन्सार / मेरोलगानी,स्रोत: सेयरसन्सार / मेरोलगानी,Attribution
 todays_price,Today's Price,आजको मूल्य,थौंया मोल,Tab label
 source_cdsc,Source: CDSC Nepal,स्रोत: सीडीएससी नेपाल,स्रोत: सीडीएससी नेपाल,Attribution
 updated_ago,Updated {time} ago,{time} अघि अपडेट भयो,{time} न्ह्यःने अपडेट जुल,Time label
@@ -187,7 +211,10 @@ citizenship_photo_merger,Citizenship Photo Merger,नागरिकता फ�
 reset,Reset,रिसेट,रिसेट,Button tooltip
 merger_instructions,Add front and back photos of your citizenship card to merge them into a single image.,नागरिकताको अगाडि र पछाडिको फोटो थपेर एउटै तस्बिरमा मर्ज गर्नुहोस्।,नागरिकताया न्ह्यः व लिपाया फोटो तयार च्वनेगु।,Instructions
 front_side,Front Side,अगाडिको भाग,न्ह्यःया भाग,Card title
+front_side_np,अगाडिको भाग,अगाडिको भाग,न्ह्यःया भाग,Card title Nepali
 back_side,Back Side,पछाडिको भाग,लिपाया भाग,Card title
+back_side_np,पछाडिको भाग,पछाडिको भाग,लिपाया भाग,Card title Nepali
+failed_to_display,Failed to display image,तस्बिर देखाउन असफल,तस्बिर क्यनेत मजिउ,Error text
 merge_photos,Merge Photos,फोटो मर्ज गर्नुहोस्,फोटो मर्ज याय्,Button text
 processing,Processing...,प्रशोधन हुँदैछ...,प्रशोधन जुयाच्वँ...,Loading state
 file_size,Size: {size},साइज: {size},साइज: {size},File info

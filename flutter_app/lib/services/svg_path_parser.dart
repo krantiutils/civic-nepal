@@ -1,10 +1,13 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:path_parsing/path_parsing.dart';
+import 'package:polylabel/polylabel.dart';
 
 /// Parses SVG paths and provides hit testing for districts
 class SvgPathParser {
   final Map<String, Path> _districtPaths = {};
+  final Map<String, Offset> _pathCenters = {};
   double _svgWidth = 1224.992;
   double _svgHeight = 817.002;
   double _viewBoxMinX = 0;
@@ -100,12 +103,117 @@ class SvgPathParser {
           try {
             final path = parseSvgPathData(pathData);
             _districtPaths[id] = path;
+            // Calculate visual center (point inside the path)
+            _pathCenters[id] = _findVisualCenter(path);
           } catch (e) {
             print('Error parsing path for $id: $e');
           }
         }
       }
     }
+  }
+
+  /// Find the "pole of inaccessibility" using polylabel algorithm
+  /// Returns the point inside the polygon furthest from any edge
+  Offset _findVisualCenter(Path path) {
+    final bounds = path.getBounds();
+
+    // Extract polygon points from path by sampling along the boundary
+    final polygon = _pathToPolygon(path, bounds);
+
+    if (polygon.isEmpty || polygon.length < 3) {
+      return bounds.center;
+    }
+
+    try {
+      // Use polylabel to find the optimal label position
+      final result = polylabel([polygon]);
+      return Offset(result.point.x.toDouble(), result.point.y.toDouble());
+    } catch (e) {
+      // Fallback to bounds center if polylabel fails
+      return bounds.center;
+    }
+  }
+
+  /// Convert a Path to a polygon (list of points) by sampling the boundary
+  List<Point<num>> _pathToPolygon(Path path, Rect bounds) {
+    final points = <Point<num>>[];
+
+    // Sample points along the path boundary
+    final metrics = path.computeMetrics();
+
+    for (final metric in metrics) {
+      final length = metric.length;
+      // Sample every 2 units or at least 50 points
+      final step = length / 50 > 2 ? length / 50 : 2;
+
+      for (double d = 0; d < length; d += step) {
+        final tangent = metric.getTangentForOffset(d);
+        if (tangent != null) {
+          points.add(Point(tangent.position.dx, tangent.position.dy));
+        }
+      }
+    }
+
+    return points;
+  }
+
+  /// Get the center point of a path in SVG coordinates
+  Offset? getPathCenter(String pathId) => _pathCenters[pathId];
+
+  /// Get all path centers
+  Map<String, Offset> get pathCenters => Map.unmodifiable(_pathCenters);
+
+  /// Get the bounding box of a path
+  Rect? getPathBounds(String pathId) {
+    final path = _districtPaths[pathId];
+    return path?.getBounds();
+  }
+
+  // Cache clearance values
+  final Map<String, double> _labelClearances = {};
+
+  /// Get the minimum distance from center to any edge (label clearance)
+  double? getLabelClearance(String pathId) {
+    if (_labelClearances.containsKey(pathId)) {
+      return _labelClearances[pathId];
+    }
+
+    final path = _districtPaths[pathId];
+    if (path == null) return null;
+
+    final polygon = _pathToPolygon(path, path.getBounds());
+    if (polygon.length < 3) return null;
+
+    try {
+      final result = polylabel([polygon]);
+      _labelClearances[pathId] = result.distance.toDouble();
+      return result.distance.toDouble();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Convert SVG coordinates to screen coordinates
+  /// Uses BoxFit.contain logic to match how SvgPicture displays
+  Offset svgToScreen(Offset svgPoint, Size screenSize) {
+    // Calculate scale to fit SVG in screen while preserving aspect ratio (BoxFit.contain)
+    final scaleX = screenSize.width / _svgWidth;
+    final scaleY = screenSize.height / _svgHeight;
+    final scale = scaleX < scaleY ? scaleX : scaleY; // Use smaller scale to fit
+
+    // Calculate the actual displayed size
+    final displayedWidth = _svgWidth * scale;
+    final displayedHeight = _svgHeight * scale;
+
+    // Calculate centering offsets
+    final offsetX = (screenSize.width - displayedWidth) / 2;
+    final offsetY = (screenSize.height - displayedHeight) / 2;
+
+    return Offset(
+      (svgPoint.dx - _viewBoxMinX) * scale + offsetX,
+      (svgPoint.dy - _viewBoxMinY) * scale + offsetY,
+    );
   }
 
   /// Find which district contains the given point

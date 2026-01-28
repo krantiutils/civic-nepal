@@ -216,20 +216,20 @@ class _GovServicesScreenState extends State<GovServicesScreen> {
           Icon(
             Icons.search_off,
             size: 64,
-            color: Colors.grey[400],
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 16),
           Text(
             l10n.noServices,
             style: TextStyle(
               fontSize: 18,
-              color: Colors.grey[600],
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           Text(
             l10n.tryDifferent,
             style: TextStyle(
-              color: Colors.grey[500],
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -318,7 +318,7 @@ class _CategorySection extends StatelessWidget {
                       Text(
                         category.nameNp,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                       ),
                     ],
@@ -359,11 +359,11 @@ class _ServiceTile extends StatelessWidget {
         children: [
           Text(
             service.nameNp,
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
           ),
           Text(
             service.description,
-            style: TextStyle(color: Colors.grey[500], fontSize: 12),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

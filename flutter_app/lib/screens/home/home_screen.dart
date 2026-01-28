@@ -57,16 +57,7 @@ class _HomeTabState extends State<HomeTab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.appName),
-            const Text(
-              'नागरिक क्यालेन्डर',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-            ),
-          ],
-        ),
+        title: Text(l10n.appName),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -91,13 +82,13 @@ class _HomeTabState extends State<HomeTab> {
               const SizedBox(height: 20),
 
               // Quick access grid
-              _SectionHeader(title: l10n.explore, titleNp: 'अन्वेषण'),
+              _SectionHeader(title: l10n.explore, titleNp: l10n.exploreNp),
               const SizedBox(height: 12),
               _QuickAccessGrid(l10n: l10n),
               const SizedBox(height: 24),
 
               // Utilities section
-              _SectionHeader(title: l10n.utilities, titleNp: 'उपकरणहरू'),
+              _SectionHeader(title: l10n.utilities, titleNp: l10n.utilitiesNp),
               const SizedBox(height: 12),
               // First row
               Row(
@@ -106,7 +97,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.badge,
                       title: l10n.citizenshipMerger,
-                      titleNp: 'नागरिकता मर्जर',
+                      titleNp: l10n.citizenshipMergerNp,
                       color: const Color(0xFF7B1FA2),
                       onTap: () => context.push('/photo-merger'),
                     ),
@@ -116,7 +107,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.compress,
                       title: l10n.imageCompressor,
-                      titleNp: 'फोटो कम्प्रेस',
+                      titleNp: l10n.imageCompressorNp,
                       color: const Color(0xFF1976D2),
                       onTap: () => context.push('/photo-compress'),
                     ),
@@ -131,7 +122,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.calendar_month,
                       title: l10n.calendar,
-                      titleNp: 'पात्रो',
+                      titleNp: l10n.calendarNp,
                       color: const Color(0xFF1976D2),
                       onTap: () => context.push('/calendar'),
                     ),
@@ -141,7 +132,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.swap_horiz,
                       title: l10n.dateConvert,
-                      titleNp: 'मिति परिवर्तक',
+                      titleNp: l10n.dateConvertNp,
                       color: const Color(0xFFE65100),
                       onTap: () => context.push('/date-converter'),
                     ),
@@ -156,7 +147,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.currency_exchange,
                       title: l10n.forex,
-                      titleNp: 'विदेशी मुद्रा',
+                      titleNp: l10n.forexNp,
                       color: const Color(0xFF2E7D32),
                       onTap: () => context.push('/forex'),
                     ),
@@ -166,7 +157,7 @@ class _HomeTabState extends State<HomeTab> {
                     child: _UtilityGridCard(
                       icon: Icons.diamond,
                       title: l10n.goldSilver,
-                      titleNp: 'सुन/चाँदी',
+                      titleNp: l10n.goldSilverNp,
                       color: const Color(0xFFFFB300),
                       onTap: () => context.push('/gold-price'),
                     ),
@@ -309,7 +300,7 @@ class _SectionHeader extends StatelessWidget {
         Text(
           titleNp,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
         ),
       ],
@@ -332,7 +323,7 @@ class _QuickAccessGrid extends StatelessWidget {
           child: _QuickAccessCard(
             icon: Icons.account_balance,
             title: l10n.govt,
-            titleNp: 'सरकार',
+            titleNp: l10n.govtNp,
             color: secondaryColor,
             onTap: () => context.push('/how-nepal-works'),
           ),
@@ -342,7 +333,7 @@ class _QuickAccessGrid extends StatelessWidget {
           child: _QuickAccessCard(
             icon: Icons.map,
             title: l10n.map,
-            titleNp: 'नक्सा',
+            titleNp: l10n.mapNp,
             color: const Color(0xFF2E7D32),
             onTap: () => context.push('/map'),
           ),
@@ -352,7 +343,7 @@ class _QuickAccessGrid extends StatelessWidget {
           child: _QuickAccessCard(
             icon: Icons.gavel,
             title: l10n.rights,
-            titleNp: 'अधिकार',
+            titleNp: l10n.rightsNp,
             color: const Color(0xFF6A1B9A),
             onTap: () => context.push('/constitutional-rights'),
           ),
@@ -401,7 +392,7 @@ class _QuickAccessCard extends StatelessWidget {
               Text(
                 titleNp,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -452,7 +443,7 @@ class _UtilityGridCard extends StatelessWidget {
               Text(
                 titleNp,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                 textAlign: TextAlign.center,
               ),

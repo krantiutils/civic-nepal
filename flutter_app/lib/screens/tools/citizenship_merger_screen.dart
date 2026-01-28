@@ -203,7 +203,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
                 Expanded(
                   child: _ImagePickerCard(
                     title: l10n.frontSide,
-                    titleNp: 'अगाडिको भाग',
+                    titleNp: l10n.frontSideNp,
                     imageBytes: _frontImage?.bytes,
                     onTap: () => _pickImage(true),
                     icon: Icons.credit_card,
@@ -213,7 +213,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
                 Expanded(
                   child: _ImagePickerCard(
                     title: l10n.backSide,
-                    titleNp: 'पछाडिको भाग',
+                    titleNp: l10n.backSideNp,
                     imageBytes: _backImage?.bytes,
                     onTap: () => _pickImage(false),
                     icon: Icons.credit_card_outlined,
@@ -224,7 +224,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
           else ...[
             _ImagePickerCard(
               title: l10n.frontSide,
-              titleNp: 'अगाडिको भाग',
+              titleNp: l10n.frontSideNp,
               imageBytes: _frontImage?.bytes,
               onTap: () => _pickImage(true),
               icon: Icons.credit_card,
@@ -232,7 +232,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
             const SizedBox(height: 16),
             _ImagePickerCard(
               title: l10n.backSide,
-              titleNp: 'पछाडिको भाग',
+              titleNp: l10n.backSideNp,
               imageBytes: _backImage?.bytes,
               onTap: () => _pickImage(false),
               icon: Icons.credit_card_outlined,
@@ -283,15 +283,20 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
                 debugPrint('Image error: $error');
                 return Container(
                   height: 200,
-                  color: Colors.grey[200],
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.broken_image, size: 48, color: Colors.grey[400]),
-                        const SizedBox(height: 8),
-                        Text('Failed to display image', style: TextStyle(color: Colors.grey[600])),
-                      ],
+                    child: Builder(
+                      builder: (context) {
+                        final l10n = AppLocalizations.of(context);
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.broken_image, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            const SizedBox(height: 8),
+                            Text(l10n.failedToDisplay, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 );
@@ -303,7 +308,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
           // File size info
           Text(
             l10n.fileSize(ImageService.getFileSizeString(_mergedImage!.length)),
-            style: TextStyle(color: Colors.grey[600]),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 16),
 
@@ -439,14 +444,14 @@ class _ImagePickerCard extends StatelessWidget {
                         Text(
                           titleNp,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           l10n.tapToSelect,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[500],
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                         ),
                       ],

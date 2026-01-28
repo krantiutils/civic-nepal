@@ -69,19 +69,30 @@ class AppLocalizations {
   String get navIpo => get('nav_ipo');
   String get navRights => get('nav_rights');
   String get explore => get('explore');
+  String get exploreNp => get('explore_np');
   String get utilities => get('utilities');
+  String get utilitiesNp => get('utilities_np');
   String get govt => get('govt');
+  String get govtNp => get('govt_np');
   String get government => get('government');
   String get map => get('map');
+  String get mapNp => get('map_np');
   String get rights => get('rights');
+  String get rightsNp => get('rights_np');
 
   // ============= Utility Cards =============
   String get citizenshipMerger => get('citizenship_merger');
+  String get citizenshipMergerNp => get('citizenship_merger_np');
   String get imageCompressor => get('image_compressor');
+  String get imageCompressorNp => get('image_compressor_np');
   String get calendar => get('calendar');
+  String get calendarNp => get('calendar_np');
   String get dateConvert => get('date_convert');
+  String get dateConvertNp => get('date_convert_np');
   String get forex => get('forex');
+  String get forexNp => get('forex_np');
   String get goldSilver => get('gold_silver');
+  String get goldSilverNp => get('gold_silver_np');
 
   // ============= Settings =============
   String get settings => get('settings');
@@ -171,6 +182,8 @@ class AppLocalizations {
   String get filterByProvince => get('filter_by_province');
   String get resetZoom => get('reset_zoom');
   String noLeadersDistrict(String district) => getWithParams('no_leaders_district', {'district': district});
+  String get wikipedia => get('wikipedia');
+  String get website => get('website');
 
   // ============= Map Selector =============
   String get selectMapType => get('select_map_type');
@@ -186,16 +199,23 @@ class AppLocalizations {
   String get noConstituenciesFound => get('no_constituencies_found');
   String get noCandidatesFound => get('no_candidates_found');
   String get viewConstituencies => get('view_constituencies');
+  String get zoomHint => get('zoom_hint');
+  String get votes => get('votes');
 
   // ============= Calendar =============
   String get nepaliCalendar => get('nepali_calendar');
   String get today => get('today');
+  String todayLabel(String date) => getWithParams('today_label', {'date': date});
+  String adDate(String date) => getWithParams('ad_date', {'date': date});
   String get previousMonth => get('previous_month');
   String get nextMonth => get('next_month');
   String get holiday => get('holiday');
   String get event => get('event');
   String get auspicious => get('auspicious');
   String get noEvents => get('no_events');
+  String get weddingAuspicious => get('wedding_auspicious');
+  String get bratabandhaAuspicious => get('bratabandha_auspicious');
+  String get pasniAuspicious => get('pasni_auspicious');
 
   // ============= IPO =============
   String get ipoShares => get('ipo_shares');
@@ -230,6 +250,10 @@ class AppLocalizations {
   String get marketUnavailable => get('market_unavailable');
   String get marketClosed => get('market_closed');
   String get vol => get('vol');
+  String get ipoSharesNp => get('ipo_shares_np');
+  String get updating => get('updating');
+  String get justNow => get('just_now');
+  String get sourceShares => get('source_shares');
 
   // ============= Date Converter =============
   String get dateConverter => get('date_converter');
@@ -250,7 +274,10 @@ class AppLocalizations {
   String get reset => get('reset');
   String get mergerInstructions => get('merger_instructions');
   String get frontSide => get('front_side');
+  String get frontSideNp => get('front_side_np');
   String get backSide => get('back_side');
+  String get backSideNp => get('back_side_np');
+  String get failedToDisplay => get('failed_to_display');
   String get mergePhotos => get('merge_photos');
   String get processing => get('processing');
   String fileSize(String size) => getWithParams('file_size', {'size': size});

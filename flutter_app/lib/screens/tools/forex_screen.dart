@@ -88,9 +88,9 @@ class _ForexScreenState extends State<ForexScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+            Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
-            Text(_error!, style: TextStyle(color: Colors.grey[600])),
+            Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _fetchRates,
@@ -123,7 +123,7 @@ class _ForexScreenState extends State<ForexScreen> {
               if (_date != null)
                 Text(
                   _date!,
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
             ],
           ),
@@ -131,7 +131,7 @@ class _ForexScreenState extends State<ForexScreen> {
         // Column headers
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: Colors.grey[100],
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Row(
             children: [
               const SizedBox(width: 40),
@@ -197,7 +197,7 @@ class _ForexScreenState extends State<ForexScreen> {
                 if (rate.unit != 1)
                   Text(
                     'Per ${rate.unit} units',
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                    style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
               ],
             ),
@@ -217,7 +217,7 @@ class _ForexScreenState extends State<ForexScreen> {
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),

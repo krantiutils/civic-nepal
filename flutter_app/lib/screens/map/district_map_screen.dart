@@ -64,9 +64,24 @@ class DistrictMapScreen extends ConsumerStatefulWidget {
 class _DistrictMapScreenState extends ConsumerState<DistrictMapScreen> {
   final TransformationController _transformationController =
       TransformationController();
+  double _currentZoom = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _transformationController.addListener(_onZoomChanged);
+  }
+
+  void _onZoomChanged() {
+    final zoom = _transformationController.value.getMaxScaleOnAxis();
+    if (zoom != _currentZoom) {
+      setState(() => _currentZoom = zoom);
+    }
+  }
 
   @override
   void dispose() {
+    _transformationController.removeListener(_onZoomChanged);
     _transformationController.dispose();
     super.dispose();
   }
@@ -165,13 +180,14 @@ class _DistrictMapScreenState extends ConsumerState<DistrictMapScreen> {
     return InteractiveViewer(
       transformationController: _transformationController,
       minScale: 0.5,
-      maxScale: 4.0,
+      maxScale: 15.0,
       constrained: false,
       child: SizedBox(
         width: 1225,
         height: 817,
         child: _NepalMapWidget(
           districts: visibleDistricts,
+          currentZoom: _currentZoom,
           onDistrictTap: (districtName) {
             if (districtName.isNotEmpty) {
               // Navigate to local body screen for this district
@@ -321,7 +337,7 @@ class _DistrictDetailsCard extends StatelessWidget {
               children: [
                 _InfoItem(
                   icon: Icons.flag,
-                  label: 'Province ${info.province}',
+                  label: l10n.provinceNumber(info.province),
                 ),
                 const SizedBox(width: 16),
                 if (info.headquarters != null)
@@ -387,7 +403,7 @@ class _DistrictDetailsCard extends StatelessWidget {
                           child: OutlinedButton.icon(
                             onPressed: () => _launchUrl(info.wikiUrl!),
                             icon: const Icon(Icons.language, size: 16),
-                            label: const Text('Wikipedia'),
+                            label: Text(l10n.wikipedia),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               visualDensity: VisualDensity.compact,
@@ -401,7 +417,7 @@ class _DistrictDetailsCard extends StatelessWidget {
                           child: OutlinedButton.icon(
                             onPressed: () => _launchUrl(info.websiteUrl!),
                             icon: const Icon(Icons.public, size: 16),
-                            label: const Text('Website'),
+                            label: Text(l10n.website),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               visualDensity: VisualDensity.compact,
@@ -527,13 +543,13 @@ class _DistrictLeadersList extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.person_off, size: 48, color: Colors.grey),
+                Icon(Icons.person_off, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 const SizedBox(height: 16),
                 Text(
                   l10n.noLeadersDistrict(districtName),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                 ),
               ],
@@ -617,10 +633,12 @@ class _DistrictLeadersList extends ConsumerWidget {
 /// Interactive Nepal SVG Map Widget
 class _NepalMapWidget extends StatefulWidget {
   final Map<String, DistrictInfo> districts;
+  final double currentZoom;
   final void Function(String districtName) onDistrictTap;
 
   const _NepalMapWidget({
     required this.districts,
+    required this.currentZoom,
     required this.onDistrictTap,
   });
 
@@ -633,6 +651,9 @@ class _NepalMapWidgetState extends State<_NepalMapWidget> {
   final GlobalKey _mapKey = GlobalKey();
   bool _isLoading = true;
 
+  // Cache text sizes for performance
+  final Map<String, Size> _textSizes = {};
+
   @override
   void initState() {
     super.initState();
@@ -642,13 +663,34 @@ class _NepalMapWidgetState extends State<_NepalMapWidget> {
   Future<void> _loadSvgPaths() async {
     await _pathParser.loadSvg('assets/images/nepal_districts.svg');
     if (mounted) {
+      _precomputeTextSizes();
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _precomputeTextSizes() {
+    const textStyle = TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.bold,
+    );
+
+    for (final districtId in _pathParser.districtIds) {
+      if (districtId.startsWith('path') || districtId.startsWith('SVG')) continue;
+
+      final label = _formatDistrictName(districtId);
+      final textPainter = TextPainter(
+        text: TextSpan(text: label, style: textStyle),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      _textSizes[districtId] = Size(textPainter.width, textPainter.height);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         // Render the actual SVG map
         SvgPicture.asset(
@@ -658,6 +700,8 @@ class _NepalMapWidgetState extends State<_NepalMapWidget> {
           height: 817,
           fit: BoxFit.contain,
         ),
+        // District labels
+        if (!_isLoading) ..._buildDistrictLabels(),
         // Overlay for tap detection with hit testing
         Positioned.fill(
           child: GestureDetector(
@@ -673,6 +717,64 @@ class _NepalMapWidgetState extends State<_NepalMapWidget> {
           ),
       ],
     );
+  }
+
+  List<Widget> _buildDistrictLabels() {
+    final labels = <Widget>[];
+    final pathCenters = _pathParser.pathCenters;
+    final zoom = widget.currentZoom;
+
+    // Text size at base zoom (fontSize 10)
+    const baseFontSize = 10.0;
+
+    for (final entry in pathCenters.entries) {
+      final districtId = entry.key;
+      final center = entry.value;
+
+      // Skip non-district paths
+      if (districtId.startsWith('path') || districtId.startsWith('SVG')) continue;
+
+      final label = _formatDistrictName(districtId);
+      final textSize = _textSizes[districtId];
+
+      // Get clearance (distance from center to nearest edge in SVG units)
+      final clearance = _pathParser.getLabelClearance(districtId) ?? 0;
+
+      // At current zoom, the clearance appears as: clearance * zoom (in screen pixels)
+      // The text width stays constant at textSize.width
+      // Show label only if: clearance * zoom > textSize.width / 2
+      if (textSize != null) {
+        final effectiveClearance = clearance * zoom;
+        if (effectiveClearance < textSize.width / 2) {
+          continue; // Text won't fit at this zoom level
+        }
+      }
+
+      // Center the text on the visual center
+      final halfWidth = (textSize?.width ?? 30) / 2;
+      final halfHeight = (textSize?.height ?? 8) / 2;
+
+      labels.add(Positioned(
+        left: center.dx - halfWidth,
+        top: center.dy - halfHeight,
+        child: IgnorePointer(
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: baseFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+              shadows: [
+                Shadow(color: Colors.white, blurRadius: 2),
+                Shadow(color: Colors.white, blurRadius: 3),
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+
+    return labels;
   }
 
   void _handleTap(TapUpDetails details) {

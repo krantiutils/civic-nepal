@@ -258,7 +258,7 @@ class ConstitutionScreen extends ConsumerWidget {
         ),
         subtitle: Text(
           category.subtitle.forLocale(localeCode),
-          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         children: category.rights.map((right) =>
           _buildRightItem(context, ref, right, localeCode),
@@ -454,7 +454,7 @@ class ConstitutionScreen extends ConsumerWidget {
               Text(
                 'प्रस्तावना',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey[600],
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 16),
@@ -486,7 +486,7 @@ class ConstitutionScreen extends ConsumerWidget {
         Text(
           language,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Colors.grey[600],
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 8),
@@ -528,7 +528,7 @@ class ConstitutionScreen extends ConsumerWidget {
             Text(
               part.title.np,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -598,7 +598,7 @@ class ConstitutionScreen extends ConsumerWidget {
                 Text(
                   article.title.np!,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               const SizedBox(height: 16),
@@ -631,7 +631,7 @@ class ConstitutionScreen extends ConsumerWidget {
         Text(
           language,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Colors.grey[600],
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 8),

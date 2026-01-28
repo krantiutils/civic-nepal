@@ -97,9 +97,9 @@ class _BullionScreenState extends State<BullionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+            Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
-            Text(_error!, style: TextStyle(color: Colors.grey[600])),
+            Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _fetchData,
@@ -129,7 +129,7 @@ class _BullionScreenState extends State<BullionScreen> {
             if (_source != null)
               Text(
                 l10n.source(_source!),
-                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             const SizedBox(height: 16),
 
@@ -221,7 +221,7 @@ class _BullionScreenState extends State<BullionScreen> {
                           flex: 2,
                           child: Text(
                             l10n.silver,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 13),
+                            style: const TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -324,7 +324,7 @@ class _BullionScreenState extends State<BullionScreen> {
                   ),
                   Text(
                     titleNp,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -342,7 +342,7 @@ class _BullionScreenState extends State<BullionScreen> {
                 ),
                 Text(
                   unit,
-                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 if (change != 0)
                   Row(
