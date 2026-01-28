@@ -181,8 +181,8 @@ class _HowNepalWorksScreenState extends ConsumerState<HowNepalWorksScreen> {
                           Expanded(
                             child: _GovCard(
                               icon: Icons.how_to_vote,
-                              title: 'Elections',
-                              description: 'How voting works',
+                              title: l10n.elections,
+                              description: l10n.electionsDesc,
                               color: const Color(0xFFD32F2F),
                               onTap: () => _selectSection(_GovSection.elections),
                             ),
@@ -238,7 +238,7 @@ class _HowNepalWorksScreenState extends ConsumerState<HowNepalWorksScreen> {
       case _GovSection.lawMaking:
         return l10n.lawMaking;
       case _GovSection.elections:
-        return 'Elections';
+        return l10n.elections;
       case _GovSection.cabinet:
         return l10n.cabinet;
       case _GovSection.services:
@@ -464,7 +464,7 @@ class _GovernmentStructureTab extends StatelessWidget {
             l10n.federalParliament,
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
-          const Text(
+          Text(
             'संघीय संसद (द्विसदनात्मक)',
             style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
@@ -1052,6 +1052,7 @@ class _ProcessStep extends StatelessWidget {
   final String titleNp;
   final String description;
   final bool isLast;
+  final bool isNepali;
 
   const _ProcessStep({
     required this.step,
@@ -1059,6 +1060,7 @@ class _ProcessStep extends StatelessWidget {
     required this.titleNp,
     required this.description,
     required this.isLast,
+    this.isNepali = false,
   });
 
   @override
@@ -1116,10 +1118,11 @@ class _ProcessStep extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  Text(
-                    titleNp,
-                    style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  ),
+                  if (!isNepali && titleNp.isNotEmpty)
+                    Text(
+                      titleNp,
+                      style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    ),
                   const SizedBox(height: 4),
                   Text(
                     description,
@@ -1193,58 +1196,69 @@ class _ElectionsTab extends StatelessWidget {
     required this.onNavigateToConstitution,
   });
 
+  /// Helper to get localized text from data map
+  String _getLocalizedText(Map<String, dynamic> map, String key, bool isNepali) {
+    if (isNepali) {
+      final npKey = '${key}Np';
+      return (map[npKey] as String?) ?? (map[key] as String?) ?? '';
+    }
+    return (map[key] as String?) ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
+    final isNepali = l10n.locale.code == 'ne';
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Header
         Text(
-          data['title'] as String,
+          _getLocalizedText(data, 'title', isNepali),
           style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
-        Text(
-          data['titleNp'] as String,
-          style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
-        ),
+        if (!isNepali)
+          Text(
+            data['titleNp'] as String,
+            style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
         const SizedBox(height: 8),
         Text(
-          data['description'] as String,
+          _getLocalizedText(data, 'description', isNepali),
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 24),
 
         // Electoral System Section
-        _buildElectoralSystemSection(context, data['electoralSystem'] as Map<String, dynamic>),
+        _buildElectoralSystemSection(context, data['electoralSystem'] as Map<String, dynamic>, isNepali),
         const SizedBox(height: 24),
 
         // Election Levels Section
-        _buildElectionLevelsSection(context, data['electionLevels'] as Map<String, dynamic>),
+        _buildElectionLevelsSection(context, data['electionLevels'] as Map<String, dynamic>, isNepali),
         const SizedBox(height: 24),
 
         // Election Commission Section
-        _buildElectionCommissionSection(context, data['electionCommission'] as Map<String, dynamic>),
+        _buildElectionCommissionSection(context, data['electionCommission'] as Map<String, dynamic>, isNepali),
         const SizedBox(height: 24),
 
         // Voter Eligibility Section
-        _buildVoterEligibilitySection(context, data['voterEligibility'] as Map<String, dynamic>),
+        _buildVoterEligibilitySection(context, data['voterEligibility'] as Map<String, dynamic>, isNepali),
         const SizedBox(height: 24),
 
         // Government Formation Section
-        _buildGovernmentFormationSection(context, data['governmentFormation'] as Map<String, dynamic>),
+        _buildGovernmentFormationSection(context, data['governmentFormation'] as Map<String, dynamic>, isNepali),
         const SizedBox(height: 24),
 
         // Key Terms Section
-        _buildKeyTermsSection(context, data['keyTerms'] as List<dynamic>),
+        _buildKeyTermsSection(context, data['keyTerms'] as List<dynamic>, isNepali),
         const SizedBox(height: 24),
       ],
     );
   }
 
-  Widget _buildElectoralSystemSection(BuildContext context, Map<String, dynamic> electoralSystem) {
+  Widget _buildElectoralSystemSection(BuildContext context, Map<String, dynamic> electoralSystem, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final systems = electoralSystem['systems'] as List<dynamic>;
@@ -1272,13 +1286,14 @@ class _ElectionsTab extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        electoralSystem['title'] as String,
+                        _getLocalizedText(electoralSystem, 'title', isNepali),
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        electoralSystem['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+                      if (!isNepali)
+                        Text(
+                          electoralSystem['titleNp'] as String,
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
                     ],
                   ),
                 ),
@@ -1297,7 +1312,7 @@ class _ElectionsTab extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      electoralSystem['explanation'] as String,
+                      _getLocalizedText(electoralSystem, 'explanation', isNepali),
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
@@ -1307,23 +1322,24 @@ class _ElectionsTab extends StatelessWidget {
             const SizedBox(height: 16),
             // FPTP and PR cards
             for (final system in systems) ...[
-              _ElectoralSystemCard(system: system as Map<String, dynamic>),
+              _ElectoralSystemCard(system: system as Map<String, dynamic>, isNepali: isNepali),
               const SizedBox(height: 12),
             ],
             // Why both systems
             const Divider(),
             const SizedBox(height: 8),
             Text(
-              whyBoth['question'] as String,
+              _getLocalizedText(whyBoth, 'question', isNepali),
               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-            Text(
-              whyBoth['questionNp'] as String,
-              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
-            ),
+            if (!isNepali)
+              Text(
+                whyBoth['questionNp'] as String,
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
             const SizedBox(height: 8),
             Text(
-              whyBoth['answer'] as String,
+              _getLocalizedText(whyBoth, 'answer', isNepali),
               style: const TextStyle(fontSize: 13),
             ),
           ],
@@ -1332,7 +1348,7 @@ class _ElectionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildElectionLevelsSection(BuildContext context, Map<String, dynamic> electionLevels) {
+  Widget _buildElectionLevelsSection(BuildContext context, Map<String, dynamic> electionLevels, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final levels = electionLevels['levels'] as List<dynamic>;
@@ -1359,13 +1375,14 @@ class _ElectionsTab extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        electionLevels['title'] as String,
+                        _getLocalizedText(electionLevels, 'title', isNepali),
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        electionLevels['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+                      if (!isNepali)
+                        Text(
+                          electionLevels['titleNp'] as String,
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
                     ],
                   ),
                 ),
@@ -1376,6 +1393,7 @@ class _ElectionsTab extends StatelessWidget {
               _ElectionLevelCard(
                 level: level as Map<String, dynamic>,
                 onTap: onNavigateToConstitution,
+                isNepali: isNepali,
               ),
           ],
         ),
@@ -1383,7 +1401,7 @@ class _ElectionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildElectionCommissionSection(BuildContext context, Map<String, dynamic> ec) {
+  Widget _buildElectionCommissionSection(BuildContext context, Map<String, dynamic> ec, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final constitutionRef = ec['constitutionRef'] as Map<String, dynamic>?;
@@ -1415,13 +1433,14 @@ class _ElectionsTab extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          ec['title'] as String,
+                          _getLocalizedText(ec, 'title', isNepali),
                           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          ec['titleNp'] as String,
-                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                        ),
+                        if (!isNepali)
+                          Text(
+                            ec['titleNp'] as String,
+                            style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          ),
                       ],
                     ),
                   ),
@@ -1430,10 +1449,10 @@ class _ElectionsTab extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              _InfoRow(label: 'Role', value: ec['role'] as String),
-              _InfoRow(label: 'Composition', value: ec['composition'] as String),
-              _InfoRow(label: 'Appointment', value: ec['appointment'] as String),
-              _InfoRow(label: 'Term', value: ec['term'] as String),
+              _InfoRow(label: isNepali ? 'भूमिका' : 'Role', value: _getLocalizedText(ec, 'role', isNepali)),
+              _InfoRow(label: isNepali ? 'गठन' : 'Composition', value: _getLocalizedText(ec, 'composition', isNepali)),
+              _InfoRow(label: isNepali ? 'नियुक्ति' : 'Appointment', value: _getLocalizedText(ec, 'appointment', isNepali)),
+              _InfoRow(label: isNepali ? 'अवधि' : 'Term', value: _getLocalizedText(ec, 'term', isNepali)),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -1447,7 +1466,7 @@ class _ElectionsTab extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        ec['independence'] as String,
+                        _getLocalizedText(ec, 'independence', isNepali),
                         style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -1461,7 +1480,7 @@ class _ElectionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildVoterEligibilitySection(BuildContext context, Map<String, dynamic> voter) {
+  Widget _buildVoterEligibilitySection(BuildContext context, Map<String, dynamic> voter, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final requirements = voter['requirements'] as List<dynamic>;
@@ -1488,13 +1507,14 @@ class _ElectionsTab extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        voter['title'] as String,
+                        _getLocalizedText(voter, 'title', isNepali),
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        voter['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+                      if (!isNepali)
+                        Text(
+                          voter['titleNp'] as String,
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
                     ],
                   ),
                 ),
@@ -1510,7 +1530,7 @@ class _ElectionsTab extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        req['requirement'] as String,
+                        isNepali ? ((req as Map<String, dynamic>)['requirementNp'] ?? req['requirement']) as String : req['requirement'] as String,
                         style: const TextStyle(fontSize: 14),
                       ),
                     ),
@@ -1530,7 +1550,7 @@ class _ElectionsTab extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      voter['votingMethod'] as String,
+                      _getLocalizedText(voter, 'votingMethod', isNepali),
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
@@ -1543,7 +1563,7 @@ class _ElectionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildGovernmentFormationSection(BuildContext context, Map<String, dynamic> govFormation) {
+  Widget _buildGovernmentFormationSection(BuildContext context, Map<String, dynamic> govFormation, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final process = govFormation['process'] as List<dynamic>;
@@ -1572,13 +1592,14 @@ class _ElectionsTab extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        govFormation['title'] as String,
+                        _getLocalizedText(govFormation, 'title', isNepali),
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        govFormation['titleNp'] as String,
-                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+                      if (!isNepali)
+                        Text(
+                          govFormation['titleNp'] as String,
+                          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
                     ],
                   ),
                 ),
@@ -1598,7 +1619,7 @@ class _ElectionsTab extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      govFormation['subtitle'] as String,
+                      _getLocalizedText(govFormation, 'subtitle', isNepali),
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                   ),
@@ -1607,7 +1628,7 @@ class _ElectionsTab extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              govFormation['explanation'] as String,
+              _getLocalizedText(govFormation, 'explanation', isNepali),
               style: const TextStyle(fontSize: 13),
             ),
             const SizedBox(height: 16),
@@ -1615,22 +1636,24 @@ class _ElectionsTab extends StatelessWidget {
             for (var i = 0; i < process.length; i++) ...[
               _ProcessStep(
                 step: process[i]['step'] as int,
-                title: process[i]['title'] as String,
-                titleNp: process[i]['titleNp'] as String,
-                description: process[i]['description'] as String,
+                title: isNepali ? (process[i]['titleNp'] ?? process[i]['title']) as String : process[i]['title'] as String,
+                titleNp: isNepali ? '' : process[i]['titleNp'] as String,
+                description: isNepali ? (process[i]['descriptionNp'] ?? process[i]['description']) as String : process[i]['description'] as String,
                 isLast: i == process.length - 1,
+                isNepali: isNepali,
               ),
             ],
             const Divider(height: 32),
             // Instability section
             Text(
-              instability['title'] as String,
+              _getLocalizedText(instability, 'title', isNepali),
               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            Text(
-              instability['titleNp'] as String,
-              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
-            ),
+            if (!isNepali)
+              Text(
+                instability['titleNp'] as String,
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
             const SizedBox(height: 12),
             for (final reason in reasons)
               Container(
@@ -1644,12 +1667,12 @@ class _ElectionsTab extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${reason['reason']} (${reason['reasonNp']})',
+                      isNepali ? (reason['reasonNp'] ?? reason['reason']) as String : '${reason['reason']} (${reason['reasonNp']})',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      reason['explanation'] as String,
+                      isNepali ? ((reason as Map<String, dynamic>)['explanationNp'] ?? reason['explanation']) as String : reason['explanation'] as String,
                       style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
@@ -1669,7 +1692,7 @@ class _ElectionsTab extends StatelessWidget {
                   const Icon(Icons.help_outline, color: Colors.deepPurple, size: 20),
                   const SizedBox(height: 8),
                   Text(
-                    instability['criticalQuestion'] as String,
+                    _getLocalizedText(instability, 'criticalQuestion', isNepali),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -1686,7 +1709,7 @@ class _ElectionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildKeyTermsSection(BuildContext context, List<dynamic> keyTerms) {
+  Widget _buildKeyTermsSection(BuildContext context, List<dynamic> keyTerms, bool isNepali) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -1728,11 +1751,11 @@ class _ElectionsTab extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        t['term'] as String,
+                        isNepali ? (t['termNp'] ?? t['term']) as String : t['term'] as String,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       Text(
-                        t['meaning'] as String,
+                        isNepali ? (t['meaningNp'] ?? t['meaning']) as String : t['meaning'] as String,
                         style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
@@ -1749,8 +1772,9 @@ class _ElectionsTab extends StatelessWidget {
 
 class _ElectoralSystemCard extends StatelessWidget {
   final Map<String, dynamic> system;
+  final bool isNepali;
 
-  const _ElectoralSystemCard({required this.system});
+  const _ElectoralSystemCard({required this.system, required this.isNepali});
 
   @override
   Widget build(BuildContext context) {
@@ -1788,27 +1812,28 @@ class _ElectoralSystemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      system['name'] as String,
+                      isNepali ? (system['nameNp'] ?? system['name']) as String : system['name'] as String,
                       style: TextStyle(fontWeight: FontWeight.bold, color: color),
                     ),
-                    Text(
-                      system['nameNp'] as String,
-                      style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    ),
+                    if (!isNepali)
+                      Text(
+                        system['nameNp'] as String,
+                        style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      ),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          _SystemDetailRow(icon: Icons.touch_app, label: 'How', text: system['howItWorks'] as String),
-          _SystemDetailRow(icon: Icons.flag, label: 'Purpose', text: system['purpose'] as String),
-          _SystemDetailRow(icon: Icons.warning_amber, label: 'Criticism', text: system['criticism'] as String),
+          _SystemDetailRow(icon: Icons.touch_app, label: isNepali ? 'कसरी' : 'How', text: isNepali ? (system['howItWorksNp'] ?? system['howItWorks']) as String : system['howItWorks'] as String),
+          _SystemDetailRow(icon: Icons.flag, label: isNepali ? 'उद्देश्य' : 'Purpose', text: isNepali ? (system['purposeNp'] ?? system['purpose']) as String : system['purpose'] as String),
+          _SystemDetailRow(icon: Icons.warning_amber, label: isNepali ? 'आलोचना' : 'Criticism', text: isNepali ? (system['criticismNp'] ?? system['criticism']) as String : system['criticism'] as String),
           if (system['inclusionRequirement'] != null)
             _SystemDetailRow(
               icon: Icons.people_alt,
-              label: 'Inclusion',
-              text: system['inclusionRequirement'] as String,
+              label: isNepali ? 'समावेश' : 'Inclusion',
+              text: isNepali ? (system['inclusionRequirementNp'] ?? system['inclusionRequirement']) as String : system['inclusionRequirement'] as String,
             ),
         ],
       ),
@@ -1852,8 +1877,9 @@ class _SystemDetailRow extends StatelessWidget {
 class _ElectionLevelCard extends StatelessWidget {
   final Map<String, dynamic> level;
   final void Function(int partIndex) onTap;
+  final bool isNepali;
 
-  const _ElectionLevelCard({required this.level, required this.onTap});
+  const _ElectionLevelCard({required this.level, required this.onTap, required this.isNepali});
 
   @override
   Widget build(BuildContext context) {
@@ -1882,13 +1908,14 @@ class _ElectionLevelCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        level['level'] as String,
+                        isNepali ? (level['levelNp'] ?? level['level']) as String : level['level'] as String,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                       ),
-                      Text(
-                        level['levelNp'] as String,
-                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+                      if (!isNepali)
+                        Text(
+                          level['levelNp'] as String,
+                          style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
                     ],
                   ),
                 ),
@@ -1912,18 +1939,18 @@ class _ElectionLevelCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${level['units']} units',
+                      '${level['units']} ${isNepali ? 'इकाइ' : 'units'}',
                       style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold, fontSize: 11),
                     ),
                   ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Elects:', style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text(isNepali ? 'निर्वाचन गर्छ:' : 'Elects:', style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             for (final e in elects)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
-                child: Text('• $e', style: const TextStyle(fontSize: 12)),
+                child: Text('• ${isNepali ? ((level['electsNp'] as List<dynamic>?)?.elementAtOrNull(elects.indexOf(e)) ?? e) : e}', style: const TextStyle(fontSize: 12)),
               ),
             if (level['note'] != null) ...[
               const SizedBox(height: 8),
@@ -1939,7 +1966,7 @@ class _ElectionLevelCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        level['note'] as String,
+                        isNepali ? (level['noteNp'] ?? level['note']) as String : level['note'] as String,
                         style: const TextStyle(fontSize: 11),
                       ),
                     ),

@@ -56,6 +56,8 @@ ipo_alerts_desc,Get notified when IPOs are opening or closing,आईपीओ �
 checking_updates,Checking for updates...,अपडेट जाँच गर्दै...,अपडेट जाँच यानाच्वँ...,Snackbar message
 cache_cleared,Cache cleared,क्यास खाली भयो,क्यास खाली जुल,Snackbar message
 app_version,NagarikCalendar v1.0.0,नागरिक क्यालेन्डर v1.0.0,नागरिक क्यालेन्डर v1.0.0,Version info
+privacy_policy,Privacy Policy,गोपनीयता नीति,गोपनीयता नीति,Setting title
+privacy_policy_desc,Read our privacy policy,हाम्रो गोपनीयता नीति पढ्नुहोस्,जिगु गोपनीयता नीति ब्वनादिसँ,Setting subtitle
 
 # Theme Options
 theme_system,System,सिस्टम,सिस्टम,Theme option
@@ -280,6 +282,8 @@ government,Government,सरकार,सरकार,Screen title
 structure,Structure,संरचना,संरचना,Tab label
 law_making,Law Making,कानून निर्माण,कानून निर्माण,Tab label
 cabinet,Cabinet,मन्त्रिपरिषद्,मन्त्रिपरिषद्,Tab label
+elections,Elections,निर्वाचन,निर्वाचन,Tab label
+elections_desc,How voting works,मतदान कसरी हुन्छ,मतदान गुकथं जुइ,Card description
 federal_parliament,Federal Parliament (Bicameral),संघीय संसद (द्विसदनात्मक),संघीय संसद (द्विसदनात्मक),Section title
 seats,{count} seats,{count} सिटहरू,{count} सिटथें,Seat count
 special_bills,Special Types of Bills,विशेष प्रकारका विधेयकहरू,विशेष प्रकारया विधेयकथें,Section header

@@ -28,6 +28,9 @@ mixin _$ConstituencyData {
   Map<String, List<Constituency>> get districts =>
       throw _privateConstructorUsedError;
 
+  /// Remote flag to control vote display - flip to true after election results are in
+  bool get showVotes => throw _privateConstructorUsedError;
+
   /// Serializes this ConstituencyData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -49,7 +52,8 @@ abstract class $ConstituencyDataCopyWith<$Res> {
       String source,
       @JsonKey(name: 'scraped_at') String scrapedAt,
       int totalConstituencies,
-      Map<String, List<Constituency>> districts});
+      Map<String, List<Constituency>> districts,
+      bool showVotes});
 }
 
 /// @nodoc
@@ -72,6 +76,7 @@ class _$ConstituencyDataCopyWithImpl<$Res, $Val extends ConstituencyData>
     Object? scrapedAt = null,
     Object? totalConstituencies = null,
     Object? districts = null,
+    Object? showVotes = null,
   }) {
     return _then(_value.copyWith(
       version: null == version
@@ -94,6 +99,10 @@ class _$ConstituencyDataCopyWithImpl<$Res, $Val extends ConstituencyData>
           ? _value.districts
           : districts // ignore: cast_nullable_to_non_nullable
               as Map<String, List<Constituency>>,
+      showVotes: null == showVotes
+          ? _value.showVotes
+          : showVotes // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -111,7 +120,8 @@ abstract class _$$ConstituencyDataImplCopyWith<$Res>
       String source,
       @JsonKey(name: 'scraped_at') String scrapedAt,
       int totalConstituencies,
-      Map<String, List<Constituency>> districts});
+      Map<String, List<Constituency>> districts,
+      bool showVotes});
 }
 
 /// @nodoc
@@ -132,6 +142,7 @@ class __$$ConstituencyDataImplCopyWithImpl<$Res>
     Object? scrapedAt = null,
     Object? totalConstituencies = null,
     Object? districts = null,
+    Object? showVotes = null,
   }) {
     return _then(_$ConstituencyDataImpl(
       version: null == version
@@ -154,6 +165,10 @@ class __$$ConstituencyDataImplCopyWithImpl<$Res>
           ? _value._districts
           : districts // ignore: cast_nullable_to_non_nullable
               as Map<String, List<Constituency>>,
+      showVotes: null == showVotes
+          ? _value.showVotes
+          : showVotes // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -166,7 +181,8 @@ class _$ConstituencyDataImpl implements _ConstituencyData {
       required this.source,
       @JsonKey(name: 'scraped_at') required this.scrapedAt,
       required this.totalConstituencies,
-      required final Map<String, List<Constituency>> districts})
+      required final Map<String, List<Constituency>> districts,
+      this.showVotes = false})
       : _districts = districts;
 
   factory _$ConstituencyDataImpl.fromJson(Map<String, dynamic> json) =>
@@ -189,9 +205,14 @@ class _$ConstituencyDataImpl implements _ConstituencyData {
     return EqualUnmodifiableMapView(_districts);
   }
 
+  /// Remote flag to control vote display - flip to true after election results are in
+  @override
+  @JsonKey()
+  final bool showVotes;
+
   @override
   String toString() {
-    return 'ConstituencyData(version: $version, source: $source, scrapedAt: $scrapedAt, totalConstituencies: $totalConstituencies, districts: $districts)';
+    return 'ConstituencyData(version: $version, source: $source, scrapedAt: $scrapedAt, totalConstituencies: $totalConstituencies, districts: $districts, showVotes: $showVotes)';
   }
 
   @override
@@ -206,13 +227,21 @@ class _$ConstituencyDataImpl implements _ConstituencyData {
             (identical(other.totalConstituencies, totalConstituencies) ||
                 other.totalConstituencies == totalConstituencies) &&
             const DeepCollectionEquality()
-                .equals(other._districts, _districts));
+                .equals(other._districts, _districts) &&
+            (identical(other.showVotes, showVotes) ||
+                other.showVotes == showVotes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, version, source, scrapedAt,
-      totalConstituencies, const DeepCollectionEquality().hash(_districts));
+  int get hashCode => Object.hash(
+      runtimeType,
+      version,
+      source,
+      scrapedAt,
+      totalConstituencies,
+      const DeepCollectionEquality().hash(_districts),
+      showVotes);
 
   /// Create a copy of ConstituencyData
   /// with the given fields replaced by the non-null parameter values.
@@ -233,12 +262,12 @@ class _$ConstituencyDataImpl implements _ConstituencyData {
 
 abstract class _ConstituencyData implements ConstituencyData {
   const factory _ConstituencyData(
-          {required final String version,
-          required final String source,
-          @JsonKey(name: 'scraped_at') required final String scrapedAt,
-          required final int totalConstituencies,
-          required final Map<String, List<Constituency>> districts}) =
-      _$ConstituencyDataImpl;
+      {required final String version,
+      required final String source,
+      @JsonKey(name: 'scraped_at') required final String scrapedAt,
+      required final int totalConstituencies,
+      required final Map<String, List<Constituency>> districts,
+      final bool showVotes}) = _$ConstituencyDataImpl;
 
   factory _ConstituencyData.fromJson(Map<String, dynamic> json) =
       _$ConstituencyDataImpl.fromJson;
@@ -254,6 +283,10 @@ abstract class _ConstituencyData implements ConstituencyData {
   int get totalConstituencies;
   @override
   Map<String, List<Constituency>> get districts;
+
+  /// Remote flag to control vote display - flip to true after election results are in
+  @override
+  bool get showVotes;
 
   /// Create a copy of ConstituencyData
   /// with the given fields replaced by the non-null parameter values.

@@ -221,7 +221,7 @@ class _BullionScreenState extends State<BullionScreen> {
                           flex: 2,
                           child: Text(
                             l10n.silver,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
                             textAlign: TextAlign.right,
                           ),
                         ),

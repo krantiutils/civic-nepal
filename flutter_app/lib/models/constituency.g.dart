@@ -20,6 +20,7 @@ _$ConstituencyDataImpl _$$ConstituencyDataImplFromJson(
                 .map((e) => Constituency.fromJson(e as Map<String, dynamic>))
                 .toList()),
       ),
+      showVotes: json['showVotes'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ConstituencyDataImplToJson(
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$ConstituencyDataImplToJson(
       'scraped_at': instance.scrapedAt,
       'totalConstituencies': instance.totalConstituencies,
       'districts': instance.districts,
+      'showVotes': instance.showVotes,
     };
 
 _$ConstituencyImpl _$$ConstituencyImplFromJson(Map<String, dynamic> json) =>

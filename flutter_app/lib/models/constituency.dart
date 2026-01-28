@@ -12,6 +12,8 @@ class ConstituencyData with _$ConstituencyData {
     @JsonKey(name: 'scraped_at') required String scrapedAt,
     required int totalConstituencies,
     required Map<String, List<Constituency>> districts,
+    /// Remote flag to control vote display - flip to true after election results are in
+    @Default(false) bool showVotes,
   }) = _ConstituencyData;
 
   factory ConstituencyData.fromJson(Map<String, dynamic> json) =>

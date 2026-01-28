@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/leader.dart';
 import '../../providers/leaders_provider.dart';
@@ -132,14 +133,27 @@ class LeaderDetailScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        leader.biography.isNotEmpty
-                            ? leader.biography
-                            : l10n.noBiography,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                            ),
-                      ),
+                      if (leader.biography.isNotEmpty)
+                        MarkdownBody(
+                          data: leader.biography,
+                          selectable: true,
+                          styleSheet: MarkdownStyleSheet(
+                            p: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  height: 1.5,
+                                ),
+                            h1: Theme.of(context).textTheme.headlineSmall,
+                            h2: Theme.of(context).textTheme.titleLarge,
+                            h3: Theme.of(context).textTheme.titleMedium,
+                            listBullet: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        )
+                      else
+                        Text(
+                          l10n.noBiography,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                height: 1.5,
+                              ),
+                        ),
                       const SizedBox(height: 32),
 
                       // View other leaders button

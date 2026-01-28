@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/constituency.dart';
 import '../../providers/constituencies_provider.dart';
+import '../../providers/leaders_provider.dart';
 import '../../widgets/home_title.dart';
 
 /// Screen showing federal constituencies for a district
@@ -35,7 +37,7 @@ class _ConstituencyScreenState extends ConsumerState<ConstituencyScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.map_outlined, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  Icon(Icons.map_outlined, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   const SizedBox(height: 16),
                   Text(
                     l10n.noConstituenciesFound,
@@ -206,74 +208,105 @@ class _CandidatesPanel extends StatelessWidget {
 }
 
 /// Card showing candidate details
-class _CandidateCard extends StatelessWidget {
+class _CandidateCard extends ConsumerWidget {
   final Candidate candidate;
 
   const _CandidateCard({required this.candidate});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final leadersAsync = ref.watch(leadersProvider);
+    final showVotes = ref.watch(showVotesProvider);
+    final l10n = AppLocalizations.of(context);
+
+    // Check if this candidate exists in leaders data (match by name since IDs differ between sources)
+    final matchingLeader = leadersAsync.maybeWhen(
+      data: (data) {
+        for (final leader in data.leaders) {
+          if (leader.name.toLowerCase() == candidate.name.toLowerCase()) {
+            return leader;
+          }
+        }
+        return null;
+      },
+      orElse: () => null,
+    );
+    final hasLeaderProfile = matchingLeader != null;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            // Candidate photo
-            _buildAvatar(context),
-            const SizedBox(width: 12),
-            // Candidate info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    candidate.name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      // Party symbol
-                      if (candidate.partySymbol.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: CachedNetworkImage(
-                            imageUrl: candidate.partySymbol,
-                            width: 20,
-                            height: 20,
-                            errorWidget: (context, url, error) =>
-                                const SizedBox.shrink(),
-                          ),
-                        ),
-                      Expanded(
-                        child: Text(
-                          candidate.party,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (candidate.votes > 0) ...[
+      child: InkWell(
+        onTap: hasLeaderProfile
+            ? () => context.push('/leaders/${matchingLeader.id}')
+            : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              // Candidate photo
+              _buildAvatar(context),
+              const SizedBox(width: 12),
+              // Candidate info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      candidate.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.how_to_vote, size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${candidate.votes} votes',
-                          style: Theme.of(context).textTheme.bodySmall,
+                        // Party symbol
+                        if (candidate.partySymbol.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: CachedNetworkImage(
+                              imageUrl: candidate.partySymbol,
+                              width: 20,
+                              height: 20,
+                              errorWidget: (context, url, error) =>
+                                  const SizedBox.shrink(),
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            candidate.party,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
+                    if (showVotes && candidate.votes > 0) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.how_to_vote, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${candidate.votes} ${l10n.votes}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-          ],
+              // Show arrow if leader profile exists
+              if (hasLeaderProfile)
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+            ],
+          ),
         ),
       ),
     );

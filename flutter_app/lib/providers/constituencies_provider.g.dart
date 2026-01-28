@@ -6,14 +6,35 @@ part of 'constituencies_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$constituenciesHash() => r'd55e0bb1b6aea3d47ecd39a0d59d6ddbc67060e6';
+String _$federalConstituenciesSvgHash() =>
+    r'ca35b392b07a1f059b0c140c6db7f6a9e6bcb806';
+
+/// Cached SVG path parser for federal constituencies map
+/// Using keepAlive to parse the SVG only once
+///
+/// Copied from [federalConstituenciesSvg].
+@ProviderFor(federalConstituenciesSvg)
+final federalConstituenciesSvgProvider = FutureProvider<SvgPathParser>.internal(
+  federalConstituenciesSvg,
+  name: r'federalConstituenciesSvgProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$federalConstituenciesSvgHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FederalConstituenciesSvgRef = FutureProviderRef<SvgPathParser>;
+String _$constituenciesHash() => r'79fe1e20b80489bc59acc9c992703f3094ba8ba3';
 
 /// Provider for federal constituencies data
+/// Using keepAlive to cache the data and avoid reloading on every screen visit
 ///
 /// Copied from [constituencies].
 @ProviderFor(constituencies)
-final constituenciesProvider =
-    AutoDisposeFutureProvider<ConstituencyData>.internal(
+final constituenciesProvider = FutureProvider<ConstituencyData>.internal(
   constituencies,
   name: r'constituenciesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,7 +46,7 @@ final constituenciesProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ConstituenciesRef = AutoDisposeFutureProviderRef<ConstituencyData>;
+typedef ConstituenciesRef = FutureProviderRef<ConstituencyData>;
 String _$constituenciesForDistrictHash() =>
     r'9c63028d37e979d99a1d9b143ae734726d84dc3b';
 
@@ -195,6 +216,24 @@ class _ConstituenciesForDistrictProviderElement
       (origin as ConstituenciesForDistrictProvider).districtName;
 }
 
+String _$showVotesHash() => r'adc7d5774366c21d5755472c630a7148e352af22';
+
+/// Remote flag to control vote display - updated via constituencies.json
+///
+/// Copied from [showVotes].
+@ProviderFor(showVotes)
+final showVotesProvider = AutoDisposeProvider<bool>.internal(
+  showVotes,
+  name: r'showVotesProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$showVotesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ShowVotesRef = AutoDisposeProviderRef<bool>;
 String _$selectedConstituencyHash() =>
     r'3a6b1a356027f25514691be3ca4e8006a3d06135';
 

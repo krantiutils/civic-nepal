@@ -65,7 +65,17 @@
       "Bash(do echo '=== $sha ===')",
       "Bash(done)",
       "Bash(for sha in 40c9425ac01187a03b7553045ab2dcd406ea47c9 f39214048d4d68a3d9d43cc110fb36e58c17ebb5 eace79461a503c4435ed45a67a7128a7a1f6f516)",
-      "Bash(do echo '=== Checking $sha ===' git ls-tree -r --name-only $sha)"
+      "Bash(do echo '=== Checking $sha ===' git ls-tree -r --name-only $sha)",
+      "Bash(flutter --version:*)",
+      "Bash(open:*)",
+      "Bash(magick:*)",
+      "mcp__puppeteer__puppeteer_click",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(flutter clean:*)",
+      "Bash(dart test_svg_parse.dart:*)",
+      "Bash(flutter pub add:*)",
+      "Bash(lsof:*)"
     ]
   }
 }

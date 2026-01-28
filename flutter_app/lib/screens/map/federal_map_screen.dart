@@ -8,6 +8,8 @@ import '../../models/constituency.dart';
 import '../../providers/constituencies_provider.dart';
 import '../../services/svg_path_parser.dart';
 import '../../widgets/home_title.dart';
+import '../../providers/leaders_provider.dart';
+import 'package:go_router/go_router.dart';
 
 part 'federal_map_screen.g.dart';
 
@@ -86,56 +88,67 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
           ],
         ),
         body: constituenciesAsync.when(
-          data: (data) => Row(
-            children: [
-              // Map area
-              Expanded(
-                child: Stack(
-                  children: [
-                    _buildInteractiveMap(data),
+          data: (data) {
+            final svgParserAsync = ref.watch(federalConstituenciesSvgProvider);
+            return svgParserAsync.when(
+              data: (svgParser) => Row(
+              children: [
+                // Map area
+                Expanded(
+                  child: Stack(
+                    children: [
+                      _buildInteractiveMap(data, svgParser),
                     if (selectedConstituency != null)
                       Positioned(
                         top: 16,
                         right: 16,
                         child: _ConstituencyInfoChip(name: selectedConstituency),
                       ),
-                    // Zoom hint at bottom
-                    Positioned(
-                      bottom: 16,
-                      left: 16,
-                      right: 16,
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.zoom_in, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                              const SizedBox(width: 6),
-                              Text(
-                                l10n.zoomHint,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    // Zoom hint at bottom - only show when no constituency selected
+                    if (selectedConstituency == null)
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.zoom_in, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                const SizedBox(width: 6),
+                                Flexible(
+                                  child: Text(
+                                    l10n.zoomHint,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
-              // Side panel for selected constituency
-              if (selectedConstituency != null)
-                _buildCandidatesPanel(data, selectedConstituency),
-            ],
-          ),
+                // Side panel for selected constituency
+                if (selectedConstituency != null)
+                  _buildCandidatesPanel(data, selectedConstituency),
+              ],
+            ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('${l10n.error}: $error')),
+            );
+          },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => Center(child: Text('${l10n.error}: $error')),
         ),
@@ -143,7 +156,7 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
     );
   }
 
-  Widget _buildInteractiveMap(ConstituencyData data) {
+  Widget _buildInteractiveMap(ConstituencyData data, SvgPathParser svgParser) {
     return InteractiveViewer(
       transformationController: _transformationController,
       minScale: 0.5,
@@ -154,6 +167,7 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
         height: 700,
         child: _ConstituencyMapWidget(
           data: data,
+          svgParser: svgParser,
           currentZoom: _currentZoom,
           onConstituencyTap: (name) {
             if (name.isEmpty) {
@@ -258,11 +272,13 @@ class _FederalMapScreenState extends ConsumerState<FederalMapScreen> {
 /// Interactive constituency map widget
 class _ConstituencyMapWidget extends StatefulWidget {
   final ConstituencyData data;
+  final SvgPathParser svgParser;
   final double currentZoom;
   final void Function(String name) onConstituencyTap;
 
   const _ConstituencyMapWidget({
     required this.data,
+    required this.svgParser,
     required this.currentZoom,
     required this.onConstituencyTap,
   });
@@ -272,30 +288,26 @@ class _ConstituencyMapWidget extends StatefulWidget {
 }
 
 class _ConstituencyMapWidgetState extends State<_ConstituencyMapWidget> {
-  final SvgPathParser _pathParser = SvgPathParser();
   final GlobalKey _mapKey = GlobalKey();
-  bool _isLoading = true;
-  final Map<String, Size> _textSizes = {};
+  Map<String, Size> _textSizes = {};
+  bool _textSizesComputed = false;
 
   // Fixed map size - must match parent SizedBox in _buildInteractiveMap
   static const _mapSize = Size(1200, 700);
 
+  SvgPathParser get _pathParser => widget.svgParser;
+
   @override
   void initState() {
     super.initState();
-    _loadSvgPaths();
-  }
-
-  Future<void> _loadSvgPaths() async {
-    await _pathParser.loadSvg('assets/data/election/nepal_constituencies.svg');
-    if (mounted) {
-      _precomputeTextSizes();
-      setState(() => _isLoading = false);
-    }
+    _precomputeTextSizes();
   }
 
   void _precomputeTextSizes() {
+    if (_textSizesComputed) return;
+
     const textStyle = TextStyle(fontSize: 8, fontWeight: FontWeight.bold);
+    final textSizes = <String, Size>{};
 
     for (final id in _pathParser.districtIds) {
       if (id.startsWith('path')) continue;
@@ -306,8 +318,11 @@ class _ConstituencyMapWidgetState extends State<_ConstituencyMapWidget> {
         textDirection: TextDirection.ltr,
       )..layout();
 
-      _textSizes[id] = Size(textPainter.width, textPainter.height);
+      textSizes[id] = Size(textPainter.width, textPainter.height);
     }
+
+    _textSizes = textSizes;
+    _textSizesComputed = true;
   }
 
   @override
@@ -336,17 +351,13 @@ class _ConstituencyMapWidgetState extends State<_ConstituencyMapWidget> {
                 alignment: Alignment.topLeft,
               ),
               // Constituency labels
-              if (!_isLoading) ..._buildConstituencyLabels(actualSize),
+              ..._buildConstituencyLabels(actualSize),
               Positioned.fill(
                 child: GestureDetector(
-                  onTapUp: _isLoading ? null : (details) => _handleTap(details, actualSize),
+                  onTapUp: (details) => _handleTap(details, actualSize),
                   behavior: HitTestBehavior.translucent,
                 ),
               ),
-              if (_isLoading)
-                const Positioned.fill(
-                  child: Center(child: CircularProgressIndicator()),
-                ),
             ],
           ),
         );
@@ -505,75 +516,101 @@ class _ConstituencyInfoChip extends StatelessWidget {
   }
 }
 
-class _CandidateCard extends StatelessWidget {
+class _CandidateCard extends ConsumerWidget {
   final Candidate candidate;
 
   const _CandidateCard({required this.candidate});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final leadersAsync = ref.watch(leadersProvider);
+    final showVotes = ref.watch(showVotesProvider);
+    final l10n = AppLocalizations.of(context);
+
+    // Check if this candidate exists in leaders data (match by name since IDs differ between sources)
+    final matchingLeader = leadersAsync.maybeWhen(
+      data: (data) {
+        for (final leader in data.leaders) {
+          if (leader.name.toLowerCase() == candidate.name.toLowerCase()) {
+            return leader;
+          }
+        }
+        return null;
+      },
+      orElse: () => null,
+    );
+    final hasLeaderProfile = matchingLeader != null;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            _buildAvatar(context),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    candidate.name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      if (candidate.partySymbol.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: CachedNetworkImage(
-                            imageUrl: candidate.partySymbol,
-                            width: 20,
-                            height: 20,
-                            errorWidget: (_, __, ___) => const SizedBox.shrink(),
+      child: InkWell(
+        onTap: hasLeaderProfile
+            ? () => context.push('/leaders/${matchingLeader.id}')
+            : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              _buildAvatar(context),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      candidate.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        if (candidate.partySymbol.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: CachedNetworkImage(
+                              imageUrl: candidate.partySymbol,
+                              width: 20,
+                              height: 20,
+                              errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            candidate.party,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      Expanded(
-                        child: Text(
-                          candidate.party,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      ],
+                    ),
+                    if (showVotes && candidate.votes > 0) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.how_to_vote, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${candidate.votes} ${l10n.votes}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  if (candidate.votes > 0) ...[
-                    const SizedBox(height: 4),
-                    Builder(
-                      builder: (context) {
-                        final l10n = AppLocalizations.of(context);
-                        return Row(
-                          children: [
-                            const Icon(Icons.how_to_vote, size: 14),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${candidate.votes} ${l10n.votes}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
                   ],
-                ],
+                ),
               ),
-            ),
-          ],
+              // Show arrow if leader profile exists
+              if (hasLeaderProfile)
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/notification_service.dart';
 import '../../widgets/home_title.dart';
+
+const _privacyPolicyUrl = 'https://voidash.github.io/civic-nepal/privacy-policy.html';
 
 /// Settings screen
 class SettingsScreen extends ConsumerWidget {
@@ -86,6 +89,11 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
               _SectionHeader(l10n.about),
               _TileSetting(
+                title: l10n.privacyPolicy,
+                subtitle: l10n.privacyPolicyDesc,
+                onTap: () => _openPrivacyPolicy(),
+              ),
+              _TileSetting(
                 title: l10n.about,
                 subtitle: l10n.appVersion,
                 onTap: () {
@@ -111,6 +119,13 @@ class SettingsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(l10n.cacheCleared)),
     );
+  }
+
+  Future<void> _openPrivacyPolicy() async {
+    final uri = Uri.parse(_privacyPolicyUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _showAboutDialog(BuildContext context, AppLocalizations l10n) {

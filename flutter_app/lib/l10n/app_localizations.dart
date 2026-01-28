@@ -115,6 +115,8 @@ class AppLocalizations {
   String get checkingUpdates => get('checking_updates');
   String get cacheCleared => get('cache_cleared');
   String get appVersion => get('app_version');
+  String get privacyPolicy => get('privacy_policy');
+  String get privacyPolicyDesc => get('privacy_policy_desc');
 
   // ============= Theme Options =============
   String get themeSystem => get('theme_system');
@@ -356,6 +358,8 @@ class AppLocalizations {
   String get structure => get('structure');
   String get lawMaking => get('law_making');
   String get cabinet => get('cabinet');
+  String get elections => get('elections');
+  String get electionsDesc => get('elections_desc');
   String get federalParliament => get('federal_parliament');
   String seats(int count) => getWithParams('seats', {'count': count.toString()});
   String get specialBills => get('special_bills');
