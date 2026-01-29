@@ -1,7 +1,7 @@
 name: nagarik_calendar
 description: NagarikCalendar - Nepali Calendar, Constitution, Leaders, and Civic Tools
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.1+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -78,6 +78,21 @@ dev_dependencies:
   freezed: ^2.4.0
   json_serializable: ^6.7.0
   riverpod_generator: ^2.3.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "store_assets/feature_icon.png"
+  adaptive_icon_background: "#4A90D9"
+  adaptive_icon_foreground: "store_assets/feature_icon.png"
+  web:
+    generate: true
+    image_path: "store_assets/feature_icon.png"
+  windows:
+    generate: false
+  macos:
+    generate: false
 
 flutter:
   uses-material-design: true
