@@ -374,3 +374,5 @@ election_map_desc,Federal and local election data,संघीय र स्थ�
 explore_nepal,Explore Nepal,नेपाल अन्वेषण,नेपाल अन्वेषण,Map section
 explore_nepal_desc,Schools roads and government offices,विद्यालय सडक र सरकारी कार्यालयहरू,विद्यालय सडक व सरकारी कार्यालय थें,Description
 source_osm,Data: OpenStreetMap contributors,डाटा: OpenStreetMap योगदानकर्ताहरू,डाटा: OpenStreetMap योगदानकर्ता थें,Attribution
+view_local_bodies,View Local Bodies,स्थानीय निकायहरू हेर्नुहोस्,स्थानीय निकाय स्वयेगु,Button text
+no_data_available,No data available,डाटा उपलब्ध छैन,डाटा मदु,Message

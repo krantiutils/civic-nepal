@@ -229,6 +229,8 @@ class AppLocalizations {
   String get exploreNepal => get('explore_nepal');
   String get exploreNepalDesc => get('explore_nepal_desc');
   String get sourceOsm => get('source_osm');
+  String get viewLocalBodies => get('view_local_bodies');
+  String get noDataAvailable => get('no_data_available');
 
   // ============= Constituencies =============
   String get constituencies => get('constituencies');

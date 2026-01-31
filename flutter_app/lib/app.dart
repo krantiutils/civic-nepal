@@ -9,9 +9,9 @@ import 'screens/constitution/constitution_screen.dart';
 import 'screens/leaders/leaders_screen.dart';
 import 'screens/leaders/leader_detail_screen.dart';
 import 'screens/map/map_selector_screen.dart';
-import 'screens/map/district_map_screen.dart';
+import 'screens/map/geo_district_map_screen.dart';
+import 'screens/map/geo_local_body_screen.dart';
 import 'screens/map/federal_map_screen.dart';
-import 'screens/map/local_body_screen.dart';
 import 'screens/map/constituency_screen.dart';
 import 'screens/map/nepal_map_screen.dart';
 import 'screens/settings/settings_screen.dart';
@@ -102,11 +102,11 @@ GoRouter router(RouterRef ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const MapSelectorScreen(),
         routes: [
-          // District map (local level - mayors, etc.)
+          // District map (local level - mayors, etc.) - GeoJSON based
           GoRoute(
             path: 'districts',
             parentNavigatorKey: _rootNavigatorKey,
-            builder: (context, state) => const DistrictMapScreen(),
+            builder: (context, state) => const GeoDistrictMapScreen(),
             routes: [
               // Local bodies for a specific district
               GoRoute(
@@ -114,7 +114,7 @@ GoRouter router(RouterRef ref) {
                 parentNavigatorKey: _rootNavigatorKey,
                 builder: (context, state) {
                   final district = state.pathParameters['district'] ?? '';
-                  return LocalBodyScreen(districtName: Uri.decodeComponent(district));
+                  return GeoLocalBodyScreen(districtName: Uri.decodeComponent(district));
                 },
               ),
             ],
