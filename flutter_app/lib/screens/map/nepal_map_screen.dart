@@ -1472,7 +1472,6 @@ class _NepalMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     _drawCountryFill(canvas, size);
-    _drawDisputedTerritory(canvas, size);
     _drawProvinces(canvas, size);
     _drawDistricts(canvas, size);
     _drawCountryOutline(canvas, size);
@@ -1535,89 +1534,6 @@ class _NepalMapPainter extends CustomPainter {
       }
       canvas.drawPath(path, paint);
     }
-  }
-
-  /// Draw the disputed Kalapani-Limpiyadhura-Lipulekh territory
-  /// This area is claimed by Nepal as per the Sugauli Treaty (1816)
-  void _drawDisputedTerritory(Canvas canvas, Size size) {
-    // Disputed territory coordinates (lon, lat) based on Nepal's official map
-    // The area between Limpiyadhura (west), Lipulekh (current border), and back
-    // Reference: Limpiyadhura 30.42°N, 80.57°E; Lipulekh 30.23°N, 80.92°E
-    final disputedArea = [
-      // Start from Limpiyadhura (claimed source of Kali River)
-      [80.30, 30.45],  // Limpiyadhura area - northwest corner
-      [80.42, 30.44],  // Ridge line
-      [80.52, 30.42],  // Along watershed
-      [80.62, 30.38],  // Towards Lipulekh
-      [80.72, 30.32],  // Approaching current border
-      [80.82, 30.26],  // Near Tinkar
-      [80.90, 30.22],  // Lipulekh/Kalapani (current border point)
-      // Follow current de facto border back southwest
-      [80.87, 30.19],
-      [80.82, 30.15],
-      [80.76, 30.10],
-      [80.70, 30.05],
-      [80.62, 29.98],
-      [80.55, 29.92],
-      [80.50, 29.85],
-      [80.45, 29.80],
-      // West edge back up to Limpiyadhura
-      [80.35, 29.90],
-      [80.30, 30.00],
-      [80.28, 30.15],
-      [80.28, 30.30],
-      [80.30, 30.45],  // Back to start
-    ];
-
-    // Create path for disputed area
-    final path = Path();
-    bool first = true;
-    for (final point in disputedArea) {
-      final offset = _latLonToCanvas(point[1], point[0], size);
-      if (first) {
-        path.moveTo(offset.dx, offset.dy);
-        first = false;
-      } else {
-        path.lineTo(offset.dx, offset.dy);
-      }
-    }
-    path.close();
-
-    // Fill with a distinct color (same as Sudurpashchim Province - pink)
-    final fillPaint = Paint()
-      ..color = Colors.pink.shade100.withValues(alpha: 0.6)
-      ..style = PaintingStyle.fill;
-    canvas.drawPath(path, fillPaint);
-
-    // Draw diagonal stripes to indicate disputed status
-    canvas.save();
-    canvas.clipPath(path);
-
-    final stripePaint = Paint()
-      ..color = Colors.pink.shade300.withValues(alpha: 0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-
-    // Draw diagonal lines
-    final bounds = path.getBounds();
-    const step = 6.0;
-    for (double i = bounds.left - bounds.height; i < bounds.right; i += step) {
-      canvas.drawLine(
-        Offset(i, bounds.top),
-        Offset(i + bounds.height, bounds.bottom),
-        stripePaint,
-      );
-    }
-
-    canvas.restore();
-
-    // Draw border with dashed line effect
-    final borderPaint = Paint()
-      ..color = Colors.red.shade700
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-
-    canvas.drawPath(path, borderPaint);
   }
 
   void _drawProvinces(Canvas canvas, Size size) {
