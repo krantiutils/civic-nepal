@@ -306,23 +306,55 @@ class _ConstituencyMapPainter extends CustomPainter {
     canvas.drawPath(path, borderPaint);
   }
 
+  double _calculatePolygonArea(List<List<double>> path) {
+    // Shoelace formula for polygon area
+    if (path.length < 3) return 0;
+    double area = 0;
+    int j = path.length - 1;
+    for (int i = 0; i < path.length; i++) {
+      area += (path[j][0] + path[i][0]) * (path[j][1] - path[i][1]);
+      j = i;
+    }
+    return (area / 2).abs();
+  }
+
   void _drawLabels(Canvas canvas, Size size) {
+    final fontSize = 9 / currentZoom.clamp(1.0, 3.0);
     final textStyle = ui.TextStyle(
       color: Colors.black87,
-      fontSize: 10 / currentZoom.clamp(1.0, 3.0),
+      fontSize: fontSize,
       fontWeight: FontWeight.w600,
     );
 
+    // Calculate minimum area threshold based on zoom
+    // At zoom 1, only show labels for large constituencies
+    // At higher zoom, show more labels
+    final minArea = 50 / (currentZoom * currentZoom);
+
+    // Track placed label positions to avoid overlap
+    final placedLabels = <Rect>[];
+
     for (final constituency in data.constituencies) {
+      // Calculate constituency area
+      final area = _calculatePolygonArea(constituency.path);
+      if (area < minArea) continue;
+
       final offset = _viewBoxToCanvas(
         constituency.centroid[0],
         constituency.centroid[1],
         size,
       );
 
-      // Format label as "District-N"
+      // Skip if label center would be outside canvas bounds (with margin)
+      const margin = 20.0;
+      if (offset.dx < margin || offset.dx > size.width - margin ||
+          offset.dy < margin || offset.dy > size.height - margin) {
+        continue;
+      }
+
+      // Format label - just show number for small areas, full name for large
       final label = constituency.number > 0
-          ? '${constituency.district.split(' ').first}-${constituency.number}'
+          ? (area > 100 ? '${constituency.district.split(' ').first}-${constituency.number}' : '${constituency.number}')
           : constituency.district;
 
       final builder = ui.ParagraphBuilder(ui.ParagraphStyle(
@@ -332,7 +364,27 @@ class _ConstituencyMapPainter extends CustomPainter {
         ..pushStyle(textStyle)
         ..addText(label);
 
-      final paragraph = builder.build()..layout(const ui.ParagraphConstraints(width: 80));
+      final paragraph = builder.build()..layout(const ui.ParagraphConstraints(width: 70));
+
+      // Calculate label bounds
+      final labelRect = Rect.fromCenter(
+        center: offset,
+        width: paragraph.width + 4,
+        height: paragraph.height + 2,
+      );
+
+      // Check for overlap with already placed labels
+      bool overlaps = false;
+      for (final placed in placedLabels) {
+        if (labelRect.overlaps(placed)) {
+          overlaps = true;
+          break;
+        }
+      }
+      if (overlaps) continue;
+
+      // Draw label and record position
+      placedLabels.add(labelRect);
       canvas.drawParagraph(
         paragraph,
         Offset(offset.dx - paragraph.width / 2, offset.dy - paragraph.height / 2),
