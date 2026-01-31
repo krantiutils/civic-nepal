@@ -33,6 +33,47 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- pdf.js for pdfx package -->
+  <script src='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.min.mjs' type='module'></script>
+  <script type='module'>
+  var { pdfjsLib } = globalThis;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.worker.mjs';
+
+  var pdfRenderOptions = {
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/cmaps/',
+    cMapPacked: true,
+  }
+  </script>
+
+  <!-- pdf-lib for PDF compression (pure JS, no WASM) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script>
+  // Expose compression function using pdf-lib
+  window.compressPdfWithMupdf = async function(pdfData, quality) {
+    try {
+      const { PDFDocument } = PDFLib;
+
+      // Load the PDF
+      const pdfDoc = await PDFDocument.load(pdfData, {
+        ignoreEncryption: true,
+      });
+
+      // Save with compression options
+      // pdf-lib automatically uses deflate compression
+      const compressedBytes = await pdfDoc.save({
+        useObjectStreams: true,      // Compress objects into streams
+        addDefaultPage: false,
+        objectsPerTick: 50,
+      });
+
+      return new Uint8Array(compressedBytes);
+    } catch (e) {
+      console.error("PDF compression error:", e);
+      return null;
+    }
+  };
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

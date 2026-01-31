@@ -224,16 +224,48 @@ class GeoConstituency {
   }
 }
 
+/// Disputed territory data model
+class GeoDisputedTerritory {
+  final String id;
+  final String name;
+  final String nameNp;
+  final List<double> centroid;
+  final List<List<double>> path;
+
+  const GeoDisputedTerritory({
+    required this.id,
+    required this.name,
+    required this.nameNp,
+    required this.centroid,
+    required this.path,
+  });
+
+  factory GeoDisputedTerritory.fromJson(Map<String, dynamic> json) {
+    return GeoDisputedTerritory(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      nameNp: json['nameNp'] ?? '',
+      centroid: (json['centroid'] as List?)?.cast<double>() ?? [0, 0],
+      path: (json['path'] as List?)
+              ?.map((p) => (p as List).cast<double>())
+              .toList() ??
+          [],
+    );
+  }
+}
+
 /// Constituencies collection
 class GeoConstituenciesData {
   final List<double> viewBox;
   final int count;
   final List<GeoConstituency> constituencies;
+  final GeoDisputedTerritory? disputedTerritory;
 
   const GeoConstituenciesData({
     required this.viewBox,
     required this.count,
     required this.constituencies,
+    this.disputedTerritory,
   });
 
   factory GeoConstituenciesData.fromJson(Map<String, dynamic> json) {
@@ -244,6 +276,10 @@ class GeoConstituenciesData {
               ?.map((c) => GeoConstituency.fromJson(c as Map<String, dynamic>))
               .toList() ??
           [],
+      disputedTerritory: json['disputedTerritory'] != null
+          ? GeoDisputedTerritory.fromJson(
+              json['disputedTerritory'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
@@ -264,4 +300,140 @@ class SelectedGeoConstituency extends _$SelectedGeoConstituency {
 
   void select(GeoConstituency? constituency) => state = constituency;
   void clear() => state = null;
+}
+
+/// City from OSM data
+class MapCity {
+  final String name;
+  final String nameNp;
+  final double lat;
+  final double lon;
+  final double x;
+  final double y;
+  final int population;
+  final String type;
+  final bool isCapital;
+
+  const MapCity({
+    required this.name,
+    required this.nameNp,
+    required this.lat,
+    required this.lon,
+    required this.x,
+    required this.y,
+    required this.population,
+    required this.type,
+    required this.isCapital,
+  });
+
+  factory MapCity.fromJson(Map<String, dynamic> json) {
+    final capital = json['capital'] ?? '';
+    return MapCity(
+      name: json['name'] ?? '',
+      nameNp: json['nameNp'] ?? '',
+      lat: (json['lat'] as num?)?.toDouble() ?? 0,
+      lon: (json['lon'] as num?)?.toDouble() ?? 0,
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      population: json['population'] ?? 0,
+      type: json['type'] ?? 'city',
+      isCapital: capital == 'yes' || capital == '4',
+    );
+  }
+}
+
+/// Mountain peak from OSM data
+class MapPeak {
+  final String name;
+  final String nameNp;
+  final double lat;
+  final double lon;
+  final double x;
+  final double y;
+  final int elevation;
+
+  const MapPeak({
+    required this.name,
+    required this.nameNp,
+    required this.lat,
+    required this.lon,
+    required this.x,
+    required this.y,
+    required this.elevation,
+  });
+
+  factory MapPeak.fromJson(Map<String, dynamic> json) {
+    return MapPeak(
+      name: json['name'] ?? '',
+      nameNp: json['nameNp'] ?? '',
+      lat: (json['lat'] as num?)?.toDouble() ?? 0,
+      lon: (json['lon'] as num?)?.toDouble() ?? 0,
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      elevation: json['elevation'] ?? 0,
+    );
+  }
+}
+
+/// River from OSM data
+class MapRiver {
+  final String name;
+  final String nameNp;
+  final List<List<double>> path;
+
+  const MapRiver({
+    required this.name,
+    required this.nameNp,
+    required this.path,
+  });
+
+  factory MapRiver.fromJson(Map<String, dynamic> json) {
+    return MapRiver(
+      name: json['name'] ?? '',
+      nameNp: json['nameNp'] ?? '',
+      path: (json['path'] as List?)
+              ?.map((p) => (p as List).cast<double>())
+              .toList() ??
+          [],
+    );
+  }
+}
+
+/// Map features collection (cities, peaks, rivers)
+class MapFeaturesData {
+  final List<MapCity> cities;
+  final List<MapPeak> peaks;
+  final List<MapRiver> rivers;
+
+  const MapFeaturesData({
+    required this.cities,
+    required this.peaks,
+    required this.rivers,
+  });
+
+  factory MapFeaturesData.fromJson(Map<String, dynamic> json) {
+    return MapFeaturesData(
+      cities: (json['cities'] as List?)
+              ?.map((c) => MapCity.fromJson(c as Map<String, dynamic>))
+              .toList() ??
+          [],
+      peaks: (json['peaks'] as List?)
+              ?.map((p) => MapPeak.fromJson(p as Map<String, dynamic>))
+              .toList() ??
+          [],
+      rivers: (json['rivers'] as List?)
+              ?.map((r) => MapRiver.fromJson(r as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+}
+
+/// Provider for map features (cities, peaks, rivers)
+@Riverpod(keepAlive: true)
+Future<MapFeaturesData> mapFeatures(MapFeaturesRef ref) async {
+  final jsonString =
+      await rootBundle.loadString('assets/data/election/map_features.json');
+  final json = jsonDecode(jsonString) as Map<String, dynamic>;
+  return MapFeaturesData.fromJson(json);
 }

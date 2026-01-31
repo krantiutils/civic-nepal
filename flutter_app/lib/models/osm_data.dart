@@ -190,6 +190,9 @@ class MapLayerState {
   final bool showTrunk;
   final bool showPrimary;
   final bool showSecondary;
+  final bool showCities;
+  final bool showPeaks;
+  final bool showRivers;
 
   const MapLayerState({
     this.showRoads = false,
@@ -202,6 +205,9 @@ class MapLayerState {
     this.showTrunk = true,
     this.showPrimary = true,
     this.showSecondary = false,
+    this.showCities = false,
+    this.showPeaks = false,
+    this.showRivers = false,
   });
 
   MapLayerState copyWith({
@@ -215,6 +221,9 @@ class MapLayerState {
     bool? showTrunk,
     bool? showPrimary,
     bool? showSecondary,
+    bool? showCities,
+    bool? showPeaks,
+    bool? showRivers,
   }) {
     return MapLayerState(
       showRoads: showRoads ?? this.showRoads,
@@ -227,10 +236,14 @@ class MapLayerState {
       showTrunk: showTrunk ?? this.showTrunk,
       showPrimary: showPrimary ?? this.showPrimary,
       showSecondary: showSecondary ?? this.showSecondary,
+      showCities: showCities ?? this.showCities,
+      showPeaks: showPeaks ?? this.showPeaks,
+      showRivers: showRivers ?? this.showRivers,
     );
   }
 
   bool get hasAnyLayer =>
       showRoads || showSchools || showColleges || showGovernment ||
-      showReligious || showPolice || showTrekking;
+      showReligious || showPolice || showTrekking ||
+      showCities || showPeaks || showRivers;
 }

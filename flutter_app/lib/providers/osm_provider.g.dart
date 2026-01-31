@@ -135,7 +135,43 @@ final trekkingSpotsProvider = FutureProvider<List<TrekkingPoint>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TrekkingSpotsRef = FutureProviderRef<List<TrekkingPoint>>;
-String _$mapLayersHash() => r'e8e76402f641b01191eb9733a2c9ff96df830c3c';
+String _$citiesHash() => r'8a99ba36cb4abd9fea6e5b3b44aeaf58b053687c';
+
+/// Provider for cities data
+///
+/// Copied from [cities].
+@ProviderFor(cities)
+final citiesProvider = FutureProvider<OsmPointData>.internal(
+  cities,
+  name: r'citiesProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$citiesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CitiesRef = FutureProviderRef<OsmPointData>;
+String _$peaksHash() => r'725a8320de914c8a818a9c9c4be84c66dfab84e4';
+
+/// Provider for peaks data
+///
+/// Copied from [peaks].
+@ProviderFor(peaks)
+final peaksProvider = FutureProvider<OsmPointData>.internal(
+  peaks,
+  name: r'peaksProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$peaksHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PeaksRef = FutureProviderRef<OsmPointData>;
+String _$mapLayersHash() => r'7413b6093246b63b9281347bcb8f5bf9a6742d11';
 
 /// Map layer state provider
 ///

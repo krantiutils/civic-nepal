@@ -216,6 +216,7 @@ class NepalMapScreen extends ConsumerStatefulWidget {
 class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
   final TransformationController _transformationController =
       TransformationController();
+  final GlobalKey _canvasKey = GlobalKey();
   double _currentZoom = 1.0;
 
   @override
@@ -285,18 +286,19 @@ class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
         Expanded(
           child: Stack(
             children: [
-              // The map
-              InteractiveViewer(
-                transformationController: _transformationController,
-                minScale: 0.5,
-                maxScale: 20.0,
-                constrained: false,
-                child: SizedBox(
-                  width: 1200,
-                  height: 800,
-                  child: GestureDetector(
-                    onTapUp: (details) => _handleTap(details, boundaries),
+              // The map - use Listener outside InteractiveViewer for tap detection
+              Listener(
+                onPointerUp: (event) => _handlePointerUp(event, boundaries),
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  minScale: 0.5,
+                  maxScale: 20.0,
+                  constrained: false,
+                  child: SizedBox(
+                    width: 1200,
+                    height: 800,
                     child: CustomPaint(
+                      key: _canvasKey,
                       size: const Size(1200, 800),
                       painter: _NepalMapPainter(
                         boundaries: boundaries,
@@ -310,6 +312,8 @@ class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
                         religiousData: ref.watch(religiousSitesProvider).valueOrNull,
                         policeData: ref.watch(policeStationsProvider).valueOrNull,
                         trekkingData: ref.watch(trekkingSpotsProvider).valueOrNull,
+                        citiesData: ref.watch(citiesProvider).valueOrNull,
+                        peaksData: ref.watch(peaksProvider).valueOrNull,
                       ),
                     ),
                   ),
@@ -369,11 +373,19 @@ class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
     );
   }
 
-  void _handleTap(TapUpDetails details, OsmBoundaries boundaries) {
-    final localPosition = details.localPosition;
-    final matrix = _transformationController.value.clone()..invert();
-    final transformed = MatrixUtils.transformPoint(matrix, localPosition);
-    final (lon, lat) = _svgToLatLon(transformed.dx, transformed.dy);
+  void _handlePointerUp(PointerUpEvent event, OsmBoundaries boundaries) {
+    // Get the canvas RenderBox to convert global position to local canvas coordinates
+    final RenderBox? canvasBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
+    if (canvasBox == null) return;
+
+    // Convert global position to canvas local position
+    final Offset canvasPos = canvasBox.globalToLocal(event.position);
+
+    // Clamp to valid canvas bounds
+    final clampedX = canvasPos.dx.clamp(0.0, 1200.0);
+    final clampedY = canvasPos.dy.clamp(0.0, 800.0);
+
+    final (lon, lat) = _svgToLatLon(clampedX, clampedY);
 
     final layerState = ref.read(mapLayersProvider);
 
@@ -447,6 +459,32 @@ class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
         final point = _findNearestPoint(lon, lat, govt.items);
         if (point != null) {
           ref.read(selectedMapPOIProvider.notifier).select(SelectedPOI.fromOsmPoint(point, 'government'));
+          ref.read(selectedMapDistrictProvider.notifier).clear();
+          return;
+        }
+      }
+    }
+
+    // Peaks
+    if (layerState.showPeaks) {
+      final peaksData = ref.read(peaksProvider).valueOrNull;
+      if (peaksData != null) {
+        final peak = _findNearestCityOrPeak(lon, lat, peaksData.items, false);
+        if (peak != null) {
+          ref.read(selectedMapPOIProvider.notifier).select(SelectedPOI.fromOsmPoint(peak, 'peak'));
+          ref.read(selectedMapDistrictProvider.notifier).clear();
+          return;
+        }
+      }
+    }
+
+    // Cities
+    if (layerState.showCities) {
+      final citiesData = ref.read(citiesProvider).valueOrNull;
+      if (citiesData != null) {
+        final city = _findNearestCityOrPeak(lon, lat, citiesData.items, true);
+        if (city != null) {
+          ref.read(selectedMapPOIProvider.notifier).select(SelectedPOI.fromOsmPoint(city, 'city'));
           ref.read(selectedMapDistrictProvider.notifier).clear();
           return;
         }
@@ -537,6 +575,28 @@ class _NepalMapScreenState extends ConsumerState<NepalMapScreen> {
       if (_currentZoom >= 1.5 && _currentZoom < 3.0 && point.id % 3 != 0) continue;
       if (_currentZoom >= 3.0 && _currentZoom < 5.0 && point.id % 2 != 0) continue;
 
+      final dist = _distance(lon, lat, point.lon, point.lat);
+      if (dist < minDist) {
+        minDist = dist;
+        nearest = point;
+      }
+    }
+
+    return nearest;
+  }
+
+  OsmPoint? _findNearestCityOrPeak(double lon, double lat, List<OsmPoint> points, bool isCity) {
+    final threshold = 0.05 / _currentZoom;
+    OsmPoint? nearest;
+    double minDist = threshold;
+
+    // Match the painter's step-based filtering
+    final step = isCity
+        ? (_currentZoom < 1.5 ? 5 : (_currentZoom < 3.0 ? 2 : 1))
+        : (_currentZoom < 1.5 ? 10 : (_currentZoom < 3.0 ? 3 : (_currentZoom < 5.0 ? 2 : 1)));
+
+    for (int i = 0; i < points.length; i += step) {
+      final point = points[i];
       final dist = _distance(lon, lat, point.lon, point.lat);
       if (dist < minDist) {
         minDist = dist;
@@ -691,6 +751,32 @@ class _LayerControlPanel extends ConsumerWidget {
                   color: Colors.green,
                   isEnabled: layerState.showTrekking,
                   onToggle: () => ref.read(mapLayersProvider.notifier).toggleTrekking(),
+                ),
+                const Divider(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: Text(
+                    l10n.geography,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                _LayerTile(
+                  icon: Icons.location_city,
+                  label: l10n.cities,
+                  subtitle: '393',
+                  color: Colors.black87,
+                  isEnabled: layerState.showCities,
+                  onToggle: () => ref.read(mapLayersProvider.notifier).toggleCities(),
+                ),
+                _LayerTile(
+                  icon: Icons.filter_hdr,
+                  label: l10n.peaks,
+                  subtitle: '582',
+                  color: Colors.brown,
+                  isEnabled: layerState.showPeaks,
+                  onToggle: () => ref.read(mapLayersProvider.notifier).togglePeaks(),
                 ),
               ],
             ),
@@ -1353,6 +1439,8 @@ class _NepalMapPainter extends CustomPainter {
   final List<ReligiousPoint>? religiousData;
   final List<PolicePoint>? policeData;
   final List<TrekkingPoint>? trekkingData;
+  final OsmPointData? citiesData;
+  final OsmPointData? peaksData;
 
   static const minLon = 80.0;
   static const maxLon = 88.2;
@@ -1371,6 +1459,8 @@ class _NepalMapPainter extends CustomPainter {
     this.religiousData,
     this.policeData,
     this.trekkingData,
+    this.citiesData,
+    this.peaksData,
   });
 
   Offset _latLonToCanvas(double lat, double lon, Size size) {
@@ -1382,6 +1472,7 @@ class _NepalMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     _drawCountryFill(canvas, size);
+    _drawDisputedTerritory(canvas, size);
     _drawProvinces(canvas, size);
     _drawDistricts(canvas, size);
     _drawCountryOutline(canvas, size);
@@ -1406,6 +1497,14 @@ class _NepalMapPainter extends CustomPainter {
     }
     if (layerState.showTrekking && trekkingData != null) {
       _drawTrekkingPoints(canvas, size, trekkingData!);
+    }
+
+    // Draw cities and peaks on top
+    if (layerState.showPeaks && peaksData != null) {
+      _drawPeaks(canvas, size, peaksData!.items);
+    }
+    if (layerState.showCities && citiesData != null) {
+      _drawCityPoints(canvas, size, citiesData!.items);
     }
 
     if (currentZoom > 2.0) {
@@ -1436,6 +1535,89 @@ class _NepalMapPainter extends CustomPainter {
       }
       canvas.drawPath(path, paint);
     }
+  }
+
+  /// Draw the disputed Kalapani-Limpiyadhura-Lipulekh territory
+  /// This area is claimed by Nepal as per the Sugauli Treaty (1816)
+  void _drawDisputedTerritory(Canvas canvas, Size size) {
+    // Disputed territory coordinates (lon, lat) based on Nepal's official map
+    // The area between Limpiyadhura (west), Lipulekh (current border), and back
+    // Reference: Limpiyadhura 30.42°N, 80.57°E; Lipulekh 30.23°N, 80.92°E
+    final disputedArea = [
+      // Start from Limpiyadhura (claimed source of Kali River)
+      [80.30, 30.45],  // Limpiyadhura area - northwest corner
+      [80.42, 30.44],  // Ridge line
+      [80.52, 30.42],  // Along watershed
+      [80.62, 30.38],  // Towards Lipulekh
+      [80.72, 30.32],  // Approaching current border
+      [80.82, 30.26],  // Near Tinkar
+      [80.90, 30.22],  // Lipulekh/Kalapani (current border point)
+      // Follow current de facto border back southwest
+      [80.87, 30.19],
+      [80.82, 30.15],
+      [80.76, 30.10],
+      [80.70, 30.05],
+      [80.62, 29.98],
+      [80.55, 29.92],
+      [80.50, 29.85],
+      [80.45, 29.80],
+      // West edge back up to Limpiyadhura
+      [80.35, 29.90],
+      [80.30, 30.00],
+      [80.28, 30.15],
+      [80.28, 30.30],
+      [80.30, 30.45],  // Back to start
+    ];
+
+    // Create path for disputed area
+    final path = Path();
+    bool first = true;
+    for (final point in disputedArea) {
+      final offset = _latLonToCanvas(point[1], point[0], size);
+      if (first) {
+        path.moveTo(offset.dx, offset.dy);
+        first = false;
+      } else {
+        path.lineTo(offset.dx, offset.dy);
+      }
+    }
+    path.close();
+
+    // Fill with a distinct color (same as Sudurpashchim Province - pink)
+    final fillPaint = Paint()
+      ..color = Colors.pink.shade100.withValues(alpha: 0.6)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path, fillPaint);
+
+    // Draw diagonal stripes to indicate disputed status
+    canvas.save();
+    canvas.clipPath(path);
+
+    final stripePaint = Paint()
+      ..color = Colors.pink.shade300.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    // Draw diagonal lines
+    final bounds = path.getBounds();
+    const step = 6.0;
+    for (double i = bounds.left - bounds.height; i < bounds.right; i += step) {
+      canvas.drawLine(
+        Offset(i, bounds.top),
+        Offset(i + bounds.height, bounds.bottom),
+        stripePaint,
+      );
+    }
+
+    canvas.restore();
+
+    // Draw border with dashed line effect
+    final borderPaint = Paint()
+      ..color = Colors.red.shade700
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    canvas.drawPath(path, borderPaint);
   }
 
   void _drawProvinces(Canvas canvas, Size size) {
@@ -1721,10 +1903,72 @@ class _NepalMapPainter extends CustomPainter {
     }
   }
 
+  void _drawCityPoints(Canvas canvas, Size size, List<OsmPoint> cities) {
+    final cityPaint = Paint()
+      ..color = Colors.black87
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final radius = (3.0 / currentZoom).clamp(2.0, 4.0);
+
+    // Filter based on zoom level (same as schools)
+    final step = currentZoom < 1.5 ? 5 : (currentZoom < 3.0 ? 2 : 1);
+    for (int i = 0; i < cities.length; i += step) {
+      final city = cities[i];
+      final offset = _latLonToCanvas(city.lat, city.lon, size);
+
+      if (offset.dx < 0 || offset.dx > size.width || offset.dy < 0 || offset.dy > size.height) {
+        continue;
+      }
+
+      canvas.drawCircle(offset, radius, cityPaint);
+      canvas.drawCircle(offset, radius, borderPaint);
+    }
+  }
+
+  void _drawPeaks(Canvas canvas, Size size, List<OsmPoint> peaks) {
+    final peakPaint = Paint()
+      ..color = Colors.brown.shade700
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final triangleSize = (4.0 / currentZoom).clamp(2.0, 5.0);
+
+    // Filter based on zoom level
+    final step = currentZoom < 1.5 ? 10 : (currentZoom < 3.0 ? 3 : (currentZoom < 5.0 ? 2 : 1));
+    for (int i = 0; i < peaks.length; i += step) {
+      final peak = peaks[i];
+      final offset = _latLonToCanvas(peak.lat, peak.lon, size);
+
+      if (offset.dx < 0 || offset.dx > size.width || offset.dy < 0 || offset.dy > size.height) {
+        continue;
+      }
+
+      // Draw peak triangle
+      final path = Path()
+        ..moveTo(offset.dx, offset.dy - triangleSize)
+        ..lineTo(offset.dx - triangleSize * 0.7, offset.dy + triangleSize * 0.5)
+        ..lineTo(offset.dx + triangleSize * 0.7, offset.dy + triangleSize * 0.5)
+        ..close();
+      canvas.drawPath(path, peakPaint);
+      canvas.drawPath(path, borderPaint);
+    }
+  }
+
   @override
   bool shouldRepaint(covariant _NepalMapPainter oldDelegate) {
     return selectedDistrict != oldDelegate.selectedDistrict ||
         currentZoom != oldDelegate.currentZoom ||
-        layerState != oldDelegate.layerState;
+        layerState != oldDelegate.layerState ||
+        citiesData != oldDelegate.citiesData ||
+        peaksData != oldDelegate.peaksData;
   }
 }

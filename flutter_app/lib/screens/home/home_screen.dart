@@ -164,6 +164,31 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              // Fourth row - PDF Compressor and Unicode Converter
+              Row(
+                children: [
+                  Expanded(
+                    child: _UtilityGridCard(
+                      icon: Icons.picture_as_pdf,
+                      title: l10n.pdfCompressorShort,
+                      titleNp: l10n.pdfCompressorNp,
+                      color: const Color(0xFFD32F2F),
+                      onTap: () => context.push('/pdf-compress'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _UtilityGridCard(
+                      icon: Icons.translate,
+                      title: l10n.unicodeShort,
+                      titleNp: l10n.unicodeNp,
+                      color: const Color(0xFF00796B),
+                      onTap: () => context.push('/unicode'),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 24),
             ],
           ),

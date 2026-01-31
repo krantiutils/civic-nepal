@@ -93,6 +93,10 @@ class AppLocalizations {
   String get forexNp => get('forex_np');
   String get goldSilver => get('gold_silver');
   String get goldSilverNp => get('gold_silver_np');
+  String get pdfCompressorShort => get('pdf_compressor_short');
+  String get pdfCompressorNp => get('pdf_compressor_np');
+  String get unicodeShort => get('unicode_short');
+  String get unicodeNp => get('unicode_np');
 
   // ============= Settings =============
   String get settings => get('settings');
@@ -224,6 +228,10 @@ class AppLocalizations {
   String get muslim => get('muslim');
   String get sikh => get('sikh');
   String get unknown => get('unknown');
+  String get geography => get('geography');
+  String get cities => get('cities');
+  String get peaks => get('peaks');
+  String get rivers => get('rivers');
   String get electionMap => get('election_map');
   String get electionMapDesc => get('election_map_desc');
   String get exploreNepal => get('explore_nepal');

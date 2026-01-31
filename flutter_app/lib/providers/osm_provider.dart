@@ -90,6 +90,22 @@ Future<List<TrekkingPoint>> trekkingSpots(TrekkingSpotsRef ref) async {
   return points.map((p) => TrekkingPoint.fromJson(p as Map<String, dynamic>)).toList();
 }
 
+/// Provider for cities data
+@Riverpod(keepAlive: true)
+Future<OsmPointData> cities(CitiesRef ref) async {
+  final jsonString = await rootBundle.loadString('assets/data/osm/cities.json');
+  final json = jsonDecode(jsonString) as Map<String, dynamic>;
+  return OsmPointData.fromJson(json);
+}
+
+/// Provider for peaks data
+@Riverpod(keepAlive: true)
+Future<OsmPointData> peaks(PeaksRef ref) async {
+  final jsonString = await rootBundle.loadString('assets/data/osm/peaks.json');
+  final json = jsonDecode(jsonString) as Map<String, dynamic>;
+  return OsmPointData.fromJson(json);
+}
+
 /// Map layer state provider
 @riverpod
 class MapLayers extends _$MapLayers {
@@ -136,6 +152,18 @@ class MapLayers extends _$MapLayers {
     state = state.copyWith(showSecondary: !state.showSecondary);
   }
 
+  void toggleCities() {
+    state = state.copyWith(showCities: !state.showCities);
+  }
+
+  void togglePeaks() {
+    state = state.copyWith(showPeaks: !state.showPeaks);
+  }
+
+  void toggleRivers() {
+    state = state.copyWith(showRivers: !state.showRivers);
+  }
+
   void showAll() {
     state = const MapLayerState(
       showRoads: true,
@@ -145,10 +173,16 @@ class MapLayers extends _$MapLayers {
       showReligious: true,
       showPolice: true,
       showTrekking: true,
+      showCities: true,
+      showPeaks: true,
+      showRivers: true,
     );
   }
 
   void hideAll() {
-    state = const MapLayerState();
+    state = const MapLayerState(
+      showCities: false,
+      showRivers: false,
+    );
   }
 }

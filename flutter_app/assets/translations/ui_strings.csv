@@ -34,6 +34,10 @@ forex,Forex,विदेशी मुद्रा,विदेशी मुद�
 forex_np,विदेशी मुद्रा,विदेशी मुद्रा,विदेशी मुद्रा,Utility card Nepali
 gold_silver,Gold/Silver,सुन/चाँदी,लुँ/चाँदी,Utility card title
 gold_silver_np,सुन/चाँदी,सुन/चाँदी,लुँ/चाँदी,Utility card Nepali
+pdf_compressor_short,PDF Compress,PDF कम्प्रेस,PDF कम्प्रेस,Utility card title
+pdf_compressor_np,PDF कम्प्रेस,PDF कम्प्रेस,PDF कम्प्रेस,Utility card Nepali
+unicode_short,Unicode,युनिकोड,युनिकोड,Utility card title
+unicode_np,युनिकोड,युनिकोड,युनिकोड,Utility card Nepali
 
 # Settings Screen
 settings,Settings,सेटिङ,सेटिङ,Screen title
@@ -392,6 +396,10 @@ christian,Christian,ईसाई,ईसाई,Religion
 muslim,Muslim,मुस्लिम,मुस्लिम,Religion
 sikh,Sikh,सिख,सिख,Religion
 unknown,Unknown,अज्ञात,थाःमसः,Religion fallback
+geography,Geography,भूगोल,भूगोल,Map layer section
+cities,Cities,शहरहरू,नगर थें,Map layer
+peaks,Peaks,शिखरहरू,शिखर थें,Map layer
+rivers,Rivers,नदीहरू,खुसि थें,Map layer
 election_map,Election Map,निर्वाचन नक्सा,निर्वाचन नक्सा,Map section
 election_map_desc,Federal and local election data,संघीय र स्थानीय निर्वाचन डाटा,संघीय व स्थानीय निर्वाचन डाटा,Description
 explore_nepal,Explore Nepal,नेपाल अन्वेषण,नेपाल अन्वेषण,Map section

@@ -1,9 +1,12 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
+
+// Conditional imports for platform-specific implementations
+import 'pdf_service_stub.dart'
+    if (dart.library.io) 'pdf_service_mobile.dart'
+    if (dart.library.html) 'pdf_service_web.dart' as platform;
 
 /// Picked PDF result
 class PickedPdf {
@@ -18,14 +21,14 @@ class PickedPdf {
 
 /// Quality levels for PDF compression
 enum PdfQuality {
-  low(72, 'Low (72 DPI)'),
-  medium(100, 'Medium (100 DPI)'),
-  high(150, 'High (150 DPI)');
+  low(30, 'Low'),
+  medium(50, 'Medium'),
+  high(70, 'High');
 
-  final int dpi;
+  final int quality;
   final String label;
 
-  const PdfQuality(this.dpi, this.label);
+  const PdfQuality(this.quality, this.label);
 }
 
 /// Service for PDF operations
@@ -42,12 +45,26 @@ class PdfService {
       if (result == null || result.files.isEmpty) return null;
 
       final file = result.files.first;
-      if (file.bytes == null) return null;
+      Uint8List? bytes = file.bytes;
+
+      // On mobile, bytes might be null - read from path
+      // On web, path is not available so we skip this
+      if (bytes == null && !kIsWeb) {
+        final path = file.path;
+        if (path != null) {
+          bytes = await platform.readFileBytes(path);
+        }
+      }
+
+      if (bytes == null) {
+        debugPrint('Could not get PDF bytes');
+        return null;
+      }
 
       return PickedPdf(
-        bytes: file.bytes!,
+        bytes: bytes,
         name: file.name,
-        path: file.path,
+        path: kIsWeb ? null : file.path,
       );
     } catch (e) {
       debugPrint('Error picking PDF: $e');
@@ -55,93 +72,23 @@ class PdfService {
     }
   }
 
-  /// Compress PDF by reducing image quality
-  /// Note: This is a simplified compression that works by re-encoding
-  /// For production, consider using native PDF libraries
+  /// Compress PDF - available on all platforms
   static Future<Uint8List?> compressPdf(
     Uint8List pdfBytes, {
     required PdfQuality quality,
+    required String filename,
   }) async {
-    // PDF compression in pure Dart is limited
-    // This would require either:
-    // 1. Native platform code (iOS: PDFKit, Android: PdfRenderer + iText)
-    // 2. Server-side processing
-    // 3. A specialized Flutter plugin
-    //
-    // For now, we return a simulated compression based on quality
-    // In production, implement native compression or use a backend service
-
-    try {
-      // Simulate compression delay
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Calculate simulated compressed size based on quality
-      // Real compression would use native libraries
-      final compressionRatio = switch (quality) {
-        PdfQuality.low => 0.3,
-        PdfQuality.medium => 0.5,
-        PdfQuality.high => 0.7,
-      };
-
-      // For MVP, return original bytes with a note
-      // Real implementation would compress here
-      return pdfBytes;
-    } catch (e) {
-      debugPrint('Error compressing PDF: $e');
-      return null;
-    }
+    return platform.compressPdf(pdfBytes, quality: quality.quality, filename: filename);
   }
 
-  /// Share PDF file
+  /// Share PDF file (on web, triggers download)
   static Future<void> sharePdf(Uint8List bytes, {required String filename}) async {
-    try {
-      if (kIsWeb) {
-        // Web sharing handled differently
-        debugPrint('PDF sharing on web not fully supported');
-        return;
-      }
-
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/$filename');
-      await file.writeAsBytes(bytes);
-
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        subject: filename,
-      );
-    } catch (e) {
-      debugPrint('Error sharing PDF: $e');
-    }
+    await platform.sharePdf(bytes, filename: filename);
   }
 
   /// Save PDF to downloads
   static Future<bool> savePdf(Uint8List bytes, {required String filename}) async {
-    try {
-      if (kIsWeb) {
-        // Web download handled differently
-        return false;
-      }
-
-      // Get downloads directory or documents directory
-      Directory? saveDir;
-      if (Platform.isAndroid) {
-        saveDir = Directory('/storage/emulated/0/Download');
-        if (!await saveDir.exists()) {
-          saveDir = await getExternalStorageDirectory();
-        }
-      } else {
-        saveDir = await getApplicationDocumentsDirectory();
-      }
-
-      if (saveDir == null) return false;
-
-      final file = File('${saveDir.path}/$filename');
-      await file.writeAsBytes(bytes);
-      return true;
-    } catch (e) {
-      debugPrint('Error saving PDF: $e');
-      return false;
-    }
+    return platform.savePdf(bytes, filename: filename);
   }
 
   /// Format file size for display
@@ -150,4 +97,7 @@ class PdfService {
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
+
+  /// Check if compression is supported on current platform
+  static bool get isCompressionSupported => !kIsWeb;
 }

@@ -209,6 +209,24 @@ final geoConstituenciesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GeoConstituenciesRef = FutureProviderRef<GeoConstituenciesData>;
+String _$mapFeaturesHash() => r'03fecd1943ae18d48096b590b8f4c285f81a0144';
+
+/// Provider for map features (cities, peaks, rivers)
+///
+/// Copied from [mapFeatures].
+@ProviderFor(mapFeatures)
+final mapFeaturesProvider = FutureProvider<MapFeaturesData>.internal(
+  mapFeatures,
+  name: r'mapFeaturesProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapFeaturesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MapFeaturesRef = FutureProviderRef<MapFeaturesData>;
 String _$selectedGeoDistrictHash() =>
     r'51b527ff251422dd85c50fe3d9ff5e0ab38759db';
 

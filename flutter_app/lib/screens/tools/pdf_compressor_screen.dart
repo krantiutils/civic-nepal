@@ -17,29 +17,47 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
   PickedPdf? _originalPdf;
   Uint8List? _compressedPdf;
   int _compressedSize = 0;
-  bool _isProcessing = false;
+  bool _isLoading = false;
+  bool _isCompressing = false;
   PdfQuality _selectedQuality = PdfQuality.medium;
 
   Future<void> _pickPdf() async {
-    final picked = await PdfService.pickPdf();
-    if (picked != null) {
-      setState(() {
-        _originalPdf = picked;
-        _compressedPdf = null;
-        _compressedSize = 0;
-      });
+    setState(() => _isLoading = true);
+    try {
+      final picked = await PdfService.pickPdf();
+      if (picked != null && mounted) {
+        setState(() {
+          _originalPdf = picked;
+          _compressedPdf = null;
+          _compressedSize = 0;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting PDF: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   Future<void> _compressPdf() async {
     if (_originalPdf == null) return;
 
-    setState(() => _isProcessing = true);
+    setState(() => _isCompressing = true);
 
     try {
       final compressed = await PdfService.compressPdf(
         _originalPdf!.bytes,
         quality: _selectedQuality,
+        filename: _originalPdf!.name,
       );
 
       if (compressed != null && mounted) {
@@ -48,30 +66,37 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
           _compressedSize = compressed.length;
         });
       } else if (mounted) {
-        _showError('Failed to compress PDF');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to compress PDF'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
-        _showError('Error: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) {
-        setState(() => _isProcessing = false);
+        setState(() => _isCompressing = false);
       }
     }
-  }
-
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
   }
 
   Future<void> _savePdf() async {
     final pdfToSave = _compressedPdf ?? _originalPdf?.bytes;
     if (pdfToSave == null) return;
 
-    final filename = 'compressed_${_originalPdf!.name}';
+    final filename = _compressedPdf != null
+        ? 'compressed_${_originalPdf!.name}'
+        : _originalPdf!.name;
+
     final success = await PdfService.savePdf(pdfToSave, filename: filename);
 
     if (mounted) {
@@ -103,6 +128,22 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
     });
   }
 
+  String _getSavingsText() {
+    if (_originalPdf == null || _compressedPdf == null) return '';
+    final originalSize = _originalPdf!.size;
+    final savedBytes = originalSize - _compressedSize;
+    if (savedBytes <= 0) {
+      return 'No size reduction (PDF may already be optimized)';
+    }
+    final percent = ((savedBytes / originalSize) * 100).toStringAsFixed(1);
+    return 'Saved ${PdfService.getFileSizeString(savedBytes)} ($percent% smaller)';
+  }
+
+  bool get _hasCompression {
+    if (_originalPdf == null || _compressedPdf == null) return false;
+    return _compressedSize < _originalPdf!.size;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -124,8 +165,8 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
               child: _originalPdf == null
-                  ? _buildEmptyState()
-                  : _buildCompressionView(),
+                  ? _buildEmptyState(l10n)
+                  : _buildCompressionView(l10n),
             ),
           );
         },
@@ -133,8 +174,7 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    final l10n = AppLocalizations.of(context);
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -166,8 +206,14 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
             ),
             const SizedBox(height: 32),
             FilledButton.icon(
-              onPressed: _pickPdf,
-              icon: const Icon(Icons.upload_file),
+              onPressed: _isLoading ? null : _pickPdf,
+              icon: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.upload_file),
               label: Text(l10n.selectPdf),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
@@ -182,8 +228,7 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
     );
   }
 
-  Widget _buildCompressionView() {
-    final l10n = AppLocalizations.of(context);
+  Widget _buildCompressionView(AppLocalizations l10n) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -193,53 +238,50 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red[50],
-                          borderRadius: BorderRadius.circular(12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(Icons.picture_as_pdf, size: 40, color: Colors.red[700]),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _originalPdf!.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
-                        child: Icon(Icons.picture_as_pdf, size: 40, color: Colors.red[700]),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(height: 8),
+                        Row(
                           children: [
-                            Text(
-                              _originalPdf!.name,
-                              style: Theme.of(context).textTheme.titleMedium,
-                              overflow: TextOverflow.ellipsis,
+                            _SizeChip(
+                              label: l10n.original,
+                              size: _originalPdf!.size,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                _SizeChip(
-                                  label: l10n.original,
-                                  size: _originalPdf!.size,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
-                                if (_compressedPdf != null) ...[
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.arrow_forward, size: 16),
-                                  ),
-                                  _SizeChip(
-                                    label: l10n.compressed,
-                                    size: _compressedSize,
-                                    color: Colors.green,
-                                  ),
-                                ],
-                              ],
-                            ),
+                            if (_compressedPdf != null) ...[
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Icon(Icons.arrow_forward, size: 16),
+                              ),
+                              _SizeChip(
+                                label: l10n.compressed,
+                                size: _compressedSize,
+                                color: _hasCompression ? Colors.green : Colors.orange,
+                              ),
+                            ],
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -247,89 +289,139 @@ class _PdfCompressorScreenState extends State<PdfCompressorScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Compression note
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue[200]!),
+          // Quality selector (only show if not yet compressed)
+          if (_compressedPdf == null) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.quality,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 12),
+                    SegmentedButton<PdfQuality>(
+                      segments: PdfQuality.values
+                          .map((q) => ButtonSegment(
+                                value: q,
+                                label: Text(q.label),
+                              ))
+                          .toList(),
+                      selected: {_selectedQuality},
+                      onSelectionChanged: (selection) {
+                        setState(() {
+                          _selectedQuality = selection.first;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Lower quality = smaller file size',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            child: Row(
+            const SizedBox(height: 24),
+
+            // Compress button
+            FilledButton.icon(
+              onPressed: _isCompressing ? null : _compressPdf,
+              icon: _isCompressing
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.compress),
+              label: Text(_isCompressing ? l10n.compressing : l10n.compress),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+            ),
+          ],
+
+          // Results (show after compression)
+          if (_compressedPdf != null) ...[
+            // Savings display
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: _hasCompression ? Colors.green[50] : Colors.orange[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: _hasCompression ? Colors.green[200]! : Colors.orange[200]!,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _hasCompression ? Icons.check_circle : Icons.info_outline,
+                    color: _hasCompression ? Colors.green[700] : Colors.orange[700],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _getSavingsText(),
+                      style: TextStyle(
+                        color: _hasCompression ? Colors.green[700] : Colors.orange[700],
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Action buttons
+            Row(
               children: [
-                Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
-                const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                    l10n.pdfCompressionNote,
-                    style: TextStyle(color: Colors.blue[700], fontSize: 13),
+                  child: OutlinedButton.icon(
+                    onPressed: _savePdf,
+                    icon: const Icon(Icons.save_alt),
+                    label: Text(l10n.save),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: _sharePdf,
+                    icon: const Icon(Icons.share),
+                    label: Text(l10n.share),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-          // Quality selector
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.quality,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  SegmentedButton<PdfQuality>(
-                    segments: PdfQuality.values
-                        .map((q) => ButtonSegment(
-                              value: q,
-                              label: Text(q.label),
-                            ))
-                        .toList(),
-                    selected: {_selectedQuality},
-                    onSelectionChanged: (selection) {
-                      setState(() {
-                        _selectedQuality = selection.first;
-                        _compressedPdf = null;
-                        _compressedSize = 0;
-                      });
-                    },
-                  ),
-                ],
-              ),
+            // Compress again with different quality
+            TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  _compressedPdf = null;
+                  _compressedSize = 0;
+                });
+              },
+              icon: const Icon(Icons.tune),
+              label: const Text('Try different quality'),
             ),
-          ),
-          const SizedBox(height: 24),
-
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _savePdf,
-                  icon: const Icon(Icons.save_alt),
-                  label: Text(l10n.save),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: _sharePdf,
-                  icon: const Icon(Icons.share),
-                  label: Text(l10n.share),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          ],
         ],
       ),
     );

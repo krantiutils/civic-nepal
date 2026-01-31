@@ -81,7 +81,11 @@ class _GeoFederalMapScreenState extends ConsumerState<GeoFederalMapScreen> {
           ],
         ),
         body: constituenciesAsync.when(
-          data: (data) => _buildMapContent(data, electionDataAsync, selectedConstituency),
+          data: (data) => _buildMapContent(
+            data,
+            electionDataAsync,
+            selectedConstituency,
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, s) => Center(child: Text('Error: $e')),
         ),
@@ -101,37 +105,68 @@ class _GeoFederalMapScreenState extends ConsumerState<GeoFederalMapScreen> {
     return Row(
       children: [
         Expanded(
-          child: Stack(
-            children: [
-              InteractiveViewer(
-                transformationController: _transformationController,
-                minScale: 0.5,
-                maxScale: 15.0,
-                constrained: false,
-                child: SizedBox(
-                  width: _canvasWidth,
-                  height: _canvasHeight,
-                  child: GestureDetector(
-                    onTapUp: (details) => _handleTap(details, data),
-                    child: CustomPaint(
-                      size: const Size(_canvasWidth, _canvasHeight),
-                      painter: _ConstituencyMapPainter(
-                        data: data,
-                        electionData: electionDataAsync.valueOrNull,
-                        selectedConstituency: selectedConstituency,
-                        currentZoom: _currentZoom,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Center the map initially
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (_transformationController.value == Matrix4.identity()) {
+                  final dx = (constraints.maxWidth - _canvasWidth) / 2;
+                  final dy = (constraints.maxHeight - _canvasHeight) / 2;
+                  if (dx > 0 || dy > 0) {
+                    _transformationController.value = Matrix4.identity()
+                      ..setTranslationRaw(dx.clamp(0, double.infinity), dy.clamp(0, double.infinity), 0);
+                  }
+                }
+              });
+              return Stack(
+                children: [
+                  InteractiveViewer(
+                    transformationController: _transformationController,
+                    minScale: 0.5,
+                    maxScale: 15.0,
+                    constrained: false,
+                    child: SizedBox(
+                      width: _canvasWidth,
+                      height: _canvasHeight,
+                      child: GestureDetector(
+                        onTapUp: (details) => _handleTap(details, data),
+                        child: CustomPaint(
+                          size: const Size(_canvasWidth, _canvasHeight),
+                          painter: _ConstituencyMapPainter(
+                            data: data,
+                            electionData: electionDataAsync.valueOrNull,
+                            selectedConstituency: selectedConstituency,
+                            currentZoom: _currentZoom,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
               if (selectedConstituency != null)
                 Positioned(
                   top: 16,
                   right: 16,
                   child: _ConstituencyInfoChip(constituency: selectedConstituency),
                 ),
-            ],
+              // Map data attribution
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text(
+                    'Geographic data © OpenStreetMap contributors',
+                    style: TextStyle(color: Colors.white70, fontSize: 10),
+                  ),
+                ),
+              ),
+              ],
+            );
+            },
           ),
         ),
         if (selectedConstituency != null)
@@ -256,6 +291,9 @@ class _ConstituencyMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Draw disputed territory first (so it's behind constituencies)
+    _drawDisputedTerritory(canvas, size);
+
     // Draw all constituencies
     for (final constituency in data.constituencies) {
       final isSelected = selectedConstituency?.id == constituency.id;
@@ -272,26 +310,74 @@ class _ConstituencyMapPainter extends CustomPainter {
         ..strokeWidth = isSelected ? 2.0 : 0.5
         ..strokeJoin = StrokeJoin.round;
 
-      _drawConstituency(canvas, size, constituency, fillPaint, borderPaint);
+      _drawPolygon(canvas, size, constituency.path, fillPaint, borderPaint);
     }
 
-    // Always draw labels
+    // Draw constituency labels
     _drawLabels(canvas, size);
   }
 
-  void _drawConstituency(
+  void _drawDisputedTerritory(Canvas canvas, Size size) {
+    final disputed = data.disputedTerritory;
+    if (disputed == null || disputed.path.isEmpty) return;
+
+    // Fill with a distinct color to show it's Nepal's claimed territory
+    final fillPaint = Paint()
+      ..color = const Color(0xFFFFCDD2) // Light red to indicate disputed
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = const Color(0xFFD32F2F) // Red border
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeJoin = StrokeJoin.round;
+
+    _drawPolygon(canvas, size, disputed.path, fillPaint, borderPaint);
+
+    // Draw label for disputed territory at higher zoom
+    if (currentZoom >= 2) {
+      final offset = _viewBoxToCanvas(
+        disputed.centroid[0],
+        disputed.centroid[1],
+        size,
+      );
+
+      final textStyle = ui.TextStyle(
+        color: const Color(0xFFB71C1C),
+        fontSize: 7 / currentZoom.clamp(1.0, 2.5),
+        fontWeight: FontWeight.w600,
+      );
+
+      final builder = ui.ParagraphBuilder(ui.ParagraphStyle(
+        textAlign: TextAlign.center,
+        maxLines: 2,
+      ))
+        ..pushStyle(textStyle)
+        ..addText(disputed.name);
+
+      final paragraph = builder.build()
+        ..layout(const ui.ParagraphConstraints(width: 100));
+
+      canvas.drawParagraph(
+        paragraph,
+        Offset(offset.dx - paragraph.width / 2, offset.dy - paragraph.height / 2),
+      );
+    }
+  }
+
+  void _drawPolygon(
     Canvas canvas,
     Size size,
-    GeoConstituency constituency,
+    List<List<double>> points,
     Paint fillPaint,
     Paint borderPaint,
   ) {
-    if (constituency.path.length < 3) return;
+    if (points.length < 3) return;
 
     final path = Path();
     bool first = true;
 
-    for (final point in constituency.path) {
+    for (final point in points) {
       final offset = _viewBoxToCanvas(point[0], point[1], size);
       if (first) {
         path.moveTo(offset.dx, offset.dy);
@@ -328,8 +414,8 @@ class _ConstituencyMapPainter extends CustomPainter {
 
     // Calculate minimum area threshold based on zoom
     // At zoom 1, only show labels for large constituencies
-    // At higher zoom, show more labels
-    final minArea = 50 / (currentZoom * currentZoom);
+    // At higher zoom, show all labels
+    final minArea = currentZoom > 2 ? 0 : 50 / (currentZoom * currentZoom * currentZoom);
 
     // Track placed label positions to avoid overlap
     final placedLabels = <Rect>[];
@@ -373,15 +459,17 @@ class _ConstituencyMapPainter extends CustomPainter {
         height: paragraph.height + 2,
       );
 
-      // Check for overlap with already placed labels
-      bool overlaps = false;
-      for (final placed in placedLabels) {
-        if (labelRect.overlaps(placed)) {
-          overlaps = true;
-          break;
+      // Check for overlap with already placed labels (skip at high zoom)
+      if (currentZoom < 3) {
+        bool overlaps = false;
+        for (final placed in placedLabels) {
+          if (labelRect.overlaps(placed)) {
+            overlaps = true;
+            break;
+          }
         }
+        if (overlaps) continue;
       }
-      if (overlaps) continue;
 
       // Draw label and record position
       placedLabels.add(labelRect);
