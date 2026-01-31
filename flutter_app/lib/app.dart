@@ -17,6 +17,8 @@ import 'screens/map/nepal_map_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/tools/citizenship_merger_screen.dart';
 import 'screens/tools/image_compressor_screen.dart';
+import 'screens/tools/pdf_compressor_screen.dart';
+import 'screens/tools/unicode_converter_screen.dart';
 import 'screens/tools/date_converter_screen.dart';
 import 'screens/tools/nepali_calendar_screen.dart';
 import 'screens/tools/forex_screen.dart';
@@ -176,6 +178,26 @@ GoRouter router(RouterRef ref) {
         path: '/tools/image-compressor',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ImageCompressorScreen(),
+      ),
+      GoRoute(
+        path: '/pdf-compress',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PdfCompressorScreen(),
+      ),
+      GoRoute(
+        path: '/tools/pdf-compressor',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PdfCompressorScreen(),
+      ),
+      GoRoute(
+        path: '/unicode',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const UnicodeConverterScreen(),
+      ),
+      GoRoute(
+        path: '/tools/unicode-converter',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const UnicodeConverterScreen(),
       ),
       GoRoute(
         path: '/date-converter',

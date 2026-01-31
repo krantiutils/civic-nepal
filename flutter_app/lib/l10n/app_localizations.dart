@@ -344,6 +344,29 @@ class AppLocalizations {
   String get couldNotReach => get('could_not_reach');
   String savedSmaller(String size, String percent) => getWithParams('saved_smaller', {'size': size, 'percent': percent});
 
+  // ============= PDF Compressor =============
+  String get pdfCompressor => get('pdf_compressor');
+  String get compressPdfs => get('compress_pdfs');
+  String get pdfCompressDesc => get('pdf_compress_desc');
+  String get selectPdf => get('select_pdf');
+  String get quality => get('quality');
+  String get pdfCompressionNote => get('pdf_compression_note');
+
+  // ============= Unicode Converter =============
+  String get unicodeConverter => get('unicode_converter');
+  String get convertUnicode => get('convert_unicode');
+  String get unicodeDesc => get('unicode_desc');
+  String get preetiToUnicode => get('preeti_to_unicode');
+  String get unicodeToPreeti => get('unicode_to_preeti');
+  String get inputText => get('input_text');
+  String get outputText => get('output_text');
+  String get convert => get('convert');
+  String get copy => get('copy');
+  String get copied => get('copied');
+  String get paste => get('paste');
+  String get clear => get('clear');
+  String get swap => get('swap');
+
   // ============= Forex =============
   String get forexRates => get('forex_rates');
   String get nrbRates => get('nrb_rates');

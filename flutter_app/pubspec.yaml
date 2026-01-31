@@ -40,6 +40,7 @@ dependencies:
 
   # Image tools (picker, manipulation, sharing, gallery save)
   image_picker: ^1.0.0
+  file_picker: ^6.1.1
   image: ^4.0.0
   share_plus: ^7.0.0
   gal: ^2.3.0
