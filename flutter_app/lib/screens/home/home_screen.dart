@@ -95,9 +95,9 @@ class _HomeTabState extends State<HomeTab> {
                 children: [
                   Expanded(
                     child: _UtilityGridCard(
-                      icon: Icons.badge,
-                      title: l10n.citizenshipMerger,
-                      titleNp: l10n.citizenshipMergerNp,
+                      icon: Icons.photo_library,
+                      title: l10n.photoMerger,
+                      titleNp: l10n.photoMergerNp,
                       color: const Color(0xFF7B1FA2),
                       onTap: () => context.push('/photo-merger'),
                     ),
@@ -286,11 +286,24 @@ class _TodayDateWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              // Arrow
-              Icon(
-                Icons.swap_horiz,
-                color: Colors.white.withValues(alpha: 0.7),
-                size: 28,
+              // Calendar indicator
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.calendar_month,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    size: 28,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    AppLocalizations.of(context).viewCalendar,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -342,36 +355,54 @@ class _QuickAccessGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final secondaryColor = Theme.of(context).colorScheme.secondary;
 
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _QuickAccessCard(
-            icon: Icons.account_balance,
-            title: l10n.govt,
-            titleNp: l10n.govtNp,
-            color: secondaryColor,
-            onTap: () => context.push('/how-nepal-works'),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _QuickAccessCard(
+                icon: Icons.account_balance,
+                title: l10n.govt,
+                titleNp: l10n.govtNp,
+                color: secondaryColor,
+                onTap: () => context.push('/how-nepal-works'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _QuickAccessCard(
+                icon: Icons.map,
+                title: l10n.map,
+                titleNp: l10n.mapNp,
+                color: const Color(0xFF2E7D32),
+                onTap: () => context.push('/map'),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _QuickAccessCard(
-            icon: Icons.map,
-            title: l10n.map,
-            titleNp: l10n.mapNp,
-            color: const Color(0xFF2E7D32),
-            onTap: () => context.push('/map'),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _QuickAccessCard(
-            icon: Icons.gavel,
-            title: l10n.rights,
-            titleNp: l10n.rightsNp,
-            color: const Color(0xFF6A1B9A),
-            onTap: () => context.push('/constitutional-rights'),
-          ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _QuickAccessCard(
+                icon: Icons.gavel,
+                title: l10n.rights,
+                titleNp: l10n.rightsNp,
+                color: const Color(0xFF6A1B9A),
+                onTap: () => context.push('/constitutional-rights'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _QuickAccessCard(
+                icon: Icons.notifications_active,
+                title: l10n.alerts,
+                titleNp: l10n.alertsNp,
+                color: Colors.red.shade700,
+                onTap: () => context.push('/alerts'),
+              ),
+            ),
+          ],
         ),
       ],
     );

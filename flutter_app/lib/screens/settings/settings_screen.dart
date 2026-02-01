@@ -146,6 +146,22 @@ class SettingsScreen extends ConsumerWidget {
                   ref.read(settingsProvider.notifier).setIpoNotifications(value);
                 },
               ),
+              _SwitchSetting(
+                title: l10n.earthquakeAlerts,
+                subtitle: l10n.earthquakeAlertsDesc,
+                value: settings.earthquakeNotifications,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setEarthquakeNotifications(value);
+                },
+              ),
+              _SwitchSetting(
+                title: l10n.roadClosureAlerts,
+                subtitle: l10n.roadClosureAlertsDesc,
+                value: settings.roadClosureNotifications,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setRoadClosureNotifications(value);
+                },
+              ),
               const Divider(),
               _SectionHeader(l10n.about),
               _TileSetting(

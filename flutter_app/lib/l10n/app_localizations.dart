@@ -31,6 +31,9 @@ class AppLocalizations {
 
   AppLocalizations(this.locale);
 
+  /// Check if current locale is Nepali (or any non-English)
+  bool get isNepali => locale != AppLocale.english;
+
   /// Default fallback instance for when localizations haven't loaded yet
   static final _fallback = AppLocalizations(AppLocale.nepali);
 
@@ -81,12 +84,13 @@ class AppLocalizations {
   String get rightsNp => get('rights_np');
 
   // ============= Utility Cards =============
-  String get citizenshipMerger => get('citizenship_merger');
-  String get citizenshipMergerNp => get('citizenship_merger_np');
+  String get photoMerger => get('photo_merger');
+  String get photoMergerNp => get('photo_merger_np');
   String get imageCompressor => get('image_compressor');
   String get imageCompressorNp => get('image_compressor_np');
   String get calendar => get('calendar');
   String get calendarNp => get('calendar_np');
+  String get viewCalendar => get('view_calendar');
   String get dateConvert => get('date_convert');
   String get dateConvertNp => get('date_convert_np');
   String get forex => get('forex');
@@ -260,6 +264,7 @@ class AppLocalizations {
   String get event => get('event');
   String get auspicious => get('auspicious');
   String get noEvents => get('no_events');
+  String get monthEvents => get('month_events');
   String get weddingAuspicious => get('wedding_auspicious');
   String get bratabandhaAuspicious => get('bratabandha_auspicious');
   String get pasniAuspicious => get('pasni_auspicious');
@@ -316,8 +321,7 @@ class AppLocalizations {
   String get invalidBsDate => get('invalid_bs_date');
   String get selectDate => get('select_date');
 
-  // ============= Citizenship Merger =============
-  String get citizenshipPhotoMerger => get('citizenship_photo_merger');
+  // ============= Photo Merger =============
   String get reset => get('reset');
   String get mergerInstructions => get('merger_instructions');
   String get frontSide => get('front_side');
@@ -472,6 +476,47 @@ class AppLocalizations {
   String get magh => get('magh');
   String get falgun => get('falgun');
   String get chaitra => get('chaitra');
+
+  // ============= Alerts & Disaster Response =============
+  String get alerts => get('alerts');
+  String get alertsNp => get('alerts_np');
+  String get contacts => get('contacts');
+  String get earthquakesTab => get('earthquakes');
+  String get resourcesTab => get('resources');
+  String get emergencyTip => get('emergency_tip');
+  String get minMagnitude => get('min_magnitude');
+  String get noEarthquakes => get('no_earthquakes');
+  String get noEarthquakesDesc => get('no_earthquakes_desc');
+  String get dataFromUsgs => get('data_from_usgs');
+  String get errorLoading => get('error_loading');
+  String get resourcesInfo => get('resources_info');
+  String get safetyTips => get('safety_tips');
+  String get safetyTip1 => get('safety_tip_1');
+  String get safetyTip2 => get('safety_tip_2');
+  String get safetyTip3 => get('safety_tip_3');
+  String get safetyTip4 => get('safety_tip_4');
+  String get safetyTip5 => get('safety_tip_5');
+  String get earthquakeAlerts => get('earthquake_alerts');
+  String get earthquakeAlertsDesc => get('earthquake_alerts_desc');
+  String get roadClosureAlerts => get('road_closure_alerts');
+  String get roadClosureAlertsDesc => get('road_closure_alerts_desc');
+
+  // Alerts hub
+  String get contactsNp => get('contacts_np');
+  String get earthquakesNp => get('earthquakes_np');
+  String get resourcesNp => get('resources_np');
+  String get roadClosures => get('road_closures');
+  String get roadClosuresNp => get('road_closures_np');
+  String get roadClosuresDesc => get('road_closures_desc');
+  String get weather => get('weather');
+  String get weatherNp => get('weather_np');
+  String get weatherDesc => get('weather_desc');
+  String get emergencyContactsDesc => get('emergency_contacts_desc');
+  String get resourcesDesc => get('resources_desc');
+  String get recentSeismicActivity => get('recent_seismic_activity');
+  String get noSignificantEarthquakes => get('no_significant_earthquakes');
+  String get viewOnUsgs => get('view_on_usgs');
+  String viewAllEarthquakes(int count) => 'View all $count earthquakes';
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

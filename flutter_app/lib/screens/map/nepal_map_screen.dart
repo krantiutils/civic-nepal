@@ -1139,18 +1139,26 @@ class _POIInfoCard extends StatelessWidget {
               const SizedBox(height: 8),
             ],
             // Coordinates and Google Maps button
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Icon(Icons.location_on, size: 14, color: theme.colorScheme.onSurfaceVariant),
-                const SizedBox(width: 4),
-                Text(
-                  '${poi.lat.toStringAsFixed(5)}°N, ${poi.lon.toStringAsFixed(5)}°E',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontFamily: 'monospace',
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.location_on, size: 14, color: theme.colorScheme.onSurfaceVariant),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${poi.lat.toStringAsFixed(5)}°N, ${poi.lon.toStringAsFixed(5)}°E',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ],
                 ),
-                const Spacer(),
                 TextButton.icon(
                   onPressed: () => _openInGoogleMaps(),
                   icon: const Icon(Icons.map, size: 16),

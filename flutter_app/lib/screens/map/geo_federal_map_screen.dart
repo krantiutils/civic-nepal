@@ -102,80 +102,92 @@ class _GeoFederalMapScreenState extends ConsumerState<GeoFederalMapScreen> {
     AsyncValue<ConstituencyData> electionDataAsync,
     GeoConstituency? selectedConstituency,
   ) {
-    return Row(
-      children: [
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Center the map initially
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (_transformationController.value == Matrix4.identity()) {
-                  final dx = (constraints.maxWidth - _canvasWidth) / 2;
-                  final dy = (constraints.maxHeight - _canvasHeight) / 2;
-                  if (dx > 0 || dy > 0) {
-                    _transformationController.value = Matrix4.identity()
-                      ..setTranslationRaw(dx.clamp(0, double.infinity), dy.clamp(0, double.infinity), 0);
-                  }
-                }
-              });
-              return Stack(
-                children: [
-                  InteractiveViewer(
-                    transformationController: _transformationController,
-                    minScale: 0.5,
-                    maxScale: 15.0,
-                    constrained: false,
-                    child: SizedBox(
-                      width: _canvasWidth,
-                      height: _canvasHeight,
-                      child: GestureDetector(
-                        onTapUp: (details) => _handleTap(details, data),
-                        child: CustomPaint(
-                          size: const Size(_canvasWidth, _canvasHeight),
-                          painter: _ConstituencyMapPainter(
-                            data: data,
-                            electionData: electionDataAsync.valueOrNull,
-                            selectedConstituency: selectedConstituency,
-                            currentZoom: _currentZoom,
+    return LayoutBuilder(
+      builder: (context, outerConstraints) {
+        final isWideScreen = outerConstraints.maxWidth > 700;
+
+        return Row(
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Center the map initially
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_transformationController.value == Matrix4.identity()) {
+                      final dx = (constraints.maxWidth - _canvasWidth) / 2;
+                      final dy = (constraints.maxHeight - _canvasHeight) / 2;
+                      if (dx > 0 || dy > 0) {
+                        _transformationController.value = Matrix4.identity()
+                          ..setTranslationRaw(dx.clamp(0, double.infinity), dy.clamp(0, double.infinity), 0);
+                      }
+                    }
+                  });
+                  return Stack(
+                    children: [
+                      InteractiveViewer(
+                        transformationController: _transformationController,
+                        minScale: 0.5,
+                        maxScale: 15.0,
+                        constrained: false,
+                        child: SizedBox(
+                          width: _canvasWidth,
+                          height: _canvasHeight,
+                          child: GestureDetector(
+                            onTapUp: (details) => _handleTap(details, data, isWideScreen, electionDataAsync),
+                            child: CustomPaint(
+                              size: const Size(_canvasWidth, _canvasHeight),
+                              painter: _ConstituencyMapPainter(
+                                data: data,
+                                electionData: electionDataAsync.valueOrNull,
+                                selectedConstituency: selectedConstituency,
+                                currentZoom: _currentZoom,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-              if (selectedConstituency != null)
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: _ConstituencyInfoChip(constituency: selectedConstituency),
-                ),
-              // Map data attribution
-              Positioned(
-                bottom: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text(
-                    'Geographic data © OpenStreetMap contributors',
-                    style: TextStyle(color: Colors.white70, fontSize: 10),
-                  ),
-                ),
+                      if (selectedConstituency != null)
+                        Positioned(
+                          top: 16,
+                          right: 16,
+                          child: _ConstituencyInfoChip(constituency: selectedConstituency),
+                        ),
+                      // Map data attribution
+                      Positioned(
+                        bottom: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'Geographic data © OpenStreetMap contributors',
+                            style: TextStyle(color: Colors.white70, fontSize: 10),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
-              ],
-            );
-            },
-          ),
-        ),
-        if (selectedConstituency != null)
-          _buildCandidatesPanel(electionDataAsync, selectedConstituency),
-      ],
+            ),
+            // Side panel only on wide screens
+            if (isWideScreen && selectedConstituency != null)
+              _buildCandidatesPanel(electionDataAsync, selectedConstituency),
+          ],
+        );
+      },
     );
   }
 
-  void _handleTap(TapUpDetails details, GeoConstituenciesData data) {
+  void _handleTap(
+    TapUpDetails details,
+    GeoConstituenciesData data,
+    bool isWideScreen,
+    AsyncValue<ConstituencyData> electionDataAsync,
+  ) {
     final canvasPos = details.localPosition;
     final viewBox = data.viewBox;
 
@@ -187,11 +199,65 @@ class _GeoFederalMapScreenState extends ConsumerState<GeoFederalMapScreen> {
     for (final constituency in data.constituencies) {
       if (_isPointInPolygon(vbX, vbY, constituency.path)) {
         ref.read(selectedGeoConstituencyProvider.notifier).select(constituency);
+
+        // On mobile, show bottom sheet instead of side panel
+        if (!isWideScreen) {
+          _showCandidatesBottomSheet(constituency, electionDataAsync);
+        }
         return;
       }
     }
 
     ref.read(selectedGeoConstituencyProvider.notifier).clear();
+  }
+
+  void _showCandidatesBottomSheet(
+    GeoConstituency geoConstituency,
+    AsyncValue<ConstituencyData> electionDataAsync,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, scrollController) {
+          return electionDataAsync.when(
+            data: (data) {
+              // Find matching constituency in election data
+              Constituency? constituency;
+              for (final districts in data.districts.values) {
+                for (final c in districts) {
+                  if (c.name.toLowerCase() == geoConstituency.name.toLowerCase() ||
+                      c.svgPathId == geoConstituency.id) {
+                    constituency = c;
+                    break;
+                  }
+                }
+                if (constituency != null) break;
+              }
+
+              return _CandidatesPanelContent(
+                constituency: constituency,
+                geoConstituency: geoConstituency,
+                scrollController: scrollController,
+                onClose: () {
+                  Navigator.pop(context);
+                  ref.read(selectedGeoConstituencyProvider.notifier).clear();
+                },
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, s) => Center(child: Text('Error: $e')),
+          );
+        },
+      ),
+    ).whenComplete(() {
+      ref.read(selectedGeoConstituencyProvider.notifier).clear();
+    });
   }
 
   bool _isPointInPolygon(double x, double y, List<List<double>> polygon) {
@@ -577,6 +643,103 @@ class _CandidatesPanel extends ConsumerWidget {
             child: constituency == null || constituency!.candidates.isEmpty
                 ? Center(child: Text(l10n.noCandidatesFound))
                 : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: constituency!.candidates.length,
+                    itemBuilder: (context, index) {
+                      final candidate = constituency!.candidates[index];
+                      return _CandidateCard(candidate: candidate, showVotes: showVotes);
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Shared content widget for candidates panel (used in both side panel and bottom sheet)
+class _CandidatesPanelContent extends ConsumerWidget {
+  final Constituency? constituency;
+  final GeoConstituency geoConstituency;
+  final ScrollController? scrollController;
+  final VoidCallback onClose;
+
+  const _CandidatesPanelContent({
+    required this.constituency,
+    required this.geoConstituency,
+    required this.onClose,
+    this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final showVotes = ref.watch(showVotesProvider);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Drag handle
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          // Header
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        geoConstituency.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      if (constituency != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '${constituency!.district} • Province ${constituency!.province}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                        Text(
+                          '${constituency!.candidates.length} ${l10n.candidates}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                IconButton(icon: const Icon(Icons.close), onPressed: onClose),
+              ],
+            ),
+          ),
+          // Candidates list
+          Expanded(
+            child: constituency == null || constituency!.candidates.isEmpty
+                ? Center(child: Text(l10n.noCandidatesFound))
+                : ListView.builder(
+                    controller: scrollController,
                     padding: const EdgeInsets.all(16),
                     itemCount: constituency!.candidates.length,
                     itemBuilder: (context, index) {

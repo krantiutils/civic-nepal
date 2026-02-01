@@ -15,7 +15,7 @@ import 'screens/map/geo_federal_map_screen.dart';
 import 'screens/map/constituency_screen.dart';
 import 'screens/map/nepal_map_screen.dart';
 import 'screens/settings/settings_screen.dart';
-import 'screens/tools/citizenship_merger_screen.dart';
+import 'screens/tools/photo_merger_screen.dart';
 import 'screens/tools/image_compressor_screen.dart';
 import 'screens/tools/pdf_compressor_screen.dart';
 import 'screens/tools/unicode_converter_screen.dart';
@@ -26,6 +26,10 @@ import 'screens/tools/bullion_screen.dart';
 import 'screens/tools/ipo_shares_screen.dart';
 import 'screens/tools/gov_services_screen.dart';
 import 'screens/government/how_nepal_works_screen.dart';
+import 'screens/emergency/emergency_screen.dart';
+import 'screens/emergency/earthquakes_screen.dart';
+import 'screens/emergency/contacts_screen.dart';
+import 'screens/emergency/resources_screen.dart';
 
 part 'app.g.dart';
 
@@ -150,6 +154,28 @@ GoRouter router(RouterRef ref) {
         builder: (context, state) => const HowNepalWorksScreen(),
       ),
       GoRoute(
+        path: '/alerts',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const EmergencyScreen(),
+        routes: [
+          GoRoute(
+            path: 'earthquakes',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const EarthquakesScreen(),
+          ),
+          GoRoute(
+            path: 'contacts',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const EmergencyContactsScreen(),
+          ),
+          GoRoute(
+            path: 'resources',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const EmergencyResourcesScreen(),
+          ),
+        ],
+      ),
+      GoRoute(
         path: '/government',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const HowNepalWorksScreen(),
@@ -162,12 +188,12 @@ GoRouter router(RouterRef ref) {
       GoRoute(
         path: '/photo-merger',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const CitizenshipMergerScreen(),
+        builder: (context, state) => const PhotoMergerScreen(),
       ),
       GoRoute(
-        path: '/tools/citizenship-merger',
+        path: '/tools/photo-merger',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const CitizenshipMergerScreen(),
+        builder: (context, state) => const PhotoMergerScreen(),
       ),
       GoRoute(
         path: '/photo-compress',

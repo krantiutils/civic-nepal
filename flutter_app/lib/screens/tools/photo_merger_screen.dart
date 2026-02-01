@@ -5,15 +5,15 @@ import '../../l10n/app_localizations.dart';
 import '../../services/image_service.dart';
 import '../../widgets/home_title.dart';
 
-/// Screen for merging front and back citizenship photos into a single image
-class CitizenshipMergerScreen extends StatefulWidget {
-  const CitizenshipMergerScreen({super.key});
+/// Screen for merging two photos into a single image
+class PhotoMergerScreen extends StatefulWidget {
+  const PhotoMergerScreen({super.key});
 
   @override
-  State<CitizenshipMergerScreen> createState() => _CitizenshipMergerScreenState();
+  State<PhotoMergerScreen> createState() => _PhotoMergerScreenState();
 }
 
-class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
+class _PhotoMergerScreenState extends State<PhotoMergerScreen> {
   PickedImage? _frontImage;
   PickedImage? _backImage;
   Uint8List? _mergedImage;
@@ -109,7 +109,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
     final success = await ImageService.saveImage(
       _mergedImage!,
       album: 'NagarikCalendar',
-      filename: 'citizenship_merged.jpg',
+      filename: 'photo_merged.jpg',
     );
 
     if (mounted) {
@@ -126,8 +126,8 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
     if (_mergedImage == null) return;
     await ImageService.shareImage(
       _mergedImage!,
-      subject: 'Citizenship Photo',
-      filename: 'citizenship_merged.jpg',
+      subject: 'Merged Photo',
+      filename: 'photo_merged.jpg',
     );
   }
 
@@ -144,7 +144,7 @@ class _CitizenshipMergerScreenState extends State<CitizenshipMergerScreen> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: HomeTitle(child: Text(l10n.citizenshipPhotoMerger)),
+        title: HomeTitle(child: Text(l10n.photoMerger)),
         actions: [
           if (_frontImage != null || _backImage != null)
             IconButton(

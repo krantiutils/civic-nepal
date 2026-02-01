@@ -13,6 +13,8 @@ class Settings extends _$Settings {
   static const String _keyThemeMode = 'theme_mode';
   static const String _keyStickyDateNotification = 'sticky_date_notification';
   static const String _keyIpoNotifications = 'ipo_notifications';
+  static const String _keyEarthquakeNotifications = 'earthquake_notifications';
+  static const String _keyRoadClosureNotifications = 'road_closure_notifications';
   static const String _keyAppLocale = 'app_locale';
 
   @override
@@ -26,6 +28,8 @@ class Settings extends _$Settings {
       themeMode: prefs.getString(_keyThemeMode) ?? 'system',
       stickyDateNotification: prefs.getBool(_keyStickyDateNotification) ?? false,
       ipoNotifications: prefs.getBool(_keyIpoNotifications) ?? true,
+      earthquakeNotifications: prefs.getBool(_keyEarthquakeNotifications) ?? true, // Default on for safety
+      roadClosureNotifications: prefs.getBool(_keyRoadClosureNotifications) ?? false,
       appLocale: prefs.getString(_keyAppLocale) ?? 'ne', // Default to Nepali
     );
   }
@@ -79,6 +83,20 @@ class Settings extends _$Settings {
     state = AsyncValue.data(current.copyWith(ipoNotifications: enabled));
   }
 
+  Future<void> setEarthquakeNotifications(bool enabled) async {
+    final current = await future;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyEarthquakeNotifications, enabled);
+    state = AsyncValue.data(current.copyWith(earthquakeNotifications: enabled));
+  }
+
+  Future<void> setRoadClosureNotifications(bool enabled) async {
+    final current = await future;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyRoadClosureNotifications, enabled);
+    state = AsyncValue.data(current.copyWith(roadClosureNotifications: enabled));
+  }
+
   Future<void> setAppLocale(String localeCode) async {
     final current = await future;
     final prefs = await SharedPreferences.getInstance();
@@ -96,6 +114,8 @@ class SettingsData {
   final String themeMode; // 'light', 'dark', 'system'
   final bool stickyDateNotification;
   final bool ipoNotifications;
+  final bool earthquakeNotifications;
+  final bool roadClosureNotifications;
   final String appLocale; // 'ne', 'en', 'new'
 
   const SettingsData({
@@ -106,6 +126,8 @@ class SettingsData {
     required this.themeMode,
     required this.stickyDateNotification,
     required this.ipoNotifications,
+    required this.earthquakeNotifications,
+    required this.roadClosureNotifications,
     required this.appLocale,
   });
 
@@ -117,6 +139,8 @@ class SettingsData {
     String? themeMode,
     bool? stickyDateNotification,
     bool? ipoNotifications,
+    bool? earthquakeNotifications,
+    bool? roadClosureNotifications,
     String? appLocale,
   }) {
     return SettingsData(
@@ -127,6 +151,8 @@ class SettingsData {
       themeMode: themeMode ?? this.themeMode,
       stickyDateNotification: stickyDateNotification ?? this.stickyDateNotification,
       ipoNotifications: ipoNotifications ?? this.ipoNotifications,
+      earthquakeNotifications: earthquakeNotifications ?? this.earthquakeNotifications,
+      roadClosureNotifications: roadClosureNotifications ?? this.roadClosureNotifications,
       appLocale: appLocale ?? this.appLocale,
     );
   }
