@@ -75,7 +75,24 @@
       "Bash(flutter clean:*)",
       "Bash(dart test_svg_parse.dart:*)",
       "Bash(flutter pub add:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(else echo \"No cache\")",
+      "Bash(fi)",
+      "WebFetch(domain:nationalgeoportal.gov.np)",
+      "WebFetch(domain:download.hermes.com.np)",
+      "Bash(head:*)",
+      "Bash(git rm:*)",
+      "WebFetch(domain:www.seismonepal.gov.np)",
+      "WebFetch(domain:www.dhm.gov.np)",
+      "WebFetch(domain:earthquake.usgs.gov)",
+      "WebFetch(domain:navigate.dor.gov.np)",
+      "WebFetch(domain:dor.gov.np)",
+      "WebFetch(domain:seismonepal.gov.np)",
+      "WebFetch(domain:earthquaketrack.com)",
+      "Bash(# Try seismonepal via http curl -s --insecure \"\"http://www.seismonepal.gov.np/\"\")",
+      "Bash(# Send ''R'' for hot restart to the flutter process pgrep -f \"\"flutter_tools\"\" && echo \"\"R\"\")",
+      "Bash(# Try corsproxy.io curl -s \"\"https://corsproxy.io/?http://www.seismonepal.gov.np/\"\")",
+      "Bash(# Try different encoding or proxy curl -sL \"\"https://api.codetabs.com/v1/proxy?quest=http://www.seismonepal.gov.np/\"\")"
     ]
   }
 }
