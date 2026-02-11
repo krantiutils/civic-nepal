@@ -19,37 +19,46 @@ class IpoSharesScreen extends StatefulWidget {
 
 class _IpoSharesScreenState extends State<IpoSharesScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool _initialized = false;
+  TabController? _tabController;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _checkInitialTab();
+    _initializeWithCorrectTab();
   }
 
-  /// Check if there are active IPOs; if not, default to stock prices tab
-  Future<void> _checkInitialTab() async {
+  /// Check IPOs first, then create TabController with correct initial tab
+  Future<void> _initializeWithCorrectTab() async {
     final cached = await IpoService.getCachedIpos();
     if (!mounted) return;
 
-    // If no IPOs cached, switch to stock prices tab (index 1)
-    if (cached.isEmpty && !_initialized) {
-      _tabController.index = 1;
-    }
-    _initialized = true;
+    // Start on stock prices tab (1) if no active IPOs, otherwise IPO list (0)
+    final initialTab = cached.isEmpty ? 1 : 0;
+    _tabController = TabController(length: 2, vsync: this, initialIndex: initialTab);
+
+    setState(() => _isLoading = false);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    if (_isLoading || _tabController == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: HomeTitle(child: Text(l10n.ipoShares)),
+        ),
+        bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: HomeTitle(
@@ -65,7 +74,7 @@ class _IpoSharesScreenState extends State<IpoSharesScreen>
           ),
         ),
         bottom: TabBar(
-          controller: _tabController,
+          controller: _tabController!,
           labelColor: Theme.of(context).colorScheme.onPrimary,
           unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
           indicatorColor: Theme.of(context).colorScheme.onPrimary,
@@ -77,7 +86,7 @@ class _IpoSharesScreenState extends State<IpoSharesScreen>
       ),
       bottomNavigationBar: const CustomBottomNav(currentIndex: 2), // IPO
       body: TabBarView(
-        controller: _tabController,
+        controller: _tabController!,
         children: const [
           _IpoListTab(),
           _StockPricesTab(),
