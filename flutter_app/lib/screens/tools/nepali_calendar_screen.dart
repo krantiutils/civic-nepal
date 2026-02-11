@@ -1156,11 +1156,23 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
       builder: (context, constraints) {
         // Calculate cell size - no spacing between cells for grid look
         final cellWidth = constraints.maxWidth / 7;
-        // Use aspect ratio for height, capped at maxCellHeight
-        final cellHeight = (cellWidth * 1.1).clamp(60.0, maxCellHeight > 60 ? maxCellHeight : 120.0);
 
-        return SingleChildScrollView(
-          child: Column(
+        // If we have bounded height, divide by rows to fill space perfectly
+        // Otherwise use aspect ratio with maxCellHeight cap
+        final double cellHeight;
+        if (constraints.maxHeight.isFinite && constraints.maxHeight > 0) {
+          // Fill available height evenly across rows
+          cellHeight = (constraints.maxHeight / rows).clamp(60.0, maxCellHeight);
+        } else {
+          // Fallback to aspect ratio
+          cellHeight = (cellWidth * 1.1).clamp(60.0, maxCellHeight > 60 ? maxCellHeight : 120.0);
+        }
+
+        // Check if scrolling is needed
+        final totalHeight = rows * cellHeight;
+        final needsScroll = constraints.maxHeight.isFinite && totalHeight > constraints.maxHeight;
+
+        final gridContent = Column(
             children: List.generate(rows, (rowIndex) {
               return Row(
                 children: List.generate(7, (colIndex) {
@@ -1224,8 +1236,13 @@ class _NepaliCalendarScreenState extends State<NepaliCalendarScreen> {
                 }),
               );
             }),
-          ),
         );
+
+        // Only wrap in scroll view if needed
+        if (needsScroll) {
+          return SingleChildScrollView(child: gridContent);
+        }
+        return gridContent;
       },
     );
   }

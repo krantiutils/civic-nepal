@@ -20,11 +20,25 @@ class IpoSharesScreen extends StatefulWidget {
 class _IpoSharesScreenState extends State<IpoSharesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _checkInitialTab();
+  }
+
+  /// Check if there are active IPOs; if not, default to stock prices tab
+  Future<void> _checkInitialTab() async {
+    final cached = await IpoService.getCachedIpos();
+    if (!mounted) return;
+
+    // If no IPOs cached, switch to stock prices tab (index 1)
+    if (cached.isEmpty && !_initialized) {
+      _tabController.index = 1;
+    }
+    _initialized = true;
   }
 
   @override
