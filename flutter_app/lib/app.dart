@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/home/home_screen.dart';
+import 'screens/home/web_home_screen.dart';
 import 'screens/constitution/constitution_screen.dart';
 import 'screens/leaders/leaders_screen.dart';
 import 'screens/leaders/leader_detail_screen.dart';
@@ -57,9 +58,16 @@ GoRouter router(RouterRef ref) {
     },
     routes: [
       // Home is the main entry point
+      // Web: calendar-first layout, Mobile: card-based home
       GoRoute(
         path: '/home',
-        builder: (context, state) => const HomeTab(),
+        builder: (context, state) {
+          // Use web-specific layout for desktop browsers
+          if (kIsWeb) {
+            return const WebHomeScreen();
+          }
+          return const HomeTab();
+        },
       ),
       // Calendar, IPO, Rights are regular pushed routes (like Government)
       GoRoute(

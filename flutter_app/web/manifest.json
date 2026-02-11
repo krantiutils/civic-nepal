@@ -1,13 +1,15 @@
 {
-    "name": "nepal_civic",
-    "short_name": "nepal_civic",
+    "name": "नागरिक पात्रो - NagarikPatro",
+    "short_name": "पात्रो",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#FAFAFA",
+    "theme_color": "#1976D2",
+    "description": "Free Nepali Patro with Bikram Sambat calendar, holidays, events, tithi, auspicious days, and civic tools for Nepal.",
+    "orientation": "any",
     "prefer_related_applications": false,
+    "lang": "ne",
+    "categories": ["utilities", "lifestyle"],
     "icons": [
         {
             "src": "icons/Icon-192.png",
@@ -30,6 +32,13 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [],
+    "related_applications": [
+        {
+            "platform": "play",
+            "url": "https://play.google.com/store/apps/details?id=xyz.nagarikpatro.app"
         }
     ]
 }

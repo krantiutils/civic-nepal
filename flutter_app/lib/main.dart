@@ -57,13 +57,14 @@ class _FallbackCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupe
 }
 
 void main() async {
-  // Use hash URLs on web (e.g., /#/calendar) - works without server config
-  // Path URLs (e.g., /calendar) require server-side SPA routing configuration
-  // which isn't always available, so hash URLs are more reliable
-  // To use path URLs, uncomment the line below and configure your web server
-  // usePathUrlStrategy();
-
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Use clean URLs on web (e.g., /calendar instead of /#/calendar)
+  // Required for SEO - search engines can crawl these URLs
+  // Note: Server must be configured to serve index.html for all routes
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
 
   // Initialize platform-specific services (not available on web)
   if (!kIsWeb) {
