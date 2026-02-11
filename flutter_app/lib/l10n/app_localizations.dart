@@ -75,6 +75,13 @@ class AppLocalizations {
   String get exploreNp => get('explore_np');
   String get utilities => get('utilities');
   String get utilitiesNp => get('utilities_np');
+  String get pinned => get('pinned');
+  String get pinnedNp => get('pinned_np');
+  String get recent => get('recent');
+  String get recentNp => get('recent_np');
+  String get longPressToPin => get('long_press_to_pin');
+  String get pinnedToast => get('pinned_toast');
+  String get unpinnedToast => get('unpinned_toast');
   String get govt => get('govt');
   String get govtNp => get('govt_np');
   String get government => get('government');
@@ -163,6 +170,7 @@ class AppLocalizations {
 
   // ============= Leaders =============
   String get leaders => get('leaders');
+  String get leadersNp => get('leaders_np');
   String get sort => get('sort');
   String get filter => get('filter');
   String get sortBy => get('sort_by');

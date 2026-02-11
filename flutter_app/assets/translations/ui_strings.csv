@@ -14,6 +14,13 @@ explore,Explore,अन्वेषण,अन्वेषण,Section header
 explore_np,अन्वेषण,अन्वेषण,अन्वेषण,Section header Nepali
 utilities,Utilities,उपकरणहरू,उपकरणथें,Section header
 utilities_np,उपकरणहरू,उपकरणहरू,उपकरणथें,Section header Nepali
+pinned,Pinned,पिन गरिएको,पिन याःगु,Section header for pinned items
+pinned_np,पिन गरिएको,पिन गरिएको,पिन याःगु,Section header Nepali
+recent,Recent,हालसालै,न्हापांगु,Section header for recent items
+recent_np,हालसालै,हालसालै,न्हापांगु,Section header Nepali
+long_press_to_pin,Long press to pin,पिन गर्न थिच्नुहोस्,पिन यायेत थ्वदिसँ,Hint text
+pinned_toast,Pinned to home,गृह पृष्ठमा पिन गरियो,होम पेजय् पिन जुल,Toast message
+unpinned_toast,Removed from pins,पिनबाट हटाइयो,पिनं थ्व हटाइगु,Toast message
 govt,Govt,सरकार,सरकार,Quick access card
 govt_np,सरकार,सरकार,सरकार,Quick access card Nepali
 map,Map,नक्सा,नक्सा,Quick access card
@@ -98,6 +105,7 @@ sentence,Sentence,वाक्य,वाक्य,Toggle option
 
 # Leaders Screen
 leaders,Leaders,नेताहरू,नेताथें,Screen title
+leaders_np,नेताहरू,नेताहरू,नेताथें,Screen title Nepali
 sort,Sort,क्रमबद्ध,क्रमबद्ध,Button tooltip
 filter,Filter,फिल्टर,फिल्टर,Button tooltip
 sort_by,Sort by,क्रमबद्ध गर्नुहोस्,क्रमबद्ध यायेमा,Dialog title

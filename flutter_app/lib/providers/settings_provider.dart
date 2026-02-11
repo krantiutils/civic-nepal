@@ -16,6 +16,11 @@ class Settings extends _$Settings {
   static const String _keyEarthquakeNotifications = 'earthquake_notifications';
   static const String _keyRoadClosureNotifications = 'road_closure_notifications';
   static const String _keyAppLocale = 'app_locale';
+  static const String _keyPinnedRoutes = 'pinned_routes';
+  static const String _keyRecentRoutes = 'recent_routes';
+
+  static const int maxPinnedItems = 6;
+  static const int maxRecentItems = 5;
 
   @override
   Future<SettingsData> build() async {
@@ -31,6 +36,8 @@ class Settings extends _$Settings {
       earthquakeNotifications: prefs.getBool(_keyEarthquakeNotifications) ?? true, // Default on for safety
       roadClosureNotifications: prefs.getBool(_keyRoadClosureNotifications) ?? false,
       appLocale: prefs.getString(_keyAppLocale) ?? 'ne', // Default to Nepali
+      pinnedRoutes: prefs.getStringList(_keyPinnedRoutes) ?? [],
+      recentRoutes: prefs.getStringList(_keyRecentRoutes) ?? [],
     );
   }
 
@@ -103,6 +110,65 @@ class Settings extends _$Settings {
     await prefs.setString(_keyAppLocale, localeCode);
     state = AsyncValue.data(current.copyWith(appLocale: localeCode));
   }
+
+  /// Toggle a route's pinned status. Returns true if now pinned, false if unpinned.
+  Future<bool> togglePin(String route) async {
+    final current = await future;
+    final prefs = await SharedPreferences.getInstance();
+    final pinned = List<String>.from(current.pinnedRoutes);
+
+    bool nowPinned;
+    if (pinned.contains(route)) {
+      pinned.remove(route);
+      nowPinned = false;
+    } else {
+      if (pinned.length >= maxPinnedItems) {
+        // Remove oldest pin to make room
+        pinned.removeAt(0);
+      }
+      pinned.add(route);
+      nowPinned = true;
+    }
+
+    await prefs.setStringList(_keyPinnedRoutes, pinned);
+    state = AsyncValue.data(current.copyWith(pinnedRoutes: pinned));
+    return nowPinned;
+  }
+
+  /// Check if a route is pinned
+  bool isPinned(String route) {
+    final current = state.valueOrNull;
+    return current?.pinnedRoutes.contains(route) ?? false;
+  }
+
+  /// Record a visit to a route for recent tracking
+  Future<void> recordVisit(String route) async {
+    final current = await future;
+    final prefs = await SharedPreferences.getInstance();
+    final recent = List<String>.from(current.recentRoutes);
+
+    // Remove if already in list (will re-add at end)
+    recent.remove(route);
+
+    // Add to end (most recent)
+    recent.add(route);
+
+    // Trim to max size
+    while (recent.length > maxRecentItems) {
+      recent.removeAt(0);
+    }
+
+    await prefs.setStringList(_keyRecentRoutes, recent);
+    state = AsyncValue.data(current.copyWith(recentRoutes: recent));
+  }
+
+  /// Clear recent routes
+  Future<void> clearRecent() async {
+    final current = await future;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_keyRecentRoutes, []);
+    state = AsyncValue.data(current.copyWith(recentRoutes: []));
+  }
 }
 
 /// Immutable settings data class
@@ -117,6 +183,8 @@ class SettingsData {
   final bool earthquakeNotifications;
   final bool roadClosureNotifications;
   final String appLocale; // 'ne', 'en', 'new'
+  final List<String> pinnedRoutes;
+  final List<String> recentRoutes;
 
   const SettingsData({
     required this.languagePreference,
@@ -129,6 +197,8 @@ class SettingsData {
     required this.earthquakeNotifications,
     required this.roadClosureNotifications,
     required this.appLocale,
+    required this.pinnedRoutes,
+    required this.recentRoutes,
   });
 
   SettingsData copyWith({
@@ -142,6 +212,8 @@ class SettingsData {
     bool? earthquakeNotifications,
     bool? roadClosureNotifications,
     String? appLocale,
+    List<String>? pinnedRoutes,
+    List<String>? recentRoutes,
   }) {
     return SettingsData(
       languagePreference: languagePreference ?? this.languagePreference,
@@ -154,6 +226,8 @@ class SettingsData {
       earthquakeNotifications: earthquakeNotifications ?? this.earthquakeNotifications,
       roadClosureNotifications: roadClosureNotifications ?? this.roadClosureNotifications,
       appLocale: appLocale ?? this.appLocale,
+      pinnedRoutes: pinnedRoutes ?? this.pinnedRoutes,
+      recentRoutes: recentRoutes ?? this.recentRoutes,
     );
   }
 }
