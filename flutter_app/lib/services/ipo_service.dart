@@ -21,38 +21,79 @@ class IpoService {
   static const String eventOpening = 'opening';
   static const String eventClosing = 'closing';
 
-  /// CORS proxy for web (browsers block cross-origin requests)
-  static const String _corsProxy = 'https://corsproxy.io/?';
+  /// CORS proxies for web (browsers block cross-origin requests)
+  /// Multiple proxies for fallback when one fails
+  static const List<String> _corsProxies = [
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?',
+  ];
+
+  /// Current proxy index for rotation on failure
+  static int _currentProxyIndex = 0;
 
   /// Get URL with CORS proxy for web platform
-  static String _getProxiedUrl(String url) {
+  static String _getProxiedUrl(String url, {int? proxyIndex}) {
     if (kIsWeb) {
-      return '$_corsProxy${Uri.encodeComponent(url)}';
+      final index = proxyIndex ?? _currentProxyIndex;
+      final proxy = _corsProxies[index % _corsProxies.length];
+      return '$proxy${Uri.encodeComponent(url)}';
     }
     return url;
   }
 
-  /// Fetch IPO list from CDSC
-  static Future<List<Ipo>> fetchIpoList() async {
-    try {
-      final response = await http.get(
-        Uri.parse(_getProxiedUrl(_cdscUrl)),
+  /// Try fetching with fallback proxies
+  static Future<http.Response?> _fetchWithProxyFallback(String url) async {
+    if (!kIsWeb) {
+      return await http.get(
+        Uri.parse(url),
         headers: {
           'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
           'Accept': 'text/html,application/xhtml+xml',
         },
       ).timeout(const Duration(seconds: 30));
+    }
 
-      if (response.statusCode == 200) {
+    // Try each proxy until one works
+    for (int i = 0; i < _corsProxies.length; i++) {
+      try {
+        final proxyIndex = (_currentProxyIndex + i) % _corsProxies.length;
+        final proxiedUrl = _getProxiedUrl(url, proxyIndex: proxyIndex);
+        final response = await http.get(
+          Uri.parse(proxiedUrl),
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+            'Accept': 'text/html,application/xhtml+xml',
+          },
+        ).timeout(const Duration(seconds: 15));
+
+        if (response.statusCode == 200) {
+          // Remember this proxy worked
+          _currentProxyIndex = proxyIndex;
+          return response;
+        }
+      } catch (e) {
+        // Try next proxy
+        continue;
+      }
+    }
+    return null;
+  }
+
+  /// Fetch IPO list from CDSC
+  static Future<List<Ipo>> fetchIpoList() async {
+    try {
+      final response = await _fetchWithProxyFallback(_cdscUrl);
+
+      if (response != null && response.statusCode == 200) {
         final ipos = _parseIpoHtml(response.body);
         await _cacheIpos(ipos);
         return ipos;
       }
     } catch (e) {
       // Return cached data on error
-      return await getCachedIpos();
     }
-    return [];
+    final cached = await getCachedIpos();
+    return cached.isNotEmpty ? cached : [];
   }
 
   /// Parse IPO data from CDSC HTML
@@ -176,15 +217,9 @@ class IpoService {
 
     // Fallback to Merolagani
     try {
-      final response = await http.get(
-        Uri.parse(_getProxiedUrl(_merolaganiUrl)),
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
-          'Accept': 'text/html,application/xhtml+xml',
-        },
-      ).timeout(const Duration(seconds: 30));
+      final response = await _fetchWithProxyFallback(_merolaganiUrl);
 
-      if (response.statusCode == 200) {
+      if (response != null && response.statusCode == 200) {
         final stocks = _parseStockHtml(response.body);
         if (stocks.isNotEmpty) {
           await _cacheStocks(stocks);
@@ -201,15 +236,9 @@ class IpoService {
 
   /// Fetch from ShareSansar
   static Future<List<StockPrice>> _fetchFromShareSansar() async {
-    final response = await http.get(
-      Uri.parse(_getProxiedUrl(_shareSansarUrl)),
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml',
-      },
-    ).timeout(const Duration(seconds: 30));
+    final response = await _fetchWithProxyFallback(_shareSansarUrl);
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       return _parseShareSansarHtml(response.body);
     }
     return [];
