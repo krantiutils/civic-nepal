@@ -47,6 +47,8 @@ jobs:
           mkdir -p _site
           # Flutter app at root
           cp -r flutter_app/build/web/* _site/
+          # Copy index.html to 404.html for GitHub Pages SPA routing
+          cp _site/index.html _site/404.html
           # Static constitution site at /cons/
           mkdir -p _site/cons
           cp index.html _site/cons/
