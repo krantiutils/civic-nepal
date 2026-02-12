@@ -40,7 +40,7 @@ jobs:
 
       - name: Build web
         working-directory: flutter_app
-        run: flutter build web --release --base-href /civic-nepal/
+        run: flutter build web --release --base-href /
 
       - name: Prepare deployment
         run: |
