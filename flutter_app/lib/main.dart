@@ -59,12 +59,20 @@ class _FallbackCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupe
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Use clean URLs on web (e.g., /calendar instead of /#/calendar)
-  // Required for SEO - search engines can crawl these URLs
-  // Note: Server must be configured to serve index.html for all routes
-  if (kIsWeb) {
-    usePathUrlStrategy();
-  }
+  // URL Strategy for web:
+  // - Hash URLs (/#/calendar) work everywhere without server config
+  // - Path URLs (/calendar) require server to serve index.html for all routes
+  //
+  // To enable clean URLs for SEO, uncomment usePathUrlStrategy() below
+  // AND configure your server:
+  //   - Firebase: Add rewrite rule in firebase.json
+  //   - Netlify: Add /* /index.html 200 to _redirects
+  //   - Nginx: try_files $uri $uri/ /index.html
+  //   - GitHub Pages: Use 404.html trick or hash URLs
+  //
+  // if (kIsWeb) {
+  //   usePathUrlStrategy();
+  // }
 
   // Initialize platform-specific services (not available on web)
   if (!kIsWeb) {

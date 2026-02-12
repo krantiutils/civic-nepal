@@ -1,10 +1,10 @@
 import 'dart:async';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../providers/settings_provider.dart';
@@ -300,11 +300,11 @@ class _WebHomeScreenState extends ConsumerState<WebHomeScreen> {
     );
   }
 
-  void _launchPlayStore() {
-    html.window.open(
-      'https://play.google.com/store/apps/details?id=xyz.nagarikpatro.app',
-      '_blank',
-    );
+  Future<void> _launchPlayStore() async {
+    final uri = Uri.parse('https://play.google.com/store/apps/details?id=xyz.nagarikpatro.app');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Widget _buildCalendarSection(
