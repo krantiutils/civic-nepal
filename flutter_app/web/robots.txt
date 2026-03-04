@@ -1,0 +1,19 @@
+# Robots.txt for nagarikpatro.xyz
+# Nepali Calendar, Events & Civic Tools
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://nagarikpatro.xyz/sitemap.xml
+
+# Allow all crawlers to index main content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Disallow internal/utility paths that don't need indexing
+Disallow: /flutter_service_worker.js
+Disallow: /version.json

@@ -1,0 +1,137 @@
+name: nagarik_calendar
+description: NagarikCalendar - Nepali Calendar, Constitution, Leaders, and Civic Tools
+publish_to: 'none'
+version: 1.0.1+7
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.4.0
+
+  # SVG rendering
+  flutter_svg: ^2.0.0
+  path_parsing: ^1.0.1
+
+  # Local storage
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.0
+
+  # Markdown rendering
+  flutter_markdown: ^0.6.0
+
+  # Image caching
+  cached_network_image: ^3.3.0
+
+  # Routing
+  go_router: ^12.0.0
+
+  # HTTP client for API calls
+  http: ^1.1.0
+
+  # Path provider for file system access
+  path_provider: ^2.1.0
+
+  # Image tools (picker, manipulation, sharing, gallery save)
+  image_picker: ^1.0.0
+  file_picker: ^8.0.0
+  simple_pdf_compression: ^0.0.2
+  pdf: ^3.10.0
+  pdfx: ^2.9.0
+  image: ^4.0.0
+  share_plus: ^7.0.0
+  gal: ^2.3.0
+
+  # URL launcher for opening websites
+  url_launcher: ^6.0.0
+
+  # HTML parsing for web scraping
+  html: ^0.15.4
+
+  # Background tasks
+  workmanager: ^0.9.0
+
+  # Local notifications
+  flutter_local_notifications: ^17.0.0
+
+  # Nepali date utilities (tested library)
+  nepali_utils: ^3.0.1
+
+  # Google Calendar integration
+  googleapis: ^13.0.0
+  google_sign_in: ^6.2.0
+  extension_google_sign_in_as_googleapis_auth: ^2.0.0
+
+  # Localization
+  flutter_localizations:
+    sdk: flutter
+  intl: any  # Version pinned by flutter_localizations
+
+  # Code generation
+  freezed_annotation: ^2.4.0
+  riverpod_annotation: ^2.3.0
+  json_annotation: ^4.9.0
+  polylabel: ^1.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.0
+  freezed: ^2.4.0
+  json_serializable: ^6.7.0
+  riverpod_generator: ^2.3.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "store_assets/feature_icon.png"
+  adaptive_icon_background: "#4A90D9"
+  adaptive_icon_foreground: "store_assets/feature_icon.png"
+  web:
+    generate: true
+    image_path: "store_assets/feature_icon.png"
+  windows:
+    generate: false
+  macos:
+    generate: false
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/constitution_bilingual.json
+    - assets/data/per-sentence.json
+    - assets/data/dictionary.json
+    - assets/data/leaders.json
+    - assets/data/parties.json
+    - assets/data/districts.json
+    - assets/data/gov_services.json
+    - assets/data/know_your_rights.json
+    - assets/data/nepali_calendar_events.json
+    - assets/data/nepali_calendar_auspicious.json
+    - assets/data/ministers.json
+    - assets/data/data_version.json
+    - assets/data/gov_procedures.json
+    - assets/data/ronb_feed.json
+    - assets/data/election/local_bodies.json
+    - assets/data/election/constituencies.json
+    - assets/data/election/local_election_results.json
+    - assets/data/election/districts_geo.json
+    - assets/data/election/constituencies_geo.json
+    - assets/data/election/map_features.json
+    - assets/data/election/local_units/
+    - assets/data/election/districts/
+    - assets/data/election/nepal_constituencies.svg
+    - assets/data/osm/
+    - assets/images/nepal_districts.svg
+    - assets/images/nepal_ekantipur.svg
+    - assets/images/leaders/
+    - assets/translations/

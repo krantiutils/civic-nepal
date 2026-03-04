@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution of Nepal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #000;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        .sidebar-left {
+            border-right: 2px solid #000;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+
+        header {
+            border-bottom: 3px solid #000;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .controls {
+            border-bottom: 2px solid #000;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #000;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            background: #f5f5f5;
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 0;
+            border: 2px solid #000;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-right: 2px solid #000;
+            background: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button:last-child {
+            border-right: none;
+        }
+
+        button:hover {
+            background: #f5f5f5;
+        }
+
+        button.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .preamble {
+            border: 3px solid #000;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            background: #f9f9f9;
+        }
+
+        .preamble-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .preamble-text {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .preamble-text.nepali {
+            font-size: 1.05rem;
+        }
+
+        .part {
+            margin-bottom: 4rem;
+        }
+
+        .part-header {
+            background: #000;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .part-number {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+        }
+
+        .part-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .article {
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            border-left: 3px solid #000;
+        }
+
+        .article-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-number {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            color: #333;
+        }
+
+        .article-content {
+            margin-top: 1rem;
+        }
+
+        .subsection {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .subsection.nepali {
+            font-size: 1.05rem;
+        }
+
+        .subsection.english {
+            color: #444;
+            padding-left: 1rem;
+            border-left: 3px solid #999;
+            margin-top: 1rem;
+        }
+
+        .sentence-pair {
+            margin-bottom: 1.5rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .sentence {
+            padding: 0.75rem;
+            border-left: 4px solid #000;
+        }
+
+        .sentence.nepali {
+            background: #f5f5f5;
+            font-size: 1.05rem;
+        }
+
+        .sentence.english {
+            background: #fafafa;
+            border-left-color: #999;
+            color: #444;
+        }
+
+        .subsection-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .subsection-id {
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .sub-subsection {
+            margin-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .toc-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 0.5rem;
+            text-decoration: none;
+            color: #000;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .toc-link:hover {
+            background: #f5f5f5;
+            border-left-color: #000;
+        }
+
+        .toc-link.active {
+            background: #000;
+            color: #fff;
+            border-left-color: #000;
+        }
+
+        .article-ref {
+            color: #000;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            cursor: pointer;
+        }
+
+        .article-ref:hover {
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            padding: 0 2px;
+        }
+
+        .meaning-not-found {
+            color: #999;
+            font-style: italic;
+        }
+
+        .empty-state {
+            color: #999;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Meaning Mode Tooltip */
+        .meaning-tooltip {
+            position: fixed;
+            background: #fff;
+            border: 3px solid #000;
+            padding: 1rem;
+            max-width: 350px;
+            z-index: 10000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .meaning-tooltip.visible {
+            display: block;
+        }
+
+        .meaning-word {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #000;
+        }
+
+        .meaning-translations {
+            margin-top: 0.5rem;
+        }
+
+        .meaning-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .meaning-item:last-child {
+            border-bottom: none;
+        }
+
+        .meaning-en {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .meaning-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .meaning-close:hover {
+            background: #333;
+        }
+
+        .meaning-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #000;
+            color: #fff;
+            border: 3px solid #000;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 700;
+            z-index: 9999;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+        }
+
+        .meaning-toggle:hover {
+            background: #333;
+        }
+
+        .meaning-toggle.active {
+            background: #fff;
+            color: #000;
+        }
+
+        @media (max-width: 1200px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-left {
+                position: relative;
+                max-height: none;
+                border: none;
+                border-bottom: 2px solid #000;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .part-title {
+                font-size: 1.5rem;
+            }
+
+            .article {
+                padding-left: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        @media print {
+            .controls,
+            .sidebar-left {
+                display: none;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Left Sidebar: Table of Contents -->
+        <aside class="sidebar-left">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-box" style="margin-bottom: 1rem;">
+                <input type="text" id="search" placeholder="Search..." style="width: 100%; padding: 0.5rem; border: 2px solid #000;">
+            </div>
+            <ul class="toc-list" id="toc"></ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Constitution of Nepal</h1>
+                <div class="subtitle">नेपालको संविधान</div>
+            </header>
+
+            <div class="controls">
+                <div class="lang-toggle">
+                    <button class="active" data-lang="both">Both</button>
+                    <button data-lang="nepali">नेपाली</button>
+                    <button data-lang="english">English</button>
+                </div>
+                <div class="lang-toggle">
+                    <button class="active" data-view="paragraph">Paragraph</button>
+                    <button data-view="sentence">Sentence</button>
+                </div>
+            </div>
+
+            <div id="content" class="loading">
+                Loading constitution...
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Meaning Mode Toggle -->
+    <button class="meaning-toggle" id="meaning-mode-toggle">📖 Meaning Mode: OFF</button>
+
+    <!-- Meaning Tooltip -->
+    <div class="meaning-tooltip" id="meaning-tooltip">
+        <button class="meaning-close" id="meaning-close">✕</button>
+        <div class="meaning-word" id="meaning-word"></div>
+        <div class="meaning-translations" id="meaning-translations"></div>
+    </div>
+
+    <script>
+        let paragraphData = null;
+        let sentenceData = null;
+        let currentLang = 'both';
+        let currentView = 'paragraph';
+        let currentArticleId = null;
+
+        // Meaning mode state
+        let dictionaryData = null;
+        let meaningModeEnabled = false;
+
+        // Devanagari to Arabic numeral conversion
+        const devanagariNumerals = {'०': '0', '१': '1', '२': '2', '३': '3', '४': '4', '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'};
+
+        function devanagariToArabic(str) {
+            return str.replace(/[०-९]/g, d => devanagariNumerals[d]);
+        }
+
+        // Convert article references to clickable links
+        function linkifyArticleRefs(text) {
+            // English: "Article 42" -> link
+            text = text.replace(/\b(Article)\s+(\d+)/gi, (match, prefix, num) => {
+                return `<a href="#article-${num}" class="article-ref" onclick="event.stopPropagation(); navigateToArticle('article-${num}')">${prefix} ${num}</a>`;
+            });
+
+            // Nepali: "धारा ४२" -> link
+            text = text.replace(/(धारा)\s*([०-९]+)/g, (match, prefix, num) => {
+                const arabicNum = devanagariToArabic(num);
+                return `<a href="#article-${arabicNum}" class="article-ref" onclick="event.stopPropagation(); navigateToArticle('article-${arabicNum}')">${prefix} ${num}</a>`;
+            });
+
+            return text;
+        }
+
+        function navigateToArticle(articleId) {
+            const element = document.getElementById(articleId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setCurrentArticle(articleId);
+                updateHash(articleId);
+            }
+        }
+
+        // Deep linking: Update URL hash
+        function updateHash(articleId) {
+            if (articleId) {
+                window.history.pushState(null, '', `#${articleId}`);
+            }
+        }
+
+        // Deep linking: Navigate to article from URL hash
+        function navigateFromHash() {
+            const hash = window.location.hash.slice(1); // Remove #
+            if (hash) {
+                const element = document.getElementById(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setCurrentArticle(hash);
+                }
+            }
+        }
+
+        // Set current article
+        function setCurrentArticle(articleId) {
+            currentArticleId = articleId;
+
+            // Update TOC active state
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${articleId}`);
+            });
+        }
+
+        // Load both JSON files and dictionary
+        Promise.all([
+            fetch('constitution_bilingual.json').then(res => {
+                if (!res.ok) throw new Error('Failed to load constitution_bilingual.json');
+                return res.json();
+            }),
+            fetch('per-sentence.json').then(res => {
+                if (!res.ok) throw new Error('Failed to load per-sentence.json');
+                return res.json();
+            }),
+            fetch('dictionary.json').then(res => res.json()).catch(() => {
+                console.warn('Dictionary not found. Meaning mode will be disabled.');
+                return null;
+            })
+        ])
+            .then(([paragraph, sentence, dictionary]) => {
+                paragraphData = paragraph;
+                sentenceData = sentence;
+                dictionaryData = dictionary;
+
+                if (!dictionaryData) {
+                    document.getElementById('meaning-mode-toggle').style.display = 'none';
+                }
+
+                render();
+                renderTOC();
+                initEventListeners();
+                initMeaningMode();
+
+                // Handle deep linking on load
+                navigateFromHash();
+
+                // Handle browser back/forward
+                window.addEventListener('hashchange', navigateFromHash);
+            })
+            .catch(err => {
+                document.getElementById('content').innerHTML = `<p>Error loading constitution data: ${err.message}</p><p>Make sure you are running a local server (python3 -m http.server 8000)</p>`;
+                console.error(err);
+            });
+
+        // Render Table of Contents
+        function renderTOC() {
+            const toc = document.getElementById('toc');
+            toc.innerHTML = '';
+
+            const constitution = paragraphData.constitution;
+
+            // Preamble
+            const preambleLi = document.createElement('li');
+            preambleLi.className = 'toc-item';
+            const preambleLink = document.createElement('a');
+            preambleLink.href = '#preamble';
+            preambleLink.className = 'toc-link';
+            preambleLink.textContent = 'Preamble';
+            preambleLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('preamble').scrollIntoView({ behavior: 'smooth' });
+                setCurrentArticle('preamble');
+                updateHash('preamble');
+            });
+            preambleLi.appendChild(preambleLink);
+            toc.appendChild(preambleLi);
+
+            // Articles
+            constitution.parts.forEach(part => {
+                part.articles.forEach(article => {
+                    const articleId = `article-${article.number}`;
+                    const li = document.createElement('li');
+                    li.className = 'toc-item';
+
+                    const link = document.createElement('a');
+                    link.href = `#${articleId}`;
+                    link.className = 'toc-link';
+
+                    const titleNp = article.title.np || '';
+                    const titleEn = article.title.en || '';
+                    // Display title based on current language setting
+                    let displayTitle;
+                    if (currentLang === 'both') {
+                        displayTitle = titleNp && titleEn ? `${titleNp} / ${titleEn}` : titleNp || titleEn;
+                    } else if (currentLang === 'nepali') {
+                        displayTitle = titleNp || titleEn;
+                    } else {
+                        displayTitle = titleEn || titleNp;
+                    }
+                    link.textContent = `${article.number}. ${displayTitle}`;
+
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        document.getElementById(articleId).scrollIntoView({ behavior: 'smooth' });
+                        setCurrentArticle(articleId);
+                        updateHash(articleId);
+                    });
+
+                    li.appendChild(link);
+                    toc.appendChild(li);
+                });
+            });
+        }
+
+        function render() {
+            if (currentView === 'paragraph') {
+                renderParagraphView();
+            } else {
+                renderSentenceView();
+            }
+        }
+
+        function renderParagraphView() {
+            const container = document.getElementById('content');
+            container.innerHTML = '';
+
+            const constitution = paragraphData.constitution;
+
+            // Preamble
+            if (constitution.preamble) {
+                const preambleDiv = document.createElement('div');
+                preambleDiv.className = 'preamble';
+                preambleDiv.id = 'preamble';
+                preambleDiv.style.cursor = 'pointer';
+
+                // Click handler for preamble
+                preambleDiv.addEventListener('click', () => {
+                    setCurrentArticle('preamble');
+                    updateHash('preamble');
+                });
+
+                const title = document.createElement('div');
+                title.className = 'preamble-title';
+                title.textContent = 'Preamble / प्रस्तावना';
+                preambleDiv.appendChild(title);
+
+                if (constitution.preamble.np && currentLang !== 'english') {
+                    const npText = document.createElement('div');
+                    npText.className = 'preamble-text nepali';
+                    npText.textContent = constitution.preamble.np;
+                    preambleDiv.appendChild(npText);
+                }
+
+                if (constitution.preamble.en && currentLang !== 'nepali') {
+                    const enText = document.createElement('div');
+                    enText.className = 'preamble-text english';
+                    enText.textContent = constitution.preamble.en;
+                    preambleDiv.appendChild(enText);
+                }
+
+                container.appendChild(preambleDiv);
+            }
+
+            // Parts
+            constitution.parts.forEach(part => {
+                const partDiv = document.createElement('div');
+                partDiv.className = 'part';
+                partDiv.id = `part-${part.number}`;
+
+                const header = document.createElement('div');
+                header.className = 'part-header';
+
+                const partNum = document.createElement('div');
+                partNum.className = 'part-number';
+                partNum.textContent = `Part ${part.number}`;
+                header.appendChild(partNum);
+
+                const partTitle = document.createElement('div');
+                partTitle.className = 'part-title';
+                const titleNp = part.title.np || '';
+                const titleEn = part.title.en || '';
+
+                if (currentLang === 'both') {
+                    partTitle.textContent = titleNp && titleEn ? `${titleNp} / ${titleEn}` : titleNp || titleEn;
+                } else if (currentLang === 'nepali') {
+                    partTitle.textContent = titleNp;
+                } else {
+                    partTitle.textContent = titleEn;
+                }
+
+                header.appendChild(partTitle);
+                partDiv.appendChild(header);
+
+                // Articles
+                part.articles.forEach(article => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'article';
+                    articleDiv.id = `article-${article.number}`;
+                    articleDiv.style.cursor = 'pointer';
+
+                    // Click handler for article
+                    articleDiv.addEventListener('click', () => {
+                        setCurrentArticle(`article-${article.number}`);
+                        updateHash(`article-${article.number}`);
+                    });
+
+                    const articleHeader = document.createElement('div');
+                    articleHeader.className = 'article-header';
+
+                    const articleNum = document.createElement('div');
+                    articleNum.className = 'article-number';
+                    articleNum.textContent = article.number;
+                    articleHeader.appendChild(articleNum);
+
+                    const articleTitle = document.createElement('div');
+                    articleTitle.className = 'article-title';
+                    const titleNp = article.title.np || '';
+                    const titleEn = article.title.en || '';
+
+                    if (currentLang === 'both') {
+                        articleTitle.textContent = titleNp && titleEn ? `${titleNp} / ${titleEn}` : titleNp || titleEn;
+                    } else if (currentLang === 'nepali') {
+                        articleTitle.textContent = titleNp;
+                    } else {
+                        articleTitle.textContent = titleEn;
+                    }
+
+                    articleHeader.appendChild(articleTitle);
+                    articleDiv.appendChild(articleHeader);
+
+                    // Content
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'article-content';
+                    renderArticleContent(article.content, contentDiv);
+
+                    articleDiv.appendChild(contentDiv);
+                    partDiv.appendChild(articleDiv);
+                });
+
+                container.appendChild(partDiv);
+            });
+        }
+
+        // Render article content
+        function renderArticleContent(content, container) {
+            // Nepali content
+            if (content.np && content.np.length > 0 && currentLang !== 'english') {
+                content.np.forEach(item => {
+                    const subsectionDiv = document.createElement('div');
+                    subsectionDiv.className = 'subsection nepali';
+
+                    if (item.type === 'subsection') {
+                        const id = document.createElement('span');
+                        id.className = 'subsection-id';
+                        id.textContent = item.identifier;
+                        subsectionDiv.appendChild(id);
+
+                        const textSpan = document.createElement('span');
+                        textSpan.innerHTML = ' ' + linkifyArticleRefs(item.text);
+                        subsectionDiv.appendChild(textSpan);
+
+                        if (item.items && item.items.length > 0) {
+                            item.items.forEach(subItem => {
+                                const subDiv = document.createElement('div');
+                                subDiv.className = 'sub-subsection';
+
+                                const subId = document.createElement('span');
+                                subId.className = 'subsection-id';
+                                subId.textContent = subItem.identifier;
+                                subDiv.appendChild(subId);
+
+                                const subTextSpan = document.createElement('span');
+                                subTextSpan.innerHTML = ' ' + linkifyArticleRefs(subItem.text);
+                                subDiv.appendChild(subTextSpan);
+
+                                subsectionDiv.appendChild(subDiv);
+                            });
+                        }
+                    } else if (item.type === 'text') {
+                        subsectionDiv.innerHTML = linkifyArticleRefs(item.text);
+                    }
+
+                    container.appendChild(subsectionDiv);
+                });
+            }
+
+            // English content
+            if (content.en && content.en.length > 0 && currentLang !== 'nepali') {
+                content.en.forEach(item => {
+                    const subsectionDiv = document.createElement('div');
+                    subsectionDiv.className = 'subsection english';
+
+                    if (item.type === 'subsection') {
+                        const id = document.createElement('span');
+                        id.className = 'subsection-id';
+                        id.textContent = item.identifier;
+                        subsectionDiv.appendChild(id);
+
+                        const textSpan = document.createElement('span');
+                        textSpan.innerHTML = ' ' + linkifyArticleRefs(item.text);
+                        subsectionDiv.appendChild(textSpan);
+
+                        if (item.items && item.items.length > 0) {
+                            item.items.forEach(subItem => {
+                                const subDiv = document.createElement('div');
+                                subDiv.className = 'sub-subsection';
+
+                                const subId = document.createElement('span');
+                                subId.className = 'subsection-id';
+                                subId.textContent = subItem.identifier;
+                                subDiv.appendChild(subId);
+
+                                const subTextSpan = document.createElement('span');
+                                subTextSpan.innerHTML = ' ' + linkifyArticleRefs(subItem.text);
+                                subDiv.appendChild(subTextSpan);
+
+                                subsectionDiv.appendChild(subDiv);
+                            });
+                        }
+                    } else if (item.type === 'text') {
+                        subsectionDiv.innerHTML = linkifyArticleRefs(item.text);
+                    }
+
+                    container.appendChild(subsectionDiv);
+                });
+            }
+        }
+
+        function renderSentenceView() {
+            const container = document.getElementById('content');
+            container.innerHTML = '';
+
+            const constitution = sentenceData.constitution;
+
+            // Preamble
+            if (constitution.preamble && constitution.preamble.aligned_sentences) {
+                const preambleDiv = document.createElement('div');
+                preambleDiv.className = 'preamble';
+                preambleDiv.id = 'preamble';
+                preambleDiv.style.cursor = 'pointer';
+
+                // Click handler for preamble (same as paragraph view)
+                preambleDiv.addEventListener('click', () => {
+                    setCurrentArticle('preamble');
+                    updateHash('preamble');
+                });
+
+                const title = document.createElement('div');
+                title.className = 'preamble-title';
+                title.textContent = 'Preamble / प्रस्तावना';
+                preambleDiv.appendChild(title);
+
+                constitution.preamble.aligned_sentences.forEach(pair => {
+                    const pairDiv = document.createElement('div');
+                    pairDiv.className = 'sentence-pair';
+
+                    if (pair.np && currentLang !== 'english') {
+                        const npDiv = document.createElement('div');
+                        npDiv.className = 'sentence nepali';
+                        npDiv.innerHTML = linkifyArticleRefs(pair.np);
+                        pairDiv.appendChild(npDiv);
+                    }
+
+                    if (pair.en && currentLang !== 'nepali') {
+                        const enDiv = document.createElement('div');
+                        enDiv.className = 'sentence english';
+                        enDiv.innerHTML = linkifyArticleRefs(pair.en);
+                        pairDiv.appendChild(enDiv);
+                    }
+
+                    preambleDiv.appendChild(pairDiv);
+                });
+
+                container.appendChild(preambleDiv);
+            }
+
+            // Parts
+            constitution.parts.forEach(part => {
+                const partDiv = document.createElement('div');
+                partDiv.className = 'part';
+                partDiv.id = `part-${part.number}`;
+
+                const header = document.createElement('div');
+                header.className = 'part-header';
+
+                const partNum = document.createElement('div');
+                partNum.className = 'part-number';
+                partNum.textContent = `Part ${part.number}`;
+                header.appendChild(partNum);
+
+                const partTitle = document.createElement('div');
+                partTitle.className = 'part-title';
+                const titleNp = part.title.np || '';
+                const titleEn = part.title.en || '';
+
+                if (currentLang === 'both') {
+                    partTitle.textContent = titleNp && titleEn ? `${titleNp} / ${titleEn}` : titleNp || titleEn;
+                } else if (currentLang === 'nepali') {
+                    partTitle.textContent = titleNp;
+                } else {
+                    partTitle.textContent = titleEn;
+                }
+
+                header.appendChild(partTitle);
+                partDiv.appendChild(header);
+
+                // Articles
+                part.articles.forEach(article => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'article';
+                    articleDiv.id = `article-${article.number}`;
+                    articleDiv.style.cursor = 'pointer';
+
+                    // Click handler for article
+                    articleDiv.addEventListener('click', () => {
+                        setCurrentArticle(`article-${article.number}`);
+                        updateHash(`article-${article.number}`);
+                    });
+
+                    const articleHeader = document.createElement('div');
+                    articleHeader.className = 'article-header';
+
+                    const articleNum = document.createElement('div');
+                    articleNum.className = 'article-number';
+                    articleNum.textContent = article.number;
+                    articleHeader.appendChild(articleNum);
+
+                    const articleTitle = document.createElement('div');
+                    articleTitle.className = 'article-title';
+                    const titleNp = article.title.np || '';
+                    const titleEn = article.title.en || '';
+
+                    if (currentLang === 'both') {
+                        articleTitle.textContent = titleNp && titleEn ? `${titleNp} / ${titleEn}` : titleNp || titleEn;
+                    } else if (currentLang === 'nepali') {
+                        articleTitle.textContent = titleNp;
+                    } else {
+                        articleTitle.textContent = titleEn;
+                    }
+
+                    articleHeader.appendChild(articleTitle);
+                    articleDiv.appendChild(articleHeader);
+
+                    // Content
+                    article.content.forEach(item => {
+                        if (item.identifier) {
+                            const subsecHeader = document.createElement('div');
+                            subsecHeader.className = 'subsection-header';
+                            subsecHeader.textContent = item.identifier;
+                            articleDiv.appendChild(subsecHeader);
+                        }
+
+                        if (item.aligned_sentences) {
+                            item.aligned_sentences.forEach(pair => {
+                                const pairDiv = document.createElement('div');
+                                pairDiv.className = 'sentence-pair';
+
+                                if (pair.np && currentLang !== 'english') {
+                                    const npDiv = document.createElement('div');
+                                    npDiv.className = 'sentence nepali';
+                                    npDiv.innerHTML = linkifyArticleRefs(pair.np);
+                                    pairDiv.appendChild(npDiv);
+                                }
+
+                                if (pair.en && currentLang !== 'nepali') {
+                                    const enDiv = document.createElement('div');
+                                    enDiv.className = 'sentence english';
+                                    enDiv.innerHTML = linkifyArticleRefs(pair.en);
+                                    pairDiv.appendChild(enDiv);
+                                }
+
+                                articleDiv.appendChild(pairDiv);
+                            });
+                        }
+                    });
+
+                    partDiv.appendChild(articleDiv);
+                });
+
+                container.appendChild(partDiv);
+            });
+        }
+
+        // Initialize event listeners after data is loaded
+        function initEventListeners() {
+            // Language toggle
+            document.querySelectorAll('.lang-toggle button[data-lang]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.lang-toggle button[data-lang]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLang = btn.dataset.lang;
+                    render();
+                    renderTOC(); // Update TOC to reflect language change
+                });
+            });
+
+            // View mode toggle
+            document.querySelectorAll('.lang-toggle button[data-view]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.lang-toggle button[data-view]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentView = btn.dataset.view;
+                    render();
+                });
+            });
+        }
+
+        // Meaning Mode
+        function initMeaningMode() {
+            const toggle = document.getElementById('meaning-mode-toggle');
+            const tooltip = document.getElementById('meaning-tooltip');
+            const closeBtn = document.getElementById('meaning-close');
+
+            // Toggle meaning mode
+            toggle.addEventListener('click', () => {
+                meaningModeEnabled = !meaningModeEnabled;
+                toggle.classList.toggle('active', meaningModeEnabled);
+                toggle.textContent = meaningModeEnabled ? '📖 Meaning Mode: ON' : '📖 Meaning Mode: OFF';
+
+                if (!meaningModeEnabled) {
+                    hideTooltip();
+                }
+            });
+
+            // Close tooltip
+            closeBtn.addEventListener('click', () => {
+                hideTooltip();
+            });
+
+            // Text selection handler
+            document.addEventListener('mouseup', (e) => {
+                if (!meaningModeEnabled || !dictionaryData) return;
+
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+
+                if (selectedText && selectedText.length > 0 && selectedText.length < 50) {
+                    // Check if selection is inside content area
+                    const range = selection.getRangeAt(0);
+                    const container = range.commonAncestorContainer;
+                    const contentArea = document.getElementById('content');
+
+                    if (contentArea && contentArea.contains(container)) {
+                        showMeaning(selectedText, e.clientX, e.clientY);
+                    }
+                } else {
+                    hideTooltip();
+                }
+            });
+
+            // Hide tooltip on click outside
+            document.addEventListener('click', (e) => {
+                if (!tooltip.contains(e.target) && !toggle.contains(e.target)) {
+                    // Only hide if not clicking on selected text
+                    const selection = window.getSelection();
+                    if (!selection.toString().trim()) {
+                        hideTooltip();
+                    }
+                }
+            });
+        }
+
+        function showMeaning(word, x, y) {
+            const tooltip = document.getElementById('meaning-tooltip');
+            const wordEl = document.getElementById('meaning-word');
+            const translationsEl = document.getElementById('meaning-translations');
+
+            // Clean the word
+            const cleanWord = word.replace(/[।॥,;:\(\)\[\]{}\"\'""''`\.!?]/g, '').trim();
+            const cleanWordLower = cleanWord.toLowerCase();
+
+            // Try Nepali → English first, then English → Nepali
+            let translations = null;
+
+            if (dictionaryData.np_to_en && dictionaryData.np_to_en[cleanWord]) {
+                translations = dictionaryData.np_to_en[cleanWord];
+            } else if (dictionaryData.en_to_np && dictionaryData.en_to_np[cleanWordLower]) {
+                translations = dictionaryData.en_to_np[cleanWordLower];
+            }
+
+            if (translations && translations.length > 0) {
+                wordEl.textContent = cleanWord;
+                translationsEl.innerHTML = '';
+
+                translations.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'meaning-item';
+                    const enDiv = document.createElement('div');
+                    enDiv.className = 'meaning-en';
+                    enDiv.textContent = t; // Use textContent to prevent XSS
+                    item.appendChild(enDiv);
+                    translationsEl.appendChild(item);
+                });
+
+                // Position tooltip
+                const tooltipWidth = 350;
+                const tooltipHeight = 150;
+                let left = x + 10;
+                let top = y + 10;
+
+                if (left + tooltipWidth > window.innerWidth) {
+                    left = window.innerWidth - tooltipWidth - 20;
+                }
+                if (top + tooltipHeight > window.innerHeight) {
+                    top = y - tooltipHeight - 10;
+                }
+
+                tooltip.style.left = `${left}px`;
+                tooltip.style.top = `${top}px`;
+                tooltip.classList.add('visible');
+            } else {
+                wordEl.textContent = cleanWord;
+                translationsEl.innerHTML = '<div class="empty-state">Not found</div>';
+                tooltip.style.left = `${x + 10}px`;
+                tooltip.style.top = `${y + 10}px`;
+                tooltip.classList.add('visible');
+            }
+        }
+
+        function hideTooltip() {
+            document.getElementById('meaning-tooltip').classList.remove('visible');
+        }
+
+        // Search
+        document.getElementById('search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+
+            // Filter articles in main content
+            const articles = document.querySelectorAll('.article');
+            articles.forEach(article => {
+                const text = article.textContent.toLowerCase();
+                article.style.display = text.includes(query) ? 'block' : 'none';
+            });
+
+            const preamble = document.getElementById('preamble');
+            if (preamble) {
+                const text = preamble.textContent.toLowerCase();
+                preamble.style.display = text.includes(query) ? 'block' : 'none';
+            }
+
+            // Filter TOC
+            const tocItems = document.querySelectorAll('.toc-item');
+            tocItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
